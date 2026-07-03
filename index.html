@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏙️ Городской Магнат</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 15px;
+        }
+        .header {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .header h1 { font-size: 22px; color: #e94560; }
+        .header .info { font-size: 13px; color: #aaa; margin-top: 5px; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .cell {
+            background: #2d2d44;
+            border-radius: 10px;
+            padding: 10px 3px;
+            text-align: center;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            min-height: 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid transparent;
+        }
+        .cell:hover { background: #3d3d5c; transform: scale(1.02); }
+        .cell.empty { background: #2d2d44; color: #888; }
+        .cell.building { background: #1a5a3a; border-color: #2ecc71; }
+        .cell .emoji { font-size: 26px; }
+        .cell .name { font-size: 10px; margin-top: 3px; }
+        .cell .level { font-size: 9px; color: #f1c40f; }
+        
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .menu button {
+            background: #16213e;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu button:hover { background: #1a2a5e; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 340px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h2 { color: #e94560; margin-bottom: 12px; text-align: center; font-size: 18px; }
+        .modal-content .build-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 4px 0;
+            background: #16213e;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .modal-content .build-btn:hover { background: #1a2a5e; }
+        .modal-content .close-btn {
+            background: #6b1a1a;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .modal-content .close-btn:hover { background: #8b1a1a; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🏙️ Городской Магнат</h1>
+    <div class="info" id="userInfo">👤 Загрузка...</div>
+</div>
+
+<div class="grid" id="mapGrid"></div>
+
+<div class="menu">
+    <button onclick="refreshMap()">🔄 Обновить</button>
+    <button onclick="showStats()">📊 Статистика</button>
+    <button onclick="closeApp()">❌ Закрыть</button>
+</div>
+
+<div class="modal" id="buildModal">
+    <div class="modal-content">
+        <h2>🏗️ Строительство</h2>
+        <div id="buildList">
+            <button class="build-btn" onclick="buildBuilding('Жилой дом', 500)">🏠 Жилой дом — 500</button>
+            <button class="build-btn" onclick="buildBuilding('Лесопилка', 400)">🌲 Лесопилка — 400</button>
+            <button class="build-btn" onclick="buildBuilding('Ферма', 300)">🌾 Ферма — 300</button>
+            <button class="build-btn" onclick="buildBuilding('Электростанция', 800)">⚡ Электростанция — 800</button>
+            <button class="build-btn" onclick="buildBuilding('Нефтяная вышка', 1500)">🛢️ Нефтяная вышка — 1500</button>
+            <button class="build-btn" onclick="buildBuilding('Шахта', 1100)">⛏️ Шахта — 1100</button>
+            <button class="build-btn" onclick="buildBuilding('Завод', 1200)">🏭 Завод — 1200</button>
+            <button class="build-btn" onclick="buildBuilding('Школа', 700)">🏫 Школа — 700</button>
+            <button class="build-btn" onclick="buildBuilding('Больница', 750)">🏥 Больница — 750</button>
+            <button class="build-btn" onclick="buildBuilding('Торговый центр', 900)">🏬 Торговый центр — 900</button>
+        </div>
+        <button class="close-btn" onclick="closeModal()">❌ Отмена</button>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    
+    const user = tg.initDataUnsafe.user || { id: 0, username: 'Гость' };
+    document.getElementById('userInfo').textContent = '👤 @' + user.username + ' | ID: ' + user.id;
+    
+    let selectedX = null;
+    let selectedY = null;
+    
+    // ДЕМО-ДАННЫЕ
+    const demoData = {
+        city: 'Мой Город',
+        balance: 5000,
+        cells: []
+    };
+    
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 4; j++) {
+            let status = 'empty';
+            let emoji = '🏗️';
+            let name = 'Свободно';
+            let level = '';
+            
+            if (i === 0 && j === 1) {
+                status = 'building';
+                emoji = '🏠';
+                name = 'Жилой дом';
+                level = 'Ур. 2';
+            } else if (i === 1 && j === 0) {
+                status = 'building';
+                emoji = '🌲';
+                name = 'Лесопилка';
+                level = 'Ур. 1';
+            } else if (i === 2 && j === 2) {
+                status = 'building';
+                emoji = '🌾';
+                name = 'Ферма';
+                level = 'Ур. 1';
+            }
+            
+            demoData.cells.push({
+                x: i,
+                y: j,
+                status: status,
+                emoji: emoji,
+                name: name,
+                level: level
+            });
+        }
+    }
+    
+    function renderMap() {
+        const grid = document.getElementById('mapGrid');
+        grid.innerHTML = '';
+        
+        demoData.cells.forEach(cell => {
+            const div = document.createElement('div');
+            div.className = 'cell ' + cell.status;
+            div.setAttribute('data-x', cell.x);
+            div.setAttribute('data-y', cell.y);
+            div.innerHTML = `
+                <span class="emoji">${cell.emoji}</span>
+                <span class="name">${cell.name}</span>
+                <span class="level">${cell.level}</span>
+            `;
+            div.onclick = function() { onCellClick(cell.x, cell.y); };
+            grid.appendChild(div);
+        });
+    }
+    
+    function onCellClick(x, y) {
+        selectedX = x;
+        selectedY = y;
+        document.getElementById('buildModal').classList.add('active');
+    }
+    
+    function closeModal() {
+        document.getElementById('buildModal').classList.remove('active');
+        selectedX = null;
+        selectedY = null;
+    }
+    
+    function buildBuilding(name, cost) {
+        if (selectedX === null || selectedY === null) {
+            alert('❌ Выбери участок!');
+            return;
+        }
+        
+        tg.sendData(JSON.stringify({
+            action: 'build',
+            building: name,
+            cost: cost,
+            x: selectedX,
+            y: selectedY,
+            user_id: user.id
+        }));
+        
+        closeModal();
+        alert('✅ Запрос на строительство отправлен!');
+    }
+    
+    function refreshMap() {
+        renderMap();
+        alert('🔄 Карта обновлена!');
+    }
+    
+    function showStats() {
+        tg.sendData(JSON.stringify({
+            action: 'stats',
+            user_id: user.id
+        }));
+    }
+    
+    function closeApp() {
+        tg.close();
+    }
+    
+    renderMap();
+</script>
+</body>
+</html>
