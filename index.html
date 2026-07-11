@@ -10,13 +10,12 @@
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #1a1a2e;
-            color: white;
             overflow: hidden;
             height: 100vh;
+            width: 100vw;
             position: relative;
         }
         
-        /* ===== КОНТЕЙНЕР КАРТЫ ===== */
         #mapContainer {
             width: 100vw;
             height: 100vh;
@@ -27,41 +26,12 @@
         }
         #mapContainer:active { cursor: grabbing; }
         
-        #mapCanvas {
+        #gameCanvas {
             position: absolute;
             top: 0;
             left: 0;
-            width: 3000px;
-            height: 3000px;
-            background: #2d2d44;
-            transition: none;
+            image-rendering: pixelated;
         }
-        
-        /* ===== УЧАСТКИ ===== */
-        .plot {
-            position: absolute;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.15s;
-            font-size: 11px;
-            color: rgba(255,255,255,0.7);
-            text-shadow: 0 0 4px rgba(0,0,0,0.8);
-            background: rgba(255,255,255,0.05);
-        }
-        .plot:hover {
-            border-color: rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.15);
-            transform: scale(1.02);
-            z-index: 10;
-        }
-        .plot .emoji { font-size: 28px; line-height: 1; }
-        .plot .name { font-size: 10px; margin-top: 2px; text-align: center; }
-        .plot .size { font-size: 9px; opacity: 0.5; margin-top: 2px; }
         
         /* ===== ФУТЕР ===== */
         .footer {
@@ -72,9 +42,9 @@
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(12px);
             border-radius: 30px;
-            padding: 8px 20px;
+            padding: 8px 16px;
             display: flex;
-            gap: 8px;
+            gap: 4px;
             z-index: 1000;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -84,14 +54,14 @@
             color: #aaa;
             font-size: 10px;
             text-align: center;
-            padding: 6px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             border-radius: 16px;
             transition: 0.2s;
-            min-width: 50px;
+            min-width: 44px;
         }
         .footer button:hover { background: rgba(255,255,255,0.1); color: white; }
-        .footer button .icon { font-size: 20px; display: block; margin-bottom: 2px; }
+        .footer button .icon { font-size: 18px; display: block; margin-bottom: 2px; }
         .footer button.active { color: #e94560; }
         
         /* ===== МОДАЛЬНОЕ ОКНО ===== */
@@ -131,12 +101,7 @@
         }
         .modal .close-btn:hover { color: white; }
         
-        .building-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 8px;
-        }
+        .building-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
         .building-item {
             display: flex;
             align-items: center;
@@ -152,19 +117,11 @@
             background: rgba(255,255,255,0.12);
             border-color: rgba(255,255,255,0.2);
         }
-        .building-item img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.05);
-        }
         .building-item .info { flex: 1; }
         .building-item .info .bname { font-size: 14px; }
         .building-item .info .bsize { font-size: 11px; color: #888; }
         .building-item .info .bcost { font-size: 12px; color: #f1c40f; }
         
-        /* ===== УВЕДОМЛЕНИЕ ===== */
         .toast {
             position: fixed;
             bottom: 100px;
@@ -186,7 +143,6 @@
         .toast.error { border-color: #e74c3c; }
         .toast.info { border-color: #3498db; }
         
-        /* ===== СКРОЛЛ ===== */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
@@ -194,12 +150,10 @@
 </head>
 <body>
 
-<!-- ===== КАРТА ===== -->
 <div id="mapContainer">
-    <div id="mapCanvas"></div>
+    <canvas id="gameCanvas"></canvas>
 </div>
 
-<!-- ===== ФУТЕР ===== -->
 <div class="footer">
     <button class="active" onclick="centerMap()"><span class="icon">🏠</span>Главная</button>
     <button onclick="showStats()"><span class="icon">📊</span>Статистика</button>
@@ -207,7 +161,6 @@
     <button onclick="closeApp()"><span class="icon">❌</span>Закрыть</button>
 </div>
 
-<!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
 <div class="modal-overlay" id="buildModal">
     <div class="modal">
         <button class="close-btn" onclick="closeModal()">✕</button>
@@ -216,318 +169,582 @@
     </div>
 </div>
 
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
 <script>
-    // ==========================================
-    // 1. ИНИЦИАЛИЗАЦИЯ TELEGRAM
-    // ==========================================
-    
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    const user = tg.initDataUnsafe.user || { id: 0, username: 'Гость' };
-    
-    // ==========================================
-    // 2. ДАННЫЕ О ЗДАНИЯХ
-    // ==========================================
-    
-    // ЗДЕСЬ ТЫ МЕНЯЕШЬ ССЫЛКУ НА СВОЙ РЕПОЗИТОРИЙ!
-    const BASE_URL = 'https://твой-ник.github.io/my-city/buildings/';
-    
-    const BUILDINGS_DATA = [
-        // 2×2
-        { id: 'house', name: 'Жилой дом', size: '2×2', cost: 500, img: 'house.png' },
-        { id: 'shop', name: 'Магазин', size: '2×2', cost: 400, img: 'shop.png' },
-        { id: 'cafe', name: 'Кофейня', size: '2×2', cost: 350, img: 'cafe.png' },
-        { id: 'workshop', name: 'Мастерская', size: '2×2', cost: 300, img: 'workshop.png' },
-        { id: 'transformer', name: 'Трансформатор', size: '2×2', cost: 250, img: 'transformer.png' },
-        // 3×3
-        { id: 'school', name: 'Школа', size: '3×3', cost: 700, img: 'school.png' },
-        { id: 'kindergarten', name: 'Детский сад', size: '3×3', cost: 600, img: 'kindergarten.png' },
-        { id: 'pharmacy', name: 'Аптека', size: '3×3', cost: 500, img: 'pharmacy.png' },
-        { id: 'supermarket', name: 'Супермаркет', size: '3×3', cost: 800, img: 'supermarket.png' },
-        { id: 'library', name: 'Библиотека', size: '3×3', cost: 550, img: 'library.png' },
-        // 4×4
-        { id: 'hospital', name: 'Больница', size: '4×4', cost: 1200, img: 'hospital.png' },
-        { id: 'apartment', name: 'Жилой комплекс', size: '4×4', cost: 1000, img: 'apartment.png' },
-        { id: 'office', name: 'Офисное здание', size: '4×4', cost: 1100, img: 'office.png' },
-        { id: 'gym', name: 'Спортзал', size: '4×4', cost: 900, img: 'gym.png' },
-        { id: 'restaurant', name: 'Ресторан', size: '4×4', cost: 850, img: 'restaurant.png' },
-        // 5×5
-        { id: 'mall', name: 'Торговый центр', size: '5×5', cost: 1500, img: 'mall.png' },
-        { id: 'theater', name: 'Театр', size: '5×5', cost: 1300, img: 'theater.png' },
-        { id: 'hotel', name: 'Отель', size: '5×5', cost: 1400, img: 'hotel.png' },
-        { id: 'business', name: 'Бизнес-центр', size: '5×5', cost: 1600, img: 'business.png' },
-        { id: 'stadium_small', name: 'Стадион', size: '5×5', cost: 1800, img: 'stadium_small.png' },
-        // 6×6
-        { id: 'factory', name: 'Завод', size: '6×6', cost: 2000, img: 'factory.png' },
-        { id: 'trc', name: 'ТРЦ', size: '6×6', cost: 2500, img: 'trc.png' },
-        { id: 'skyscraper', name: 'Небоскрёб', size: '6×6', cost: 3000, img: 'skyscraper.png' },
-        { id: 'university', name: 'Университет', size: '6×6', cost: 2200, img: 'university.png' },
-        { id: 'stadium_big', name: 'Стадион', size: '6×6', cost: 2800, img: 'stadium_big.png' }
-    ];
-    
-    // ==========================================
-    // 3. ГЕНЕРАЦИЯ КАРТЫ
-    // ==========================================
-    
-    const container = document.getElementById('mapContainer');
-    const canvas = document.getElementById('mapCanvas');
-    const PLOT_SIZE = 80;
-    const GAP = 4;
-    const COLS = 15;
-    const ROWS = 15;
-    
-    let isDragging = false;
-    let startX, startY, offsetX = 0, offsetY = 0;
-    
-    // Список размеров участков
-    const SIZES = ['2×2', '3×3', '4×4', '5×5', '6×6'];
-    const SIZE_MAP = {
-        '2×2': 2, '3×3': 3, '4×4': 4, '5×5': 5, '6×6': 6
-    };
-    
-    function getRandomSize() {
-        return SIZES[Math.floor(Math.random() * SIZES.length)];
+// ============================================================
+// 1. ИНИЦИАЛИЗАЦИЯ TELEGRAM
+// ============================================================
+
+const tg = window.Telegram.WebApp;
+tg.ready();
+const user = tg.initDataUnsafe.user || { id: 0, username: 'Гость' };
+
+// ============================================================
+// 2. НАСТРОЙКИ КАРТЫ
+// ============================================================
+
+const canvas = document.getElementById('gameCanvas');
+const container = document.getElementById('mapContainer');
+
+// Размеры карты в "тайлах"
+const COLS = 18;
+const ROWS = 14;
+const TILE_SIZE = 60;
+
+// Размер карты в пикселях
+const MAP_WIDTH = COLS * TILE_SIZE;
+const MAP_HEIGHT = ROWS * TILE_SIZE;
+
+canvas.width = MAP_WIDTH;
+canvas.height = MAP_HEIGHT;
+canvas.style.width = MAP_WIDTH + 'px';
+canvas.style.height = MAP_HEIGHT + 'px';
+
+const ctx = canvas.getContext('2d');
+
+// Переменные для перемещения
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let startX, startY, dragStartX, dragStartY;
+
+// ============================================================
+// 3. ГЕНЕРАЦИЯ КАРТЫ
+// ============================================================
+
+// Типы тайлов
+const T = {
+    ROAD: 0,
+    GRASS: 1,
+    PARK: 2,
+    WATER: 3,
+    BRIDGE: 4,
+    SQUARE: 5,
+    RAILWAY: 6,
+    BUILDING: 7,
+    EMPTY: 8
+};
+
+// Карта (двумерный массив)
+let map = [];
+
+function generateMap() {
+    // Заполняем травой
+    for (let r = 0; r < ROWS; r++) {
+        map[r] = [];
+        for (let c = 0; c < COLS; c++) {
+            map[r][c] = T.GRASS;
+        }
     }
     
-    function generateMap() {
-        canvas.innerHTML = '';
-        const totalWidth = COLS * (PLOT_SIZE + GAP);
-        const totalHeight = ROWS * (PLOT_SIZE + GAP);
-        canvas.style.width = totalWidth + 'px';
-        canvas.style.height = totalHeight + 'px';
-        
-        for (let row = 0; row < ROWS; row++) {
-            for (let col = 0; col < COLS; col++) {
-                const size = getRandomSize();
-                const sizeVal = SIZE_MAP[size] || 2;
-                const plotSize = PLOT_SIZE * sizeVal + (sizeVal - 1) * GAP;
-                
-                const div = document.createElement('div');
-                div.className = 'plot';
-                div.dataset.row = row;
-                div.dataset.col = col;
-                div.dataset.size = size;
-                div.dataset.sizeVal = sizeVal;
-                
-                const x = col * (PLOT_SIZE + GAP);
-                const y = row * (PLOT_SIZE + GAP);
-                
-                div.style.left = x + 'px';
-                div.style.top = y + 'px';
-                div.style.width = plotSize + 'px';
-                div.style.height = plotSize + 'px';
-                
-                // Цвет в зависимости от размера
-                const colors = {
-                    '2×2': 'rgba(255,100,100,0.2)',
-                    '3×3': 'rgba(100,255,100,0.2)',
-                    '4×4': 'rgba(100,100,255,0.2)',
-                    '5×5': 'rgba(255,255,100,0.2)',
-                    '6×6': 'rgba(255,100,255,0.2)'
-                };
-                div.style.background = colors[size] || 'rgba(255,255,255,0.05)';
-                div.style.borderColor = colors[size]?.replace('0.2', '0.5') || 'rgba(255,255,255,0.3)';
-                
-                div.innerHTML = `
-                    <span class="emoji">🏗️</span>
-                    <span class="name">Участок</span>
-                    <span class="size">${size}</span>
-                `;
-                
-                div.addEventListener('click', () => onPlotClick(row, col, size, div));
-                canvas.appendChild(div);
+    // Дороги (горизонтальные и вертикальные магистрали)
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            const isHorRoad = r % 3 === 1;
+            const isVerRoad = c % 3 === 1;
+            
+            // Вода (извилистая река)
+            const isWater = (r >= 3 && r <= 7 && c >= 5 && c <= 7) ||
+                           (r >= 6 && r <= 9 && c >= 10 && c <= 13) ||
+                           (r >= 2 && r <= 4 && c >= 8 && c <= 10);
+            
+            if (isWater) {
+                map[r][c] = T.WATER;
+            } else if (isHorRoad || isVerRoad) {
+                // Не делаем дороги на воде
+                if (map[r][c] !== T.WATER) {
+                    map[r][c] = T.ROAD;
+                    // Мосты
+                    if (isWater && (isHorRoad || isVerRoad)) {
+                        map[r][c] = T.BRIDGE;
+                    }
+                }
             }
         }
     }
     
-    // ==========================================
-    // 4. ДВИЖЕНИЕ КАРТЫ
-    // ==========================================
-    
-    container.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX - offsetX;
-        startY = e.clientY - offsetY;
-        container.style.cursor = 'grabbing';
-    });
-    
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        offsetX = e.clientX - startX;
-        offsetY = e.clientY - startY;
-        canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    });
-    
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        container.style.cursor = 'grab';
-    });
-    
-    // Тач-события для мобильных
-    let touchStartX, touchStartY, touchOffsetX = 0, touchOffsetY = 0;
-    
-    container.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        touchStartX = touch.clientX - touchOffsetX;
-        touchStartY = touch.clientY - touchOffsetY;
-    }, { passive: true });
-    
-    container.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        touchOffsetX = touch.clientX - touchStartX;
-        touchOffsetY = touch.clientY - touchStartY;
-        canvas.style.transform = `translate(${touchOffsetX}px, ${touchOffsetY}px)`;
-    }, { passive: false });
-    
-    // ==========================================
-    // 5. КЛИК ПО УЧАСТКУ
-    // ==========================================
-    
-    let selectedPlot = null;
-    
-    function onPlotClick(row, col, size, element) {
-        selectedPlot = { row, col, size, element };
-        showToast(`📍 Выбран участок ${row+1}-${col+1} (${size})`, 'info');
-        openBuildModal();
+    // Парк (большой зелёный массив)
+    for (let r = 2; r < 6; r++) {
+        for (let c = 11; c < 16; c++) {
+            if (map[r][c] !== T.WATER && map[r][c] !== T.ROAD) {
+                map[r][c] = T.PARK;
+            }
+        }
     }
     
-    // ==========================================
-    // 6. МОДАЛЬНОЕ ОКНО
-    // ==========================================
+    // Центральная площадь
+    for (let r = 5; r < 9; r++) {
+        for (let c = 5; c < 9; c++) {
+            if (map[r][c] !== T.WATER && map[r][c] !== T.ROAD) {
+                map[r][c] = T.SQUARE;
+            }
+        }
+    }
     
-    function openBuildModal() {
-        const modal = document.getElementById('buildModal');
-        const list = document.getElementById('buildingList');
-        list.innerHTML = '';
+    // Участки для застройки (разных цветов)
+    const plotPositions = [
+        {r: 1, c: 1, size: 2}, {r: 1, c: 4, size: 2}, {r: 2, c: 8, size: 3},
+        {r: 4, c: 1, size: 3}, {r: 4, c: 10, size: 4}, {r: 5, c: 12, size: 2},
+        {r: 7, c: 1, size: 4}, {r: 7, c: 10, size: 5}, {r: 8, c: 12, size: 3},
+        {r: 10, c: 1, size: 2}, {r: 10, c: 4, size: 3}, {r: 10, c: 10, size: 6},
+        {r: 11, c: 6, size: 4}, {r: 11, c: 12, size: 2}, {r: 12, c: 2, size: 5},
+        {r: 12, c: 8, size: 3}, {r: 13, c: 4, size: 2}, {r: 13, c: 10, size: 4}
+    ];
+    
+    plotPositions.forEach(p => {
+        for (let dr = 0; dr < p.size; dr++) {
+            for (let dc = 0; dc < p.size; dc++) {
+                const rr = p.r + dr;
+                const cc = p.c + dc;
+                if (rr < ROWS && cc < COLS && map[rr][cc] === T.GRASS) {
+                    map[rr][cc] = T.EMPTY;
+                }
+            }
+        }
+    });
+}
+
+// ============================================================
+// 4. РИСОВАНИЕ КАРТЫ
+// ============================================================
+
+function drawMap() {
+    ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+    
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            const x = c * TILE_SIZE;
+            const y = r * TILE_SIZE;
+            const tile = map[r][c];
+            
+            switch(tile) {
+                case T.GRASS:
+                    ctx.fillStyle = '#4a8f5c';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    // Добавляем текстуру травы
+                    for (let i = 0; i < 5; i++) {
+                        const gx = x + Math.random() * TILE_SIZE;
+                        const gy = y + Math.random() * TILE_SIZE;
+                        ctx.fillStyle = Math.random() > 0.5 ? '#3d7a4e' : '#5a9f6a';
+                        ctx.fillRect(gx, gy, 2, 2);
+                    }
+                    break;
+                    
+                case T.ROAD:
+                    ctx.fillStyle = '#4a4a4a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    // Разметка дороги
+                    ctx.fillStyle = '#666';
+                    if (r % 3 === 1) {
+                        // Горизонтальная дорога
+                        for (let i = 0; i < 8; i++) {
+                            ctx.fillRect(x + i * 8 + 2, y + 28, 4, 4);
+                        }
+                    }
+                    if (c % 3 === 1) {
+                        // Вертикальная дорога
+                        for (let i = 0; i < 8; i++) {
+                            ctx.fillRect(x + 28, y + i * 8 + 2, 4, 4);
+                        }
+                    }
+                    break;
+                    
+                case T.PARK:
+                    ctx.fillStyle = '#2d7a3a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    // Деревья в парке
+                    for (let i = 0; i < 6; i++) {
+                        const tx = x + 10 + Math.random() * 40;
+                        const ty = y + 10 + Math.random() * 40;
+                        ctx.beginPath();
+                        ctx.arc(tx, ty, 6 + Math.random() * 4, 0, Math.PI * 2);
+                        ctx.fillStyle = '#1a5a2a';
+                        ctx.fill();
+                        ctx.fillStyle = '#2a7a3a';
+                        ctx.beginPath();
+                        ctx.arc(tx, ty, 4 + Math.random() * 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    break;
+                    
+                case T.WATER:
+                    // Вода с волнами
+                    const grad = ctx.createLinearGradient(x, y, x + TILE_SIZE, y + TILE_SIZE);
+                    grad.addColorStop(0, '#2980b9');
+                    grad.addColorStop(0.5, '#3498db');
+                    grad.addColorStop(1, '#1a6a9a');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    // Волны
+                    for (let i = 0; i < 3; i++) {
+                        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        const wx = x + 10 + i * 15 + Math.sin(Date.now() / 2000 + i) * 3;
+                        const wy = y + 10 + i * 15 + Math.cos(Date.now() / 3000 + i) * 3;
+                        ctx.arc(wx, wy, 8, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                    break;
+                    
+                case T.BRIDGE:
+                    ctx.fillStyle = '#8a7a5a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    ctx.fillStyle = '#6a5a3a';
+                    ctx.fillRect(x + 2, y + 2, TILE_SIZE - 4, 6);
+                    ctx.fillRect(x + 2, y + TILE_SIZE - 8, TILE_SIZE - 4, 6);
+                    break;
+                    
+                case T.SQUARE:
+                    // Центральная площадь (плитка)
+                    ctx.fillStyle = '#8a8a8a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    // Рисунок плитки
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            ctx.fillStyle = (i + j) % 2 === 0 ? '#9a9a9a' : '#7a7a7a';
+                            ctx.fillRect(x + i * 20 + 2, y + j * 20 + 2, 18, 18);
+                        }
+                    }
+                    // Фонтан в центре площади
+                    const cx = x + TILE_SIZE/2;
+                    const cy = y + TILE_SIZE/2;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3498db';
+                    ctx.fill();
+                    ctx.strokeStyle = '#7f8c8d';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+                    ctx.stroke();
+                    // Статуя
+                    ctx.fillStyle = '#d4a574';
+                    ctx.fillRect(cx - 3, cy - 10, 6, 6);
+                    ctx.fillRect(cx - 1, cy - 16, 2, 6);
+                    break;
+                    
+                case T.RAILWAY:
+                    ctx.fillStyle = '#5a5a5a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    ctx.fillStyle = '#7a7a7a';
+                    for (let i = 0; i < 6; i++) {
+                        ctx.fillRect(x + i * 10, y + 12, 4, 4);
+                        ctx.fillRect(x + i * 10 + 5, y + 12 + 8, 4, 4);
+                    }
+                    break;
+                    
+                case T.EMPTY:
+                    // Участок для застройки
+                    ctx.fillStyle = '#6a8a5a';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                    ctx.strokeStyle = '#8aaa7a';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+                    // Мигающая рамка
+                    ctx.strokeStyle = 'rgba(255,255,200,0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 4]);
+                    ctx.strokeRect(x + 4, y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+                    ctx.setLineDash([]);
+                    // Надпись
+                    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🏗️', x + TILE_SIZE/2, y + TILE_SIZE/2 + 4);
+                    break;
+                    
+                default:
+                    ctx.fillStyle = '#4a8f5c';
+                    ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+            }
+        }
+    }
+}
+
+// ============================================================
+// 5. АНИМАЦИИ
+// ============================================================
+
+let cars = [];
+let birds = [];
+
+function createCars() {
+    const colors = ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71', '#e67e22', '#9b59b6', '#ecf0f1'];
+    for (let i = 0; i < 6; i++) {
+        cars.push({
+            x: Math.random() * MAP_WIDTH,
+            y: Math.random() * MAP_HEIGHT,
+            speed: 0.5 + Math.random() * 1,
+            angle: Math.random() * Math.PI * 2,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            size: 4 + Math.random() * 2
+        });
+    }
+}
+
+function createBirds() {
+    for (let i = 0; i < 8; i++) {
+        birds.push({
+            x: Math.random() * MAP_WIDTH,
+            y: 20 + Math.random() * 200,
+            speed: 0.3 + Math.random() * 0.5,
+            wingPhase: Math.random() * Math.PI * 2,
+            amplitude: 5 + Math.random() * 10,
+            size: 3 + Math.random() * 2
+        });
+    }
+}
+
+function updateCars() {
+    cars.forEach(car => {
+        car.x += Math.cos(car.angle) * car.speed;
+        car.y += Math.sin(car.angle) * car.speed;
         
-        // Фильтруем здания по размеру участка
-        const size = selectedPlot?.size || '2×2';
-        const filtered = BUILDINGS_DATA.filter(b => b.size === size);
-        
-        if (filtered.length === 0) {
-            list.innerHTML = '<p style="color:#888;">Нет зданий для этого размера</p>';
-        } else {
-            filtered.forEach(b => {
-                const item = document.createElement('div');
-                item.className = 'building-item';
-                item.innerHTML = `
-                    <img src="${BASE_URL}${b.img}" alt="${b.name}" onerror="this.style.display='none'">
-                    <div class="info">
-                        <div class="bname">${b.name}</div>
-                        <div class="bsize">${b.size}</div>
-                        <div class="bcost">💰 ${b.cost} монет</div>
-                    </div>
-                `;
-                item.addEventListener('click', () => buildBuilding(b));
-                list.appendChild(item);
-            });
+        // Ограничение в пределах карты
+        if (car.x < 0 || car.x > MAP_WIDTH || car.y < 0 || car.y > MAP_HEIGHT) {
+            car.angle += Math.PI / 2;
+            car.x = Math.max(10, Math.min(MAP_WIDTH - 10, car.x));
+            car.y = Math.max(10, Math.min(MAP_HEIGHT - 10, car.y));
         }
         
-        modal.classList.add('active');
-    }
-    
-    function closeModal() {
-        document.getElementById('buildModal').classList.remove('active');
-    }
-    
-    // ==========================================
-    // 7. ПОСТРОЙКА ЗДАНИЯ
-    // ==========================================
-    
-    function buildBuilding(building) {
-        if (!selectedPlot) {
-            showToast('❌ Сначала выбери участок!', 'error');
-            return;
+        // Случайная смена направления
+        if (Math.random() < 0.005) {
+            car.angle += (Math.random() - 0.5) * 1.5;
         }
+    });
+}
+
+function drawCars() {
+    cars.forEach(car => {
+        const x = car.x;
+        const y = car.y;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(car.angle);
         
-        // Отправляем данные боту
-        const data = {
-            action: 'build',
-            building: building.id,
-            name: building.name,
-            cost: building.cost,
-            size: building.size,
-            row: selectedPlot.row,
-            col: selectedPlot.col,
-            user_id: user.id
-        };
+        // Тень
+        ctx.shadowColor = 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = 6;
         
-        tg.sendData(JSON.stringify(data));
+        // Кузов
+        ctx.fillStyle = car.color;
+        ctx.fillRect(-car.size, -car.size/2, car.size * 2, car.size);
         
-        // Обновляем отображение участка
-        const el = selectedPlot.element;
-        const imgUrl = BASE_URL + building.img;
-        el.innerHTML = `
-            <span class="emoji">🏢</span>
-            <span class="name">${building.name}</span>
-            <span class="size">${building.size}</span>
+        // Окна
+        ctx.fillStyle = 'rgba(200,230,255,0.6)';
+        ctx.fillRect(-car.size + 2, -car.size/2 + 2, car.size - 2, car.size/2 - 4);
+        
+        ctx.shadowBlur = 0;
+        ctx.restore();
+    });
+}
+
+function drawBirds() {
+    const time = Date.now() / 1000;
+    birds.forEach(bird => {
+        const x = bird.x + Math.sin(time * 0.5 + bird.wingPhase) * 20;
+        const y = bird.y + Math.sin(time * bird.speed * 2 + bird.wingPhase) * bird.amplitude;
+        
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Тело
+        ctx.fillStyle = '#2c3e50';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, bird.size * 1.5, bird.size * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Крылья (машущие)
+        const wingAngle = Math.sin(time * 2 + bird.wingPhase) * 0.4;
+        ctx.fillStyle = '#34495e';
+        ctx.beginPath();
+        ctx.ellipse(-bird.size, -bird.size * 0.5, bird.size * 0.8, bird.size * 0.3, -wingAngle, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(-bird.size, bird.size * 0.5, bird.size * 0.8, bird.size * 0.3, wingAngle, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.restore();
+        
+        // Обновление позиции птицы
+        bird.x += Math.cos(time * 0.1 + bird.wingPhase) * bird.speed * 0.3;
+        if (bird.x > MAP_WIDTH) bird.x = 0;
+        if (bird.x < 0) bird.x = MAP_WIDTH;
+    });
+}
+
+// ============================================================
+// 6. ДВИЖЕНИЕ КАРТЫ (С ОГРАНИЧЕНИЯМИ)
+// ============================================================
+
+const MAX_OFFSET_X = 0;
+const MIN_OFFSET_X = window.innerWidth - MAP_WIDTH;
+const MAX_OFFSET_Y = 0;
+const MIN_OFFSET_Y = window.innerHeight - MAP_HEIGHT;
+
+function clampOffset() {
+    offsetX = Math.min(MAX_OFFSET_X, Math.max(MIN_OFFSET_X, offsetX));
+    offsetY = Math.min(MAX_OFFSET_Y, Math.max(MIN_OFFSET_Y, offsetY));
+}
+
+function applyOffset() {
+    canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+}
+
+// ===== МЫШЬ =====
+container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX - offsetX;
+    dragStartY = e.clientY - offsetY;
+    container.style.cursor = 'grabbing';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    offsetX = e.clientX - dragStartX;
+    offsetY = e.clientY - dragStartY;
+    clampOffset();
+    applyOffset();
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+    container.style.cursor = 'grab';
+});
+
+// ===== ТАЧ =====
+let touchDragStartX = 0, touchDragStartY = 0;
+
+container.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    touchDragStartX = touch.clientX - offsetX;
+    touchDragStartY = touch.clientY - offsetY;
+}, { passive: true });
+
+container.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    offsetX = touch.clientX - touchDragStartX;
+    offsetY = touch.clientY - touchDragStartY;
+    clampOffset();
+    applyOffset();
+}, { passive: false });
+
+// ============================================================
+// 7. ОСТАЛЬНЫЕ ФУНКЦИИ
+// ============================================================
+
+let selectedPlot = null;
+
+function centerMap() {
+    offsetX = Math.round((window.innerWidth - MAP_WIDTH) / 2);
+    offsetY = Math.round((window.innerHeight - MAP_HEIGHT) / 2);
+    clampOffset();
+    applyOffset();
+    showToast('🏠 Карта центрирована', 'info');
+}
+
+function showStats() {
+    tg.sendData(JSON.stringify({ action: 'stats', user_id: user.id }));
+    showToast('📊 Запрос статистики отправлен', 'info');
+}
+
+function closeApp() {
+    tg.close();
+}
+
+function showToast(text, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = text;
+    toast.className = 'toast ' + type + ' show';
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+let toastTimeout = null;
+
+// ============================================================
+// 8. МОДАЛЬНОЕ ОКНО
+// ============================================================
+
+function openBuildModal() {
+    const modal = document.getElementById('buildModal');
+    const list = document.getElementById('buildingList');
+    list.innerHTML = '';
+    
+    const buildings = [
+        { id: 'house', name: 'Жилой дом', size: '2×2', cost: 500 },
+        { id: 'shop', name: 'Магазин', size: '2×2', cost: 400 },
+        { id: 'school', name: 'Школа', size: '3×3', cost: 700 },
+        { id: 'hospital', name: 'Больница', size: '4×4', cost: 1200 },
+        { id: 'mall', name: 'Торговый центр', size: '5×5', cost: 1500 },
+        { id: 'factory', name: 'Завод', size: '6×6', cost: 2000 }
+    ];
+    
+    buildings.forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'building-item';
+        item.innerHTML = `
+            <div class="info">
+                <div class="bname">${b.name}</div>
+                <div class="bsize">${b.size}</div>
+                <div class="bcost">💰 ${b.cost} монет</div>
+            </div>
         `;
-        el.style.background = 'rgba(46,204,113,0.3)';
-        el.style.borderColor = '#2ecc71';
-        el.style.color = 'white';
-        
-        showToast(`✅ ${building.name} построен!`, 'success');
-        closeModal();
-        selectedPlot = null;
-    }
+        item.addEventListener('click', () => {
+            tg.sendData(JSON.stringify({
+                action: 'build',
+                building: b.id,
+                name: b.name,
+                cost: b.cost,
+                size: b.size,
+                user_id: user.id
+            }));
+            showToast(`✅ ${b.name} построен!`, 'success');
+            closeModal();
+        });
+        list.appendChild(item);
+    });
     
-    // ==========================================
-    // 8. СТАТИСТИКА
-    // ==========================================
-    
-    function showStats() {
-        tg.sendData(JSON.stringify({
-            action: 'stats',
-            user_id: user.id
-        }));
-        showToast('📊 Запрос статистики отправлен', 'info');
-    }
-    
-    // ==========================================
-    // 9. ЦЕНТРИРОВАНИЕ КАРТЫ
-    // ==========================================
-    
-    function centerMap() {
-        offsetX = 0;
-        offsetY = 0;
-        canvas.style.transform = 'translate(0px, 0px)';
-        showToast('🏠 Карта центрирована', 'info');
-    }
-    
-    // ==========================================
-    // 10. ЗАКРЫТИЕ
-    // ==========================================
-    
-    function closeApp() {
-        tg.close();
-    }
-    
-    // ==========================================
-    // 11. TOAST-УВЕДОМЛЕНИЯ
-    // ==========================================
-    
-    let toastTimeout = null;
-    
-    function showToast(text, type = 'info') {
-        const toast = document.getElementById('toast');
-        toast.textContent = text;
-        toast.className = 'toast ' + type + ' show';
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-    
-    // ==========================================
-    // 12. ЗАПУСК
-    // ==========================================
-    
-    generateMap();
-    showToast('🏙️ Добро пожаловать! Выбери участок', 'info');
+    modal.classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('buildModal').classList.remove('active');
+}
+
+// ============================================================
+// 9. АНИМАЦИОННЫЙ ЦИКЛ
+// ============================================================
+
+function gameLoop() {
+    updateCars();
+    drawMap();
+    drawCars();
+    drawBirds();
+    requestAnimationFrame(gameLoop);
+}
+
+// ============================================================
+// 10. ЗАПУСК
+// ============================================================
+
+generateMap();
+createCars();
+createBirds();
+centerMap();
+gameLoop();
+
+// Обновление размеров при изменении окна
+window.addEventListener('resize', () => {
+    centerMap();
+});
+
+showToast('🏙️ Добро пожаловать в Городской Магнат!', 'info');
+
+console.log('✅ Карта загружена!');
+console.log(`📐 Размер: ${COLS}×${ROWS} тайлов, ${MAP_WIDTH}×${MAP_HEIGHT} пикселей`);
 </script>
 </body>
 </html>
