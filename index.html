@@ -6,270 +6,528 @@
     <title>🏙️ Городской Магнат</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #1a1a2e;
             color: white;
-            padding: 15px;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
         }
-        .header {
-            background: #16213e;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .header h1 { font-size: 22px; color: #e94560; }
-        .header .info { font-size: 13px; color: #aaa; margin-top: 5px; }
         
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+        /* ===== КОНТЕЙНЕР КАРТЫ ===== */
+        #mapContainer {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+            background: #1a1a2e;
         }
-        .cell {
+        #mapContainer:active { cursor: grabbing; }
+        
+        #mapCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3000px;
+            height: 3000px;
             background: #2d2d44;
-            border-radius: 10px;
-            padding: 10px 3px;
-            text-align: center;
-            font-size: 11px;
-            cursor: pointer;
-            transition: 0.2s;
-            min-height: 65px;
+            transition: none;
+        }
+        
+        /* ===== УЧАСТКИ ===== */
+        .plot {
+            position: absolute;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 2px solid transparent;
-        }
-        .cell:hover { background: #3d3d5c; transform: scale(1.02); }
-        .cell.empty { background: #2d2d44; color: #888; }
-        .cell.building { background: #1a5a3a; border-color: #2ecc71; }
-        .cell .emoji { font-size: 26px; }
-        .cell .name { font-size: 10px; margin-top: 3px; }
-        .cell .level { font-size: 9px; color: #f1c40f; }
-        
-        .menu {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .menu button {
-            background: #16213e;
-            border: none;
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 13px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.15s;
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+            background: rgba(255,255,255,0.05);
         }
-        .menu button:hover { background: #1a2a5e; }
+        .plot:hover {
+            border-color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.15);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        .plot .emoji { font-size: 28px; line-height: 1; }
+        .plot .name { font-size: 10px; margin-top: 2px; text-align: center; }
+        .plot .size { font-size: 9px; opacity: 0.5; margin-top: 2px; }
         
-        .modal {
+        /* ===== ФУТЕР ===== */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 8px 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 10px;
+            text-align: center;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: 0.2s;
+            min-width: 50px;
+        }
+        .footer button:hover { background: rgba(255,255,255,0.1); color: white; }
+        .footer button .icon { font-size: 20px; display: block; margin-bottom: 2px; }
+        .footer button.active { color: #e94560; }
+        
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
             justify-content: center;
             align-items: center;
-            z-index: 100;
         }
-        .modal.active { display: flex; }
-        .modal-content {
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
             background: #1a1a2e;
-            padding: 20px;
-            border-radius: 16px;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 380px;
             width: 90%;
-            max-width: 340px;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
         }
-        .modal-content h2 { color: #e94560; margin-bottom: 12px; text-align: center; font-size: 18px; }
-        .modal-content .build-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 4px 0;
-            background: #16213e;
+        .modal h2 { color: #e94560; font-size: 20px; margin-bottom: 12px; text-align: center; }
+        .modal .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
             border: none;
-            color: white;
-            border-radius: 8px;
-            font-size: 13px;
+            color: #666;
+            font-size: 22px;
             cursor: pointer;
-            text-align: left;
         }
-        .modal-content .build-btn:hover { background: #1a2a5e; }
-        .modal-content .close-btn {
-            background: #6b1a1a;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            width: 100%;
+        .modal .close-btn:hover { color: white; }
+        
+        .building-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
             margin-top: 8px;
-            font-size: 14px;
-            cursor: pointer;
         }
-        .modal-content .close-btn:hover { background: #8b1a1a; }
+        .building-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .building-item:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .building-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+        }
+        .building-item .info { flex: 1; }
+        .building-item .info .bname { font-size: 14px; }
+        .building-item .info .bsize { font-size: 11px; color: #888; }
+        .building-item .info .bcost { font-size: 12px; color: #f1c40f; }
+        
+        /* ===== УВЕДОМЛЕНИЕ ===== */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            padding: 12px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            z-index: 3000;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .toast.show { opacity: 1; }
+        .toast.success { border-color: #2ecc71; }
+        .toast.error { border-color: #e74c3c; }
+        .toast.info { border-color: #3498db; }
+        
+        /* ===== СКРОЛЛ ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>🏙️ Городской Магнат</h1>
-    <div class="info" id="userInfo">👤 Загрузка...</div>
+<!-- ===== КАРТА ===== -->
+<div id="mapContainer">
+    <div id="mapCanvas"></div>
 </div>
 
-<div class="grid" id="mapGrid"></div>
-
-<div class="menu">
-    <button onclick="refreshMap()">🔄 Обновить</button>
-    <button onclick="showStats()">📊 Статистика</button>
-    <button onclick="closeApp()">❌ Закрыть</button>
+<!-- ===== ФУТЕР ===== -->
+<div class="footer">
+    <button class="active" onclick="centerMap()"><span class="icon">🏠</span>Главная</button>
+    <button onclick="showStats()"><span class="icon">📊</span>Статистика</button>
+    <button onclick="openBuildModal()"><span class="icon">🏗️</span>Стройка</button>
+    <button onclick="closeApp()"><span class="icon">❌</span>Закрыть</button>
 </div>
 
-<div class="modal" id="buildModal">
-    <div class="modal-content">
+<!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+<div class="modal-overlay" id="buildModal">
+    <div class="modal">
+        <button class="close-btn" onclick="closeModal()">✕</button>
         <h2>🏗️ Строительство</h2>
-        <div id="buildList">
-            <button class="build-btn" onclick="buildBuilding('Жилой дом', 500)">🏠 Жилой дом — 500</button>
-            <button class="build-btn" onclick="buildBuilding('Лесопилка', 400)">🌲 Лесопилка — 400</button>
-            <button class="build-btn" onclick="buildBuilding('Ферма', 300)">🌾 Ферма — 300</button>
-            <button class="build-btn" onclick="buildBuilding('Электростанция', 800)">⚡ Электростанция — 800</button>
-            <button class="build-btn" onclick="buildBuilding('Нефтяная вышка', 1500)">🛢️ Нефтяная вышка — 1500</button>
-            <button class="build-btn" onclick="buildBuilding('Шахта', 1100)">⛏️ Шахта — 1100</button>
-            <button class="build-btn" onclick="buildBuilding('Завод', 1200)">🏭 Завод — 1200</button>
-            <button class="build-btn" onclick="buildBuilding('Школа', 700)">🏫 Школа — 700</button>
-            <button class="build-btn" onclick="buildBuilding('Больница', 750)">🏥 Больница — 750</button>
-            <button class="build-btn" onclick="buildBuilding('Торговый центр', 900)">🏬 Торговый центр — 900</button>
-        </div>
-        <button class="close-btn" onclick="closeModal()">❌ Отмена</button>
+        <div class="building-list" id="buildingList"></div>
     </div>
 </div>
 
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
 <script>
+    // ==========================================
+    // 1. ИНИЦИАЛИЗАЦИЯ TELEGRAM
+    // ==========================================
+    
     const tg = window.Telegram.WebApp;
     tg.ready();
-    
     const user = tg.initDataUnsafe.user || { id: 0, username: 'Гость' };
-    document.getElementById('userInfo').textContent = '👤 @' + user.username + ' | ID: ' + user.id;
     
-    let selectedX = null;
-    let selectedY = null;
+    // ==========================================
+    // 2. ДАННЫЕ О ЗДАНИЯХ
+    // ==========================================
     
-    // ДЕМО-ДАННЫЕ
-    const demoData = {
-        city: 'Мой Город',
-        balance: 5000,
-        cells: []
+    // ЗДЕСЬ ТЫ МЕНЯЕШЬ ССЫЛКУ НА СВОЙ РЕПОЗИТОРИЙ!
+    const BASE_URL = 'https://твой-ник.github.io/my-city/buildings/';
+    
+    const BUILDINGS_DATA = [
+        // 2×2
+        { id: 'house', name: 'Жилой дом', size: '2×2', cost: 500, img: 'house.png' },
+        { id: 'shop', name: 'Магазин', size: '2×2', cost: 400, img: 'shop.png' },
+        { id: 'cafe', name: 'Кофейня', size: '2×2', cost: 350, img: 'cafe.png' },
+        { id: 'workshop', name: 'Мастерская', size: '2×2', cost: 300, img: 'workshop.png' },
+        { id: 'transformer', name: 'Трансформатор', size: '2×2', cost: 250, img: 'transformer.png' },
+        // 3×3
+        { id: 'school', name: 'Школа', size: '3×3', cost: 700, img: 'school.png' },
+        { id: 'kindergarten', name: 'Детский сад', size: '3×3', cost: 600, img: 'kindergarten.png' },
+        { id: 'pharmacy', name: 'Аптека', size: '3×3', cost: 500, img: 'pharmacy.png' },
+        { id: 'supermarket', name: 'Супермаркет', size: '3×3', cost: 800, img: 'supermarket.png' },
+        { id: 'library', name: 'Библиотека', size: '3×3', cost: 550, img: 'library.png' },
+        // 4×4
+        { id: 'hospital', name: 'Больница', size: '4×4', cost: 1200, img: 'hospital.png' },
+        { id: 'apartment', name: 'Жилой комплекс', size: '4×4', cost: 1000, img: 'apartment.png' },
+        { id: 'office', name: 'Офисное здание', size: '4×4', cost: 1100, img: 'office.png' },
+        { id: 'gym', name: 'Спортзал', size: '4×4', cost: 900, img: 'gym.png' },
+        { id: 'restaurant', name: 'Ресторан', size: '4×4', cost: 850, img: 'restaurant.png' },
+        // 5×5
+        { id: 'mall', name: 'Торговый центр', size: '5×5', cost: 1500, img: 'mall.png' },
+        { id: 'theater', name: 'Театр', size: '5×5', cost: 1300, img: 'theater.png' },
+        { id: 'hotel', name: 'Отель', size: '5×5', cost: 1400, img: 'hotel.png' },
+        { id: 'business', name: 'Бизнес-центр', size: '5×5', cost: 1600, img: 'business.png' },
+        { id: 'stadium_small', name: 'Стадион', size: '5×5', cost: 1800, img: 'stadium_small.png' },
+        // 6×6
+        { id: 'factory', name: 'Завод', size: '6×6', cost: 2000, img: 'factory.png' },
+        { id: 'trc', name: 'ТРЦ', size: '6×6', cost: 2500, img: 'trc.png' },
+        { id: 'skyscraper', name: 'Небоскрёб', size: '6×6', cost: 3000, img: 'skyscraper.png' },
+        { id: 'university', name: 'Университет', size: '6×6', cost: 2200, img: 'university.png' },
+        { id: 'stadium_big', name: 'Стадион', size: '6×6', cost: 2800, img: 'stadium_big.png' }
+    ];
+    
+    // ==========================================
+    // 3. ГЕНЕРАЦИЯ КАРТЫ
+    // ==========================================
+    
+    const container = document.getElementById('mapContainer');
+    const canvas = document.getElementById('mapCanvas');
+    const PLOT_SIZE = 80;
+    const GAP = 4;
+    const COLS = 15;
+    const ROWS = 15;
+    
+    let isDragging = false;
+    let startX, startY, offsetX = 0, offsetY = 0;
+    
+    // Список размеров участков
+    const SIZES = ['2×2', '3×3', '4×4', '5×5', '6×6'];
+    const SIZE_MAP = {
+        '2×2': 2, '3×3': 3, '4×4': 4, '5×5': 5, '6×6': 6
     };
     
-    for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 4; j++) {
-            let status = 'empty';
-            let emoji = '🏗️';
-            let name = 'Свободно';
-            let level = '';
-            
-            if (i === 0 && j === 1) {
-                status = 'building';
-                emoji = '🏠';
-                name = 'Жилой дом';
-                level = 'Ур. 2';
-            } else if (i === 1 && j === 0) {
-                status = 'building';
-                emoji = '🌲';
-                name = 'Лесопилка';
-                level = 'Ур. 1';
-            } else if (i === 2 && j === 2) {
-                status = 'building';
-                emoji = '🌾';
-                name = 'Ферма';
-                level = 'Ур. 1';
+    function getRandomSize() {
+        return SIZES[Math.floor(Math.random() * SIZES.length)];
+    }
+    
+    function generateMap() {
+        canvas.innerHTML = '';
+        const totalWidth = COLS * (PLOT_SIZE + GAP);
+        const totalHeight = ROWS * (PLOT_SIZE + GAP);
+        canvas.style.width = totalWidth + 'px';
+        canvas.style.height = totalHeight + 'px';
+        
+        for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col < COLS; col++) {
+                const size = getRandomSize();
+                const sizeVal = SIZE_MAP[size] || 2;
+                const plotSize = PLOT_SIZE * sizeVal + (sizeVal - 1) * GAP;
+                
+                const div = document.createElement('div');
+                div.className = 'plot';
+                div.dataset.row = row;
+                div.dataset.col = col;
+                div.dataset.size = size;
+                div.dataset.sizeVal = sizeVal;
+                
+                const x = col * (PLOT_SIZE + GAP);
+                const y = row * (PLOT_SIZE + GAP);
+                
+                div.style.left = x + 'px';
+                div.style.top = y + 'px';
+                div.style.width = plotSize + 'px';
+                div.style.height = plotSize + 'px';
+                
+                // Цвет в зависимости от размера
+                const colors = {
+                    '2×2': 'rgba(255,100,100,0.2)',
+                    '3×3': 'rgba(100,255,100,0.2)',
+                    '4×4': 'rgba(100,100,255,0.2)',
+                    '5×5': 'rgba(255,255,100,0.2)',
+                    '6×6': 'rgba(255,100,255,0.2)'
+                };
+                div.style.background = colors[size] || 'rgba(255,255,255,0.05)';
+                div.style.borderColor = colors[size]?.replace('0.2', '0.5') || 'rgba(255,255,255,0.3)';
+                
+                div.innerHTML = `
+                    <span class="emoji">🏗️</span>
+                    <span class="name">Участок</span>
+                    <span class="size">${size}</span>
+                `;
+                
+                div.addEventListener('click', () => onPlotClick(row, col, size, div));
+                canvas.appendChild(div);
             }
-            
-            demoData.cells.push({
-                x: i,
-                y: j,
-                status: status,
-                emoji: emoji,
-                name: name,
-                level: level
-            });
         }
     }
     
-    function renderMap() {
-        const grid = document.getElementById('mapGrid');
-        grid.innerHTML = '';
-        
-        demoData.cells.forEach(cell => {
-            const div = document.createElement('div');
-            div.className = 'cell ' + cell.status;
-            div.setAttribute('data-x', cell.x);
-            div.setAttribute('data-y', cell.y);
-            div.innerHTML = `
-                <span class="emoji">${cell.emoji}</span>
-                <span class="name">${cell.name}</span>
-                <span class="level">${cell.level}</span>
-            `;
-            div.onclick = function() { onCellClick(cell.x, cell.y); };
-            grid.appendChild(div);
-        });
+    // ==========================================
+    // 4. ДВИЖЕНИЕ КАРТЫ
+    // ==========================================
+    
+    container.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - offsetX;
+        startY = e.clientY - offsetY;
+        container.style.cursor = 'grabbing';
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        offsetX = e.clientX - startX;
+        offsetY = e.clientY - startY;
+        canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
+    
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        container.style.cursor = 'grab';
+    });
+    
+    // Тач-события для мобильных
+    let touchStartX, touchStartY, touchOffsetX = 0, touchOffsetY = 0;
+    
+    container.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        touchStartX = touch.clientX - touchOffsetX;
+        touchStartY = touch.clientY - touchOffsetY;
+    }, { passive: true });
+    
+    container.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        touchOffsetX = touch.clientX - touchStartX;
+        touchOffsetY = touch.clientY - touchStartY;
+        canvas.style.transform = `translate(${touchOffsetX}px, ${touchOffsetY}px)`;
+    }, { passive: false });
+    
+    // ==========================================
+    // 5. КЛИК ПО УЧАСТКУ
+    // ==========================================
+    
+    let selectedPlot = null;
+    
+    function onPlotClick(row, col, size, element) {
+        selectedPlot = { row, col, size, element };
+        showToast(`📍 Выбран участок ${row+1}-${col+1} (${size})`, 'info');
+        openBuildModal();
     }
     
-    function onCellClick(x, y) {
-        selectedX = x;
-        selectedY = y;
-        document.getElementById('buildModal').classList.add('active');
+    // ==========================================
+    // 6. МОДАЛЬНОЕ ОКНО
+    // ==========================================
+    
+    function openBuildModal() {
+        const modal = document.getElementById('buildModal');
+        const list = document.getElementById('buildingList');
+        list.innerHTML = '';
+        
+        // Фильтруем здания по размеру участка
+        const size = selectedPlot?.size || '2×2';
+        const filtered = BUILDINGS_DATA.filter(b => b.size === size);
+        
+        if (filtered.length === 0) {
+            list.innerHTML = '<p style="color:#888;">Нет зданий для этого размера</p>';
+        } else {
+            filtered.forEach(b => {
+                const item = document.createElement('div');
+                item.className = 'building-item';
+                item.innerHTML = `
+                    <img src="${BASE_URL}${b.img}" alt="${b.name}" onerror="this.style.display='none'">
+                    <div class="info">
+                        <div class="bname">${b.name}</div>
+                        <div class="bsize">${b.size}</div>
+                        <div class="bcost">💰 ${b.cost} монет</div>
+                    </div>
+                `;
+                item.addEventListener('click', () => buildBuilding(b));
+                list.appendChild(item);
+            });
+        }
+        
+        modal.classList.add('active');
     }
     
     function closeModal() {
         document.getElementById('buildModal').classList.remove('active');
-        selectedX = null;
-        selectedY = null;
     }
     
-    function buildBuilding(name, cost) {
-        if (selectedX === null || selectedY === null) {
-            alert('❌ Выбери участок!');
+    // ==========================================
+    // 7. ПОСТРОЙКА ЗДАНИЯ
+    // ==========================================
+    
+    function buildBuilding(building) {
+        if (!selectedPlot) {
+            showToast('❌ Сначала выбери участок!', 'error');
             return;
         }
         
-        tg.sendData(JSON.stringify({
+        // Отправляем данные боту
+        const data = {
             action: 'build',
-            building: name,
-            cost: cost,
-            x: selectedX,
-            y: selectedY,
+            building: building.id,
+            name: building.name,
+            cost: building.cost,
+            size: building.size,
+            row: selectedPlot.row,
+            col: selectedPlot.col,
             user_id: user.id
-        }));
+        };
         
+        tg.sendData(JSON.stringify(data));
+        
+        // Обновляем отображение участка
+        const el = selectedPlot.element;
+        const imgUrl = BASE_URL + building.img;
+        el.innerHTML = `
+            <span class="emoji">🏢</span>
+            <span class="name">${building.name}</span>
+            <span class="size">${building.size}</span>
+        `;
+        el.style.background = 'rgba(46,204,113,0.3)';
+        el.style.borderColor = '#2ecc71';
+        el.style.color = 'white';
+        
+        showToast(`✅ ${building.name} построен!`, 'success');
         closeModal();
-        alert('✅ Запрос на строительство отправлен!');
+        selectedPlot = null;
     }
     
-    function refreshMap() {
-        renderMap();
-        alert('🔄 Карта обновлена!');
-    }
+    // ==========================================
+    // 8. СТАТИСТИКА
+    // ==========================================
     
     function showStats() {
         tg.sendData(JSON.stringify({
             action: 'stats',
             user_id: user.id
         }));
+        showToast('📊 Запрос статистики отправлен', 'info');
     }
+    
+    // ==========================================
+    // 9. ЦЕНТРИРОВАНИЕ КАРТЫ
+    // ==========================================
+    
+    function centerMap() {
+        offsetX = 0;
+        offsetY = 0;
+        canvas.style.transform = 'translate(0px, 0px)';
+        showToast('🏠 Карта центрирована', 'info');
+    }
+    
+    // ==========================================
+    // 10. ЗАКРЫТИЕ
+    // ==========================================
     
     function closeApp() {
         tg.close();
     }
     
-    renderMap();
+    // ==========================================
+    // 11. TOAST-УВЕДОМЛЕНИЯ
+    // ==========================================
+    
+    let toastTimeout = null;
+    
+    function showToast(text, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = text;
+        toast.className = 'toast ' + type + ' show';
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+    
+    // ==========================================
+    // 12. ЗАПУСК
+    // ==========================================
+    
+    generateMap();
+    showToast('🏙️ Добро пожаловать! Выбери участок', 'info');
 </script>
 </body>
 </html>
