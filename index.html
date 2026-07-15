@@ -17,7 +17,7 @@
             display:block; width:100%; height:100%; image-rendering:auto;
             background:transparent;
         }
-
+        /* футер (без изменений) */
         .footer {
             position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
             display:flex; align-items:center; gap:6px; z-index:1000;
@@ -30,8 +30,7 @@
             background:none; border:none; color:#aaa; font-size:10px;
             text-align:center; padding:6px 12px; cursor:pointer;
             border-radius:16px; transition:background 0.2s, color 0.2s;
-            min-width:70px; /* под самую длинную надпись (Resources) */
-            display:flex; flex-direction:column; align-items:center; gap:2px;
+            min-width:70px; display:flex; flex-direction:column; align-items:center; gap:2px;
             font-weight:500;
         }
         .footer button:hover { background:rgba(255,255,255,0.08); color:#fff; }
@@ -93,7 +92,7 @@
 <body>
     <div id="mapContainer"><canvas id="gameCanvas"></canvas></div>
 
-    <!-- Футер (все кнопки одинакового размера, названия на английском) -->
+    <!-- Футер (названия на английском, одинаковые размеры) -->
     <div class="footer" id="footer">
         <button onclick="handleFooter('bank')"><span class="icon">💰</span><span class="label">Bank</span></button>
         <button onclick="handleFooter('resources')"><span class="icon">📦</span><span class="label">Resources</span></button>
@@ -112,12 +111,16 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ===== TELEGRAM =====
+        // ============================================================
+        // 1. TELEGRAM
+        // ============================================================
         const tg = window.Telegram?.WebApp;
         if (tg) tg.ready();
         const user = tg?.initDataUnsafe?.user || { id: 0, username: 'Guest' };
 
-        // ===== КОНСТАНТЫ =====
+        // ============================================================
+        // 2. КОНСТАНТЫ
+        // ============================================================
         const MAP_SIZE = 12000;
         const CELL_SIZE = 600;          // размер ячейки сетки
         const ROAD_WIDTH = 60;          // ширина дороги
@@ -130,7 +133,9 @@
         const PLOT_COLORS = ['#e74c3c', '#2ecc71', '#3498db', '#f1c40f', '#e67e22', '#9b59b6'];
         const PLOT_LABELS = ['2×2', '3×3', '4×4', '5×5', '6×6', '8×8'];
 
-        // ===== КЛАССЫ =====
+        // ============================================================
+        // 3. ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
+        // ============================================================
         class Vector2 { constructor(x,y){this.x=x;this.y=y;} add(v){return new Vector2(this.x+v.x,this.y+v.y);} sub(v){return new Vector2(this.x-v.x,this.y-v.y);} scale(s){return new Vector2(this.x*s,this.y*s);} }
 
         class Camera {
@@ -140,16 +145,18 @@
                 this.targetZoom = 1;
                 this.minZoom = 0.15;
                 this.maxZoom = 3.0;
+                this.sensitivity = 0.15; // повышенная чувствительность
             }
             setZoom(z) { this.targetZoom = Math.min(this.maxZoom, Math.max(this.minZoom, z)); }
             update() {
-                this.zoom += (this.targetZoom - this.zoom) * 0.12;
+                this.zoom += (this.targetZoom - this.zoom) * 0.15; // более плавно и быстро
                 if (Math.abs(this.zoom - this.targetZoom) < 0.001) this.zoom = this.targetZoom;
-                // Ограничение панорамы
+                // Ограничение панорамы с учетом облаков
+                const border = 200; // отступ для облаков
                 const halfW = window.innerWidth / 2 / this.zoom;
                 const halfH = window.innerHeight / 2 / this.zoom;
-                this.offset.x = Math.min(MAP_SIZE - halfW, Math.max(halfW, this.offset.x));
-                this.offset.y = Math.min(MAP_SIZE - halfH, Math.max(halfH, this.offset.y));
+                this.offset.x = Math.min(MAP_SIZE - halfW - border, Math.max(halfW + border, this.offset.x));
+                this.offset.y = Math.min(MAP_SIZE - halfH - border, Math.max(halfH + border, this.offset.y));
             }
             worldToScreen(wx,wy) {
                 return { x: (wx - this.offset.x)*this.zoom + window.innerWidth/2,
@@ -161,25 +168,31 @@
             }
         }
 
-        // ===== ГОРОД =====
+        // ============================================================
+        // 4. ГОРОД
+        // ============================================================
         class City {
             constructor() {
                 this.plots = [];
                 this.trees = [];
                 this.cars = [];
                 this.crosswalks = [];
-                this.roadSegments = []; // для машин
+                this.roadSegments = [];
                 this.intersections = [];
+                this.trafficLights = [];
+                this.pedestrians = [];
+                this.clouds = [];
+                this.centerSquare = null; // сквер
+                this.cityHall = null;     // мэрия
                 this.generate();
             }
 
             generate() {
-                // 1. Строим сетку дорог и перекрёстки
+                // ---- 4.1 Дороги и перекрёстки (сетка) ----
                 const step = CELL_SIZE;
                 const cols = Math.floor(MAP_SIZE / step);
                 const rows = Math.floor(MAP_SIZE / step);
 
-                // Перекрёстки (центры пересечений)
                 for (let r = 0; r <= rows; r++) {
                     for (let c = 0; c <= cols; c++) {
                         const x = c * step;
@@ -188,7 +201,6 @@
                     }
                 }
 
-                // Дороги – сегменты между перекрёстками
                 // Горизонтальные сегменты
                 for (let r = 0; r <= rows; r++) {
                     for (let c = 0; c < cols; c++) {
@@ -218,35 +230,69 @@
                     }
                 }
 
-                // 2. Участки – внутри ячеек, не пересекая дороги и тротуары
-                const margin = ROAD_WIDTH/2 + TROTTOIR_WIDTH + 4; // отступ от центра дороги
-                for (let r = 0; r < rows; r++) {
-                    for (let c = 0; c < cols; c++) {
-                        const cx = c * step + step/2;
-                        const cy = r * step + step/2;
-                        // Проверяем, что внутри ячейки есть место для участка
-                        const available = step - 2*margin;
-                        // Случайно выбираем размер участка, который поместится
-                        const maxSize = Math.min(available, Math.max(...PLOT_SIZES));
-                        const validSizes = PLOT_SIZES.filter(s => s <= maxSize);
-                        if (validSizes.length === 0) continue;
-                        const idx = Math.floor(Math.random() * validSizes.length);
-                        const size = validSizes[idx];
-                        const color = PLOT_COLORS[PLOT_SIZES.indexOf(size)];
-                        const label = PLOT_LABELS[PLOT_SIZES.indexOf(size)];
-                        // Размещаем в центре ячейки
-                        const x = cx - size/2;
-                        const y = cy - size/2;
+                // ---- 4.2 Участки (разных размеров, ~250 шт) ----
+                const margin = ROAD_WIDTH/2 + TROTTOIR_WIDTH + 4;
+                let attempt = 0;
+                while (this.plots.length < 250 && attempt < 10000) {
+                    attempt++;
+                    // Случайная ячейка
+                    const col = Math.floor(Math.random() * cols);
+                    const row = Math.floor(Math.random() * rows);
+                    const cx = col * step + step/2;
+                    const cy = row * step + step/2;
+                    // Случайный размер (из доступных)
+                    const maxSize = Math.min(step - 2*margin, Math.max(...PLOT_SIZES));
+                    const validSizes = PLOT_SIZES.filter(s => s <= maxSize);
+                    if (validSizes.length === 0) continue;
+                    const idx = Math.floor(Math.random() * validSizes.length);
+                    const size = validSizes[idx];
+                    const color = PLOT_COLORS[PLOT_SIZES.indexOf(size)];
+                    const label = PLOT_LABELS[PLOT_SIZES.indexOf(size)];
+                    const x = cx - size/2;
+                    const y = cy - size/2;
+                    // Проверяем, не пересекается ли с уже существующими участками
+                    let overlap = false;
+                    for (let p of this.plots) {
+                        if (x < p.x + p.size && x + size > p.x && y < p.y + p.size && y + size > p.y) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    if (!overlap) {
                         this.plots.push({ x, y, size, color, label });
                     }
                 }
-                // Ограничим до 250 (уже достаточно)
-                while (this.plots.length > 250) this.plots.pop();
+                // Если меньше 250, заполняем оставшиеся маленькими участками
+                while (this.plots.length < 250) {
+                    const col = Math.floor(Math.random() * cols);
+                    const row = Math.floor(Math.random() * rows);
+                    const cx = col * step + step/2;
+                    const cy = row * step + step/2;
+                    const size = 160;
+                    const x = cx - size/2;
+                    const y = cy - size/2;
+                    let overlap = false;
+                    for (let p of this.plots) {
+                        if (x < p.x + p.size && x + size > p.x && y < p.y + p.size && y + size > p.y) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        this.plots.push({ x, y, size, color: '#e74c3c', label: '2×2' });
+                    }
+                }
 
-                // 3. Пешеходные переходы – на каждом перекрёстке, на каждой дороге
+                // ---- 4.3 Центр города: сквер и мэрия ----
+                const cx = MAP_SIZE/2;
+                const cy = MAP_SIZE/2;
+                this.centerSquare = { x: cx - 250, y: cy - 250, w: 500, h: 500 };
+                this.cityHall = { x: cx + 300, y: cy - 150, w: 300, h: 300 };
+
+                // ---- 4.4 Зебры (пешеходные переходы) ----
                 this.intersections.forEach(int => {
                     const {x, y} = int;
-                    // Переходы на север, юг, запад, восток от перекрёстка
+                    // Для каждой стороны перекрёстка создаём зебру
                     const directions = [
                         { dx: 0, dy: -1 }, // север
                         { dx: 0, dy: 1 },  // юг
@@ -254,94 +300,153 @@
                         { dx: 1, dy: 0 }   // восток
                     ];
                     directions.forEach(dir => {
-                        // Проверяем, что есть дорога в этом направлении
                         const nx = x + dir.dx * CELL_SIZE;
                         const ny = y + dir.dy * CELL_SIZE;
                         if (nx < 0 || nx > MAP_SIZE || ny < 0 || ny > MAP_SIZE) return;
-                        // Переход рисуем на расстоянии 20 пикселей от перекрёстка
+                        // Зебра рисуется на расстоянии 20px от перекрёстка
                         const off = 20;
                         const startX = x + dir.dx * off;
                         const startY = y + dir.dy * off;
                         const endX = x + dir.dx * (off + ROAD_WIDTH + 10);
                         const endY = y + dir.dy * (off + ROAD_WIDTH + 10);
-                        // Переход перпендикулярен направлению дороги
+                        // Полосы перпендикулярны направлению дороги
                         let x1, y1, x2, y2;
-                        if (dir.dx === 0) { // вертикальная дорога (переход горизонтальный)
-                            x1 = startX - ROAD_WIDTH/2 - 5;
+                        if (dir.dx === 0) { // вертикальная дорога -> зебра горизонтальная
+                            x1 = startX - ROAD_WIDTH/2 - 10;
                             y1 = startY;
-                            x2 = startX + ROAD_WIDTH/2 + 5;
+                            x2 = startX + ROAD_WIDTH/2 + 10;
                             y2 = startY;
-                        } else { // горизонтальная дорога (переход вертикальный)
+                        } else { // горизонтальная дорога -> зебра вертикальная
                             x1 = startX;
-                            y1 = startY - ROAD_WIDTH/2 - 5;
+                            y1 = startY - ROAD_WIDTH/2 - 10;
                             x2 = startX;
-                            y2 = startY + ROAD_WIDTH/2 + 5;
+                            y2 = startY + ROAD_WIDTH/2 + 10;
                         }
-                        this.crosswalks.push({ x1, y1, x2, y2, dir: dir });
+                        this.crosswalks.push({ x1, y1, x2, y2 });
                     });
                 });
 
-                // 4. Деревья – на тротуарах, не на перекрёстках и не слишком близко друг к другу
-                // Генерируем позиции на тротуарах
+                // ---- 4.5 Светофоры (на углах перекрестков) ----
+                this.intersections.forEach(int => {
+                    const {x, y} = int;
+                    // Углы перекрёстка (отступ от центра)
+                    const offsets = [
+                        { dx: -HALF_ROAD - 20, dy: -HALF_ROAD - 20 },
+                        { dx:  HALF_ROAD + 20, dy: -HALF_ROAD - 20 },
+                        { dx: -HALF_ROAD - 20, dy:  HALF_ROAD + 20 },
+                        { dx:  HALF_ROAD + 20, dy:  HALF_ROAD + 20 }
+                    ];
+                    offsets.forEach(off => {
+                        const lx = x + off.dx;
+                        const ly = y + off.dy;
+                        this.trafficLights.push({
+                            x: lx, y: ly,
+                            state: 'green', // начальное состояние
+                            timer: Math.floor(Math.random() * 200) // случайная задержка
+                        });
+                    });
+                });
+
+                // ---- 4.6 Деревья (на тротуарах) ----
                 const treePositions = [];
-                // Проходим по всем сегментам дорог и добавляем места на тротуаре
                 this.roadSegments.forEach(seg => {
-                    const step = 80; // шаг между деревьями
-                    const count = Math.floor(seg.isHorizontal ? 
-                        Math.abs(seg.x2 - seg.x1) / step : 
+                    const step = 80;
+                    const count = Math.floor(seg.isHorizontal ?
+                        Math.abs(seg.x2 - seg.x1) / step :
                         Math.abs(seg.y2 - seg.y1) / step);
                     for (let i = 0; i < count; i++) {
                         const t = (i + 0.5) / count;
                         let x, y;
                         if (seg.isHorizontal) {
                             x = seg.x1 + t * (seg.x2 - seg.x1);
-                            y = seg.y1 - HALF_ROAD - HALF_TROTTOIR - 10; // верхний тротуар
-                            // также нижний
-                            const y2 = seg.y1 + HALF_ROAD + HALF_TROTTOIR + 10;
-                            // выбираем случайную сторону
-                            if (Math.random() > 0.5) y = y2;
+                            y = seg.y1 - HALF_ROAD - HALF_TROTTOIR - 8;
+                            if (Math.random() > 0.5) y = seg.y1 + HALF_ROAD + HALF_TROTTOIR + 8;
                         } else {
                             y = seg.y1 + t * (seg.y2 - seg.y1);
-                            x = seg.x1 - HALF_ROAD - HALF_TROTTOIR - 10; // левый тротуар
-                            const x2 = seg.x1 + HALF_ROAD + HALF_TROTTOIR + 10;
-                            if (Math.random() > 0.5) x = x2;
+                            x = seg.x1 - HALF_ROAD - HALF_TROTTOIR - 8;
+                            if (Math.random() > 0.5) x = seg.x1 + HALF_ROAD + HALF_TROTTOIR + 8;
                         }
-                        // Проверяем, что точка не на перекрёстке
-                        const onIntersection = this.intersections.some(int => 
-                            Math.hypot(x - int.x, y - int.y) < ROAD_WIDTH/2 + TROTTOIR_WIDTH
+                        // Проверяем, что не на перекрёстке
+                        const onIntersection = this.intersections.some(int =>
+                            Math.hypot(x - int.x, y - int.y) < ROAD_WIDTH/2 + TROTTOIR_WIDTH + 20
                         );
                         if (!onIntersection) {
-                            // Проверяем, что дерево не на участке
-                            const onPlot = this.plots.some(p => 
-                                x > p.x && x < p.x + p.size && y > p.y && y < p.y + p.size
-                            );
-                            if (!onPlot) {
-                                treePositions.push({x, y});
-                            }
+                            treePositions.push({x, y});
                         }
                     }
                 });
-                // Удаляем слишком близкие деревья
+                // Удаляем слишком близкие
                 const minDist = 50;
                 const filtered = [];
                 treePositions.forEach(p => {
                     const tooClose = filtered.some(f => Math.hypot(p.x - f.x, p.y - f.y) < minDist);
                     if (!tooClose) filtered.push(p);
                 });
-                // Ограничим количество
-                while (filtered.length > 300) filtered.pop();
-                this.trees = filtered;
+                this.trees = filtered.slice(0, 300);
 
-                // 5. Машины – создаются динамически в updateCars
+                // ---- 4.7 Облака (граница карты) ----
+                const cloudCount = 40;
+                for (let i = 0; i < cloudCount; i++) {
+                    // Располагаем только по краям
+                    let x, y;
+                    const side = Math.floor(Math.random() * 4);
+                    if (side === 0) { // верх
+                        x = Math.random() * MAP_SIZE;
+                        y = -50 - Math.random() * 400;
+                    } else if (side === 1) { // низ
+                        x = Math.random() * MAP_SIZE;
+                        y = MAP_SIZE + 50 + Math.random() * 400;
+                    } else if (side === 2) { // лево
+                        x = -50 - Math.random() * 400;
+                        y = Math.random() * MAP_SIZE;
+                    } else { // право
+                        x = MAP_SIZE + 50 + Math.random() * 400;
+                        y = Math.random() * MAP_SIZE;
+                    }
+                    const w = 150 + Math.random() * 300;
+                    const h = 60 + Math.random() * 150;
+                    this.clouds.push({ x, y, w, h, opacity: 0.6 + Math.random() * 0.4 });
+                }
+
+                // ---- 4.8 Пешеходы (несколько) ----
+                for (let i = 0; i < 15; i++) {
+                    // Стартуем на тротуаре случайного сегмента
+                    const seg = this.roadSegments[Math.floor(Math.random() * this.roadSegments.length)];
+                    if (!seg) continue;
+                    let x, y, angle;
+                    if (seg.isHorizontal) {
+                        x = seg.x1 + Math.random() * (seg.x2 - seg.x1);
+                        y = seg.y1 - HALF_ROAD - HALF_TROTTOIR - 4;
+                        if (Math.random() > 0.5) y = seg.y1 + HALF_ROAD + HALF_TROTTOIR + 4;
+                        angle = (Math.random() > 0.5) ? 0 : Math.PI;
+                    } else {
+                        y = seg.y1 + Math.random() * (seg.y2 - seg.y1);
+                        x = seg.x1 - HALF_ROAD - HALF_TROTTOIR - 4;
+                        if (Math.random() > 0.5) x = seg.x1 + HALF_ROAD + HALF_TROTTOIR + 4;
+                        angle = (Math.random() > 0.5) ? Math.PI/2 : -Math.PI/2;
+                    }
+                    this.pedestrians.push({
+                        x, y,
+                        angle,
+                        targetX: x,
+                        targetY: y,
+                        speed: 0.3 + Math.random() * 0.4,
+                        state: 'walking',
+                        timer: 0,
+                        waiting: false
+                    });
+                }
             }
 
-            draw(ctx, camera) {
-                const view = this.getViewBounds(camera);
-                // Фон – трава
+            // ============================================================
+            // 5. ОТРИСОВКА
+            // ============================================================
+            draw(ctx) {
+                // ---- Фон (трава) ----
                 ctx.fillStyle = '#4a8f5c';
                 ctx.fillRect(0, 0, MAP_SIZE, MAP_SIZE);
 
-                // ---- ДОРОГИ ----
+                // ---- Дороги ----
                 this.roadSegments.forEach(seg => {
                     ctx.strokeStyle = '#4a4a4a';
                     ctx.lineWidth = seg.width;
@@ -349,7 +454,7 @@
                     ctx.moveTo(seg.x1, seg.y1);
                     ctx.lineTo(seg.x2, seg.y2);
                     ctx.stroke();
-                    // Разметка (осевая линия)
+                    // Разметка
                     ctx.strokeStyle = 'rgba(255,255,255,0.5)';
                     ctx.lineWidth = 2;
                     ctx.setLineDash([12, 20]);
@@ -360,8 +465,7 @@
                     ctx.setLineDash([]);
                 });
 
-                // ---- ТРОТУАРЫ (плитка) ----
-                // Рисуем только вдоль дорог, но не на перекрёстках
+                // ---- Тротуары ----
                 this.roadSegments.forEach(seg => {
                     const w = seg.width;
                     const offset = w/2 + 2;
@@ -369,11 +473,9 @@
                     if (seg.isHorizontal) {
                         const y1 = seg.y1 - offset - TROTTOIR_WIDTH;
                         const y2 = seg.y1 + offset + 2;
-                        // Верхний тротуар
                         ctx.fillRect(seg.x1, y1, seg.x2 - seg.x1, TROTTOIR_WIDTH);
-                        // Нижний тротуар
                         ctx.fillRect(seg.x1, y2, seg.x2 - seg.x1, TROTTOIR_WIDTH);
-                        // Линии плитки (для красоты)
+                        // Линии
                         ctx.strokeStyle = '#7a7a7a';
                         ctx.lineWidth = 1;
                         for (let x = seg.x1 + 20; x < seg.x2; x += 20) {
@@ -406,53 +508,19 @@
                     }
                 });
 
-                // ---- ПЕРЕКРЁСТКИ (чёрные квадраты) ----
-                this.intersections.forEach(int => {
-                    ctx.fillStyle = '#1a1a1a';
-                    const s = ROAD_WIDTH + TROTTOIR_WIDTH * 2 + 4;
-                    ctx.fillRect(int.x - s/2, int.y - s/2, s, s);
-                });
-
-                // ---- ПЕШЕХОДНЫЕ ПЕРЕХОДЫ (зебра) ----
-                this.crosswalks.forEach(cw => {
-                    ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-                    ctx.lineWidth = 8; // жирные полосы
-                    const dx = cw.x2 - cw.x1;
-                    const dy = cw.y2 - cw.y1;
-                    const len = Math.hypot(dx, dy);
-                    const nx = -dy / len;
-                    const ny = dx / len;
-                    // Рисуем 5 параллельных полос
-                    for (let i = -2; i <= 2; i++) {
-                        const offset = i * 12;
-                        const x1 = cw.x1 + nx * offset;
-                        const y1 = cw.y1 + ny * offset;
-                        const x2 = cw.x2 + nx * offset;
-                        const y2 = cw.y2 + ny * offset;
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
-                    }
-                });
-
-                // ---- УЧАСТКИ ----
+                // ---- Участки ----
                 this.plots.forEach(plot => {
-                    const x = plot.x; const y = plot.y; const s = plot.size;
-                    // Заливка травы
+                    const x = plot.x, y = plot.y, s = plot.size;
                     ctx.fillStyle = '#4a8f5c';
                     ctx.fillRect(x, y, s, s);
-                    // Рамка
                     ctx.strokeStyle = plot.color;
                     ctx.lineWidth = 4;
                     ctx.strokeRect(x, y, s, s);
-                    // Внутренняя пунктирная
                     ctx.setLineDash([6,6]);
                     ctx.strokeStyle = 'rgba(255,255,255,0.3)';
                     ctx.lineWidth = 1;
                     ctx.strokeRect(x+6, y+6, s-12, s-12);
                     ctx.setLineDash([]);
-                    // Подпись
                     ctx.fillStyle = 'rgba(255,255,255,0.8)';
                     ctx.font = '14px Arial';
                     ctx.textAlign = 'center';
@@ -460,66 +528,268 @@
                     ctx.fillText(plot.label, x+s/2, y+s/2);
                 });
 
-                // ---- ДЕРЕВЬЯ (рисуем красиво) ----
+                // ---- Пешеходные переходы (зебра) ----
+                this.crosswalks.forEach(cw => {
+                    const dx = cw.x2 - cw.x1;
+                    const dy = cw.y2 - cw.y1;
+                    const len = Math.hypot(dx, dy);
+                    const nx = -dy / len;
+                    const ny = dx / len;
+                    // 5 полос
+                    for (let i = -2; i <= 2; i++) {
+                        const offset = i * 12;
+                        const x1 = cw.x1 + nx * offset;
+                        const y1 = cw.y1 + ny * offset;
+                        const x2 = cw.x2 + nx * offset;
+                        const y2 = cw.y2 + ny * offset;
+                        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+                        ctx.lineWidth = 8;
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                    }
+                });
+
+                // ---- Светофоры ----
+                this.trafficLights.forEach(tl => {
+                    const color = tl.state === 'red' ? '#e74c3c' :
+                                 tl.state === 'yellow' ? '#f1c40f' : '#2ecc71';
+                    // Стойка
+                    ctx.fillStyle = '#333';
+                    ctx.fillRect(tl.x - 3, tl.y - 16, 6, 32);
+                    // Сигнал
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(tl.x, tl.y, 6, 0, Math.PI*2);
+                    ctx.fill();
+                    // Ободок
+                    ctx.strokeStyle = '#555';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(tl.x, tl.y, 6, 0, Math.PI*2);
+                    ctx.stroke();
+                });
+
+                // ---- Деревья ----
                 this.trees.forEach(t => {
                     const x = t.x, y = t.y;
                     // Ствол
                     ctx.fillStyle = '#5d4037';
-                    ctx.fillRect(x-3, y-6, 6, 12);
-                    // Крона (два круга)
+                    ctx.fillRect(x-2, y-4, 4, 8);
+                    // Крона (мультяшная)
                     ctx.beginPath();
-                    ctx.arc(x, y-6, 16, 0, Math.PI*2);
+                    ctx.arc(x, y-4, 12, 0, Math.PI*2);
                     ctx.fillStyle = '#2e7d32';
                     ctx.fill();
                     ctx.beginPath();
-                    ctx.arc(x-8, y-10, 12, 0, Math.PI*2);
+                    ctx.arc(x-6, y-8, 8, 0, Math.PI*2);
                     ctx.fillStyle = '#388e3c';
                     ctx.fill();
                     ctx.beginPath();
-                    ctx.arc(x+8, y-10, 12, 0, Math.PI*2);
+                    ctx.arc(x+6, y-8, 8, 0, Math.PI*2);
                     ctx.fillStyle = '#388e3c';
                     ctx.fill();
                     // Блик
                     ctx.beginPath();
-                    ctx.arc(x-4, y-14, 6, 0, Math.PI*2);
+                    ctx.arc(x-3, y-10, 4, 0, Math.PI*2);
                     ctx.fillStyle = 'rgba(255,255,255,0.15)';
                     ctx.fill();
                 });
 
-                // ---- МЭРИЯ И СКВЕР (загружаем изображения, если они есть) ----
-                // Разместим их в центре: мэрия на площади, сквер рядом
-                // Для простоты пока пропустим, т.к. изображения могут не загрузиться
-                // Но если файлы есть, их можно вставить здесь
-                // Например:
-                // if (this.cityHallImage) ctx.drawImage(this.cityHallImage, centerX-200, centerY-200, 400,400);
-                // if (this.gardenImage) ctx.drawImage(this.gardenImage, centerX+300, centerY-150, 300,300);
+                // ---- Облака (граница) ----
+                this.clouds.forEach(c => {
+                    ctx.save();
+                    ctx.globalAlpha = c.opacity;
+                    ctx.fillStyle = '#ffffff';
+                    // Рисуем облако из нескольких кругов
+                    const cx = c.x, cy = c.y, w = c.w, h = c.h;
+                    ctx.beginPath();
+                    ctx.arc(cx - w*0.3, cy + h*0.1, w*0.3, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(cx + w*0.3, cy + h*0.1, w*0.35, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(cx, cy - h*0.2, w*0.4, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(cx - w*0.15, cy - h*0.3, w*0.25, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(cx + w*0.15, cy - h*0.3, w*0.25, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                // ---- Центр: сквер и мэрия (если изображения загружены) ----
+                if (this.squareImage && this.squareImage.complete && this.squareImage.naturalWidth) {
+                    const s = this.centerSquare;
+                    ctx.drawImage(this.squareImage, s.x, s.y, s.w, s.h);
+                }
+                if (this.hallImage && this.hallImage.complete && this.hallImage.naturalWidth) {
+                    const h = this.cityHall;
+                    ctx.drawImage(this.hallImage, h.x, h.y, h.w, h.h);
+                }
+
+                // ---- Машины ----
+                this.cars.forEach(car => {
+                    if (car.image && car.image.complete && car.image.naturalWidth) {
+                        ctx.save();
+                        ctx.translate(car.x, car.y);
+                        ctx.rotate(car.angle);
+                        ctx.drawImage(car.image, -16, -10, 32, 20);
+                        ctx.restore();
+                    } else {
+                        // fallback
+                        ctx.save();
+                        ctx.translate(car.x, car.y);
+                        ctx.rotate(car.angle);
+                        ctx.fillStyle = car.color || '#3498db';
+                        ctx.fillRect(-12, -6, 24, 12);
+                        ctx.restore();
+                    }
+                });
+
+                // ---- Пешеходы ----
+                this.pedestrians.forEach(p => {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    // Маленький кружок – голова
+                    ctx.fillStyle = '#f5cba7';
+                    ctx.beginPath();
+                    ctx.arc(0, -2, 4, 0, Math.PI*2);
+                    ctx.fill();
+                    // Тело
+                    ctx.fillStyle = (p.sex === 'm') ? '#2980b9' : '#e74c3c';
+                    ctx.fillRect(-3, 2, 6, 8);
+                    ctx.restore();
+                });
             }
 
-            getViewBounds(camera) {
-                const halfW = window.innerWidth/2 / camera.zoom;
-                const halfH = window.innerHeight/2 / camera.zoom;
-                return {
-                    left: camera.offset.x - halfW,
-                    right: camera.offset.x + halfW,
-                    top: camera.offset.y - halfH,
-                    bottom: camera.offset.y + halfH
-                };
+            // ============================================================
+            // 6. ОБНОВЛЕНИЕ (логика)
+            // ============================================================
+            update() {
+                // ---- 6.1 Светофоры ----
+                this.trafficLights.forEach(tl => {
+                    tl.timer++;
+                    if (tl.timer > 200) {
+                        tl.timer = 0;
+                        if (tl.state === 'green') tl.state = 'yellow';
+                        else if (tl.state === 'yellow') tl.state = 'red';
+                        else if (tl.state === 'red') tl.state = 'green';
+                    }
+                });
+
+                // ---- 6.2 Пешеходы ----
+                this.pedestrians.forEach(p => {
+                    // Случайное изменение направления
+                    if (Math.random() < 0.01) {
+                        p.angle += (Math.random() - 0.5) * 1.5;
+                    }
+                    p.x += Math.cos(p.angle) * p.speed;
+                    p.y += Math.sin(p.angle) * p.speed;
+                    // Проверка на пересечение с зеброй – ждём зелёный
+                    // (упрощённо: просто гуляем)
+                });
+
+                // ---- 6.3 Машины (обновление позиций) ----
+                this.cars.forEach(car => {
+                    if (car.state === 'moving') {
+                        car.x += Math.cos(car.angle) * car.speed;
+                        car.y += Math.sin(car.angle) * car.speed;
+                        // Проверка светофора
+                        let stop = false;
+                        for (let tl of this.trafficLights) {
+                            const dist = Math.hypot(car.x - tl.x, car.y - tl.y);
+                            if (dist < 25 && tl.state === 'red') {
+                                stop = true;
+                                break;
+                            }
+                        }
+                        if (stop) {
+                            car.state = 'stopping';
+                            car.stopTimer = 30;
+                        }
+                        // Проверка поворота на перекрёстке (плавный поворот)
+                        const turnThreshold = 30;
+                        for (let int of this.intersections) {
+                            const dist = Math.hypot(car.x - int.x, car.y - int.y);
+                            if (dist < turnThreshold && Math.random() < 0.02) {
+                                // Плавный поворот на 90°
+                                const targetAngle = car.angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI/2;
+                                // Будем постепенно менять угол (за несколько кадров)
+                                car.targetAngle = targetAngle;
+                                car.turning = true;
+                                car.turnProgress = 0;
+                            }
+                        }
+                        // Плавный поворот
+                        if (car.turning) {
+                            car.turnProgress += 0.05;
+                            if (car.turnProgress >= 1) {
+                                car.turnProgress = 1;
+                                car.turning = false;
+                            }
+                            car.angle += (car.targetAngle - car.angle) * 0.1;
+                        }
+                        // Если выехал за пределы – удаляем
+                        if (car.x < -200 || car.x > MAP_SIZE+200 || car.y < -200 || car.y > MAP_SIZE+200) {
+                            car.dead = true;
+                        }
+                    } else if (car.state === 'stopping') {
+                        car.stopTimer--;
+                        if (car.stopTimer <= 0) {
+                            car.state = 'moving';
+                            // Проверяем, что светофор не красный
+                            let red = false;
+                            for (let tl of this.trafficLights) {
+                                if (Math.hypot(car.x - tl.x, car.y - tl.y) < 25 && tl.state === 'red') {
+                                    red = true;
+                                    break;
+                                }
+                            }
+                            if (red) car.state = 'stopping';
+                        }
+                    }
+                });
+                this.cars = this.cars.filter(c => !c.dead);
             }
         }
 
-        // ===== ЗАГРУЗКА ИЗОБРАЖЕНИЙ (мэрия, сквер) =====
-        const cityHallImg = new Image();
-        cityHallImg.src = 'City_Hall.jpg';
-        const gardenImg = new Image();
-        gardenImg.src = 'garden.png';
+        // ============================================================
+        // 7. ЗАГРУЗКА ИЗОБРАЖЕНИЙ
+        // ============================================================
+        const carImages = {
+            green: new Image(),
+            red: new Image(),
+            yellow: new Image(),
+            orange: new Image()
+        };
+        carImages.green.src = 'green_car.png';
+        carImages.red.src = 'red_car.png';
+        carImages.yellow.src = 'yellow_car.png';
+        carImages.orange.src = 'orange_car.png';
 
-        // ===== ОСНОВНОЙ КОД =====
+        const squareImg = new Image();
+        squareImg.src = 'garden.png'; // сквер
+        const hallImg = new Image();
+        hallImg.src = 'City_Hall.jpg'; // мэрия
+
+        // ============================================================
+        // 8. ОСНОВНОЙ КОД
+        // ============================================================
         const canvas = document.getElementById('gameCanvas');
         const container = document.getElementById('mapContainer');
         const ctx = canvas.getContext('2d');
 
         let city = new City();
         let camera = new Camera();
+
+        // Прикрепляем изображения к городу
+        city.squareImage = squareImg;
+        city.hallImage = hallImg;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -528,7 +798,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Управление мышью
+        // Управление
         let isDragging = false;
         let dragStart = {x:0,y:0};
         let camStart = {x:0,y:0};
@@ -548,14 +818,13 @@
         });
         document.addEventListener('mouseup', () => { isDragging = false; container.style.cursor = 'grab'; });
 
-        // Колесо мыши (зум)
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
             const delta = e.deltaY > 0 ? -0.1 : 0.1;
-            camera.setZoom(camera.zoom + delta);
+            camera.setZoom(camera.zoom + delta * 1.5); // повышенная чувствительность
         }, { passive: false });
 
-        // Мультитач для зума на телефоне
+        // Мультитач для зума
         let lastTouchDist = 0;
         container.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
@@ -572,22 +841,17 @@
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
                 const dist = Math.hypot(dx, dy);
                 if (lastTouchDist > 0) {
-                    const delta = (dist - lastTouchDist) * 0.01;
+                    const delta = (dist - lastTouchDist) * 0.02;
                     camera.setZoom(camera.zoom + delta);
                 }
                 lastTouchDist = dist;
-            } else {
-                // перемещение одним пальцем
-                if (e.touches.length === 1) {
-                    const touch = e.touches[0];
-                    // логика перемещения
-                    // для простоты реализуем как drag
-                    // но лучше использовать отдельную логику для тача
-                }
+            } else if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                // перемещение одним пальцем – уже реализовано в отдельном обработчике
             }
         }, { passive: false });
 
-        // Также добавим перемещение одним пальцем
+        // Перемещение одним пальцем (для мобильных)
         let touchStartPos = {x:0,y:0};
         let touchCamStart = {x:0,y:0};
         container.addEventListener('touchstart', (e) => {
@@ -610,128 +874,94 @@
             }
         }, { passive: true });
 
-        // ===== МАШИНЫ =====
-        // Функция для создания машин
-        function spawnCar(city) {
-            // Выбираем случайный сегмент дороги
+        // ============================================================
+        // 9. СОЗДАНИЕ МАШИН
+        // ============================================================
+        function spawnCar() {
             const seg = city.roadSegments[Math.floor(Math.random() * city.roadSegments.length)];
             if (!seg) return;
             let x, y, angle;
-            // Стартуем с одного из концов сегмента
             if (seg.isHorizontal) {
                 x = seg.x1 + (Math.random() > 0.5 ? 0 : seg.x2 - seg.x1);
-                y = seg.y1 + (Math.random() > 0.5 ? -10 : 10); // смещение на полосу
-                angle = (x === seg.x1) ? 0 : Math.PI; // вправо или влево
+                y = seg.y1 + (Math.random() > 0.5 ? -12 : 12); // смещение на полосу
+                angle = (x === seg.x1) ? 0 : Math.PI;
             } else {
                 y = seg.y1 + (Math.random() > 0.5 ? 0 : seg.y2 - seg.y1);
-                x = seg.x1 + (Math.random() > 0.5 ? -10 : 10);
+                x = seg.x1 + (Math.random() > 0.5 ? -12 : 12);
                 angle = (y === seg.y1) ? Math.PI/2 : -Math.PI/2;
             }
-            // Цвет случайный
-            const colors = ['#e74c3c', '#3498db', '#f1c40f', '#e67e22', '#2ecc71', '#9b59b6', '#ecf0f1'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
+            const colors = ['green', 'red', 'yellow', 'orange'];
+            const colorKey = colors[Math.floor(Math.random() * colors.length)];
+            const img = carImages[colorKey];
+            if (!img.complete) return;
             const speed = 0.5 + Math.random() * 0.8;
-            // Направление движения (по сегменту)
-            const dir = { x: Math.cos(angle), y: Math.sin(angle) };
-            // Сохраняем текущий сегмент и направление
-            const car = {
+            city.cars.push({
                 x, y,
                 angle,
                 speed,
-                color,
-                seg: seg,
-                dir: dir,
-                state: 'moving' // 'moving', 'turning'
-            };
-            city.cars.push(car);
-        }
-
-        function updateCars(city) {
-            // Спавним новые машины
-            if (city.cars.length < 30 && Math.random() < 0.02) {
-                spawnCar(city);
-            }
-            // Обновляем позиции
-            city.cars.forEach(car => {
-                if (car.state === 'moving') {
-                    car.x += car.dir.x * car.speed;
-                    car.y += car.dir.y * car.speed;
-                    // Проверка, не достиг ли перекрёстка
-                    const threshold = 20;
-                    let nearIntersection = false;
-                    city.intersections.forEach(int => {
-                        const dist = Math.hypot(car.x - int.x, car.y - int.y);
-                        if (dist < threshold) {
-                            nearIntersection = true;
-                            // Принятие решения: поворот или прямо
-                            if (Math.random() < 0.4) { // поворот
-                                // Выбираем новое направление (влево или вправо)
-                                const turn = Math.random() > 0.5 ? 1 : -1;
-                                const newAngle = car.angle + turn * Math.PI/2;
-                                car.angle = newAngle;
-                                car.dir = { x: Math.cos(newAngle), y: Math.sin(newAngle) };
-                                // Смещаем машину на нужную полосу
-                                // При повороте, смещение зависит от направления
-                                // Для простоты сместим на половину ширины дороги
-                                const offset = 20;
-                                if (Math.abs(car.dir.x) > 0.5) {
-                                    // горизонтальное движение
-                                    car.y += (car.dir.x > 0 ? 1 : -1) * offset;
-                                } else {
-                                    car.x += (car.dir.y > 0 ? -1 : 1) * offset;
-                                }
-                            }
-                        }
-                    });
-                    // Если машина вышла за карту – удаляем
-                    if (car.x < -100 || car.x > MAP_SIZE+100 || car.y < -100 || car.y > MAP_SIZE+100) {
-                        car.dead = true;
-                    }
-                }
+                image: img,
+                color: colorKey,
+                state: 'moving',
+                stopTimer: 0,
+                turning: false,
+                targetAngle: angle,
+                turnProgress: 0,
+                dead: false
             });
-            // Удаляем мёртвые
-            city.cars = city.cars.filter(c => !c.dead);
         }
 
-        // ===== РЕНДЕРИНГ =====
-        function render() {
+        // ============================================================
+        // 10. ОСНОВНОЙ ЦИКЛ
+        // ============================================================
+        function gameLoop() {
             camera.update();
-            updateCars(city);
+            // Спавн машин
+            if (city.cars.length < 25 && Math.random() < 0.03) {
+                spawnCar();
+            }
+            // Обновление логики
+            city.update();
 
+            // Отрисовка
             ctx.clearRect(0,0,canvas.width,canvas.height);
             ctx.save();
             ctx.translate(canvas.width/2, canvas.height/2);
             ctx.scale(camera.zoom, camera.zoom);
             ctx.translate(-camera.offset.x, -camera.offset.y);
 
-            city.draw(ctx, camera);
-
-            // ---- РИСУЕМ МАШИНЫ ----
-            city.cars.forEach(car => {
-                ctx.save();
-                ctx.translate(car.x, car.y);
-                ctx.rotate(car.angle);
-                // Кузов
-                ctx.fillStyle = car.color;
-                ctx.shadowColor = 'rgba(0,0,0,0.3)';
-                ctx.shadowBlur = 8;
-                ctx.fillRect(-12, -6, 24, 12);
-                ctx.shadowBlur = 0;
-                // Окна
-                ctx.fillStyle = 'rgba(200,230,255,0.6)';
-                ctx.fillRect(-8, -4, 6, 8);
-                ctx.fillRect(2, -4, 6, 8);
-                ctx.restore();
-            });
+            city.draw(ctx);
 
             ctx.restore();
-            requestAnimationFrame(render);
+            requestAnimationFrame(gameLoop);
         }
 
-        // ===== ЗАПУСК =====
-        render();
+        // ============================================================
+        // 11. ЗАПУСК
+        // ============================================================
+        // Дождёмся загрузки изображений перед стартом
+        let loaded = 0;
+        const total = 1 + Object.keys(carImages).length;
+        function checkLoaded() {
+            loaded++;
+            if (loaded >= total) {
+                // Добавим несколько начальных машин
+                for (let i = 0; i < 8; i++) spawnCar();
+                gameLoop();
+            }
+        }
+        squareImg.onload = checkLoaded;
+        Object.values(carImages).forEach(img => img.onload = checkLoaded);
+        // Если что-то не загрузилось – запускаем через 2 секунды
+        setTimeout(() => {
+            if (loaded < total) {
+                console.warn('Некоторые изображения не загрузились, запускаем без них');
+                gameLoop();
+            }
+        }, 3000);
 
-        // ===== ФУТЕР =====
+        // ============================================================
+        // 12. ФУТЕР И МОДАЛКА
+        // ============================================================
         function handleFooter(action) {
             document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.footer button');
@@ -782,6 +1012,8 @@
         console.log('📐 Участков:', city.plots.length);
         console.log('🌳 Деревьев:', city.trees.length);
         console.log('🚗 Машин:', city.cars.length);
+        console.log('🚦 Светофоров:', city.trafficLights.length);
+        console.log('🚶 Пешеходов:', city.pedestrians.length);
     </script>
 </body>
 </html>
