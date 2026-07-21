@@ -13,7 +13,6 @@
             -webkit-tap-highlight-color: transparent;
             font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
         }
-
         body {
             background: #000;
             display: flex;
@@ -22,9 +21,8 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            touch-action: none;
+            touch-action: pan-x pan-y; /* разрешаем жесты */
         }
-
         #game-container {
             position: relative;
             width: 100%;
@@ -33,31 +31,16 @@
             background: #2d5a27;
             overflow: hidden;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            touch-action: none; /* полностью перехватываем touch */
         }
-
         canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            cursor: grab;
+            touch-action: none;
         }
-        canvas:active {
-            cursor: grabbing;
-        }
-
-        /* --- HUD слои --- */
-        .hud {
-            position: absolute;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .hud > * {
-            pointer-events: auto;
-        }
-
-        /* Стеклянный эффект */
         .glass {
             background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(12px);
@@ -66,8 +49,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             color: white;
         }
-
-        /* Название игры */
         #game-title {
             position: absolute;
             top: 15px;
@@ -82,8 +63,6 @@
             z-index: 20;
             text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
-
-        /* Баланс монет */
         #coin-balance {
             position: absolute;
             top: 65px;
@@ -102,8 +81,6 @@
             height: 24px;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
         }
-
-        /* Баланс кристаллов */
         #crystal-balance {
             position: absolute;
             top: 115px;
@@ -116,7 +93,6 @@
             font-weight: bold;
             font-size: 0.9rem;
             z-index: 20;
-            width: auto;
             min-width: 80px;
             justify-content: center;
         }
@@ -125,8 +101,6 @@
             height: 20px;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
         }
-
-        /* Квесты */
         #quest-btn {
             position: absolute;
             bottom: 120px;
@@ -154,8 +128,6 @@
             transform: scale(0.95);
             background: rgba(255,255,255,0.3);
         }
-
-        /* Полоска опыта */
         #xp-bar-container {
             position: absolute;
             bottom: 95px;
@@ -193,7 +165,7 @@
         }
         #xp-fill {
             height: 100%;
-            width: 0%;
+            width: 12%;
             background: linear-gradient(90deg, #f5e56c, #f7b32b);
             border-radius: 3px;
             box-shadow: 0 0 8px #f7b32b;
@@ -204,8 +176,6 @@
             margin-bottom: 2px;
             letter-spacing: 0.3px;
         }
-
-        /* Футер */
         #footer {
             position: absolute;
             bottom: 0;
@@ -253,27 +223,22 @@
 <div id="game-container">
     <canvas id="gameCanvas"></canvas>
 
-    <!-- HUD -->
     <div id="game-title" class="glass">ГОРОДСКОЙ МАГНАТ</div>
-
     <div id="coin-balance" class="glass">
         <img src="https://Rruslan007.github.io/my-city/money.png" alt="Монеты" onerror="this.style.display='none'; this.nextSibling.style.display='inline';">
         <span style="display:none;">💰</span>
         <span id="coin-amount">12,450</span>
     </div>
-
     <div id="crystal-balance" class="glass">
         <span>💎</span>
         <span id="crystal-amount">340</span>
     </div>
-
     <div id="quest-btn" class="glass">
         <img src="https://Rruslan007.github.io/my-city/tasks_icon.png" alt="Квесты" onerror="this.style.display='none'; this.nextSibling.style.display='block';">
         <span style="display:none; font-size:24px;">📋</span>
         <span>Quests</span>
     </div>
 
-    <!-- XP Bar -->
     <div id="xp-bar-container">
         <span id="xp-label">LVL 1</span>
         <div id="xp-bar-bg">
@@ -282,7 +247,6 @@
         <span id="xp-text">120 / 1000 XP</span>
     </div>
 
-    <!-- Footer -->
     <div id="footer">
         <div class="footer-btn" id="btn-bank">
             <img src="https://Rruslan007.github.io/my-city/bank_icon.png" alt="Bank" onerror="this.style.display='none'; this.nextSibling.style.display='block';">
@@ -317,377 +281,375 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Размеры карты
         const MAP_WIDTH = 30000;
         const MAP_HEIGHT = 20000;
+        const SCALE = 0.22; // чуть крупнее для удобства
 
-        // Камера
-        let camera = { x: -MAP_WIDTH/2 + 200, y: -MAP_HEIGHT/2 + 200 };
+        let camera = { x: MAP_WIDTH/2, y: MAP_HEIGHT/2 };
+        let targetCamera = { x: camera.x, y: camera.y };
         let isDragging = false;
-        let dragStart = { x: 0, y: 0 };
-        let lastCamera = { x: 0, y: 0 };
-
-        // Масштаб фиксированный
-        const SCALE = 0.15; // пикселей карты на 1 пиксель экрана (примерно)
+        let dragStartCam = { x: 0, y: 0 };
 
         // Изображения
-        const images = {};
-        function loadImage(src) {
-            const img = new Image();
-            img.src = src;
-            return img;
-        }
-        images.tree = loadImage('https://Rruslan007.github.io/my-city/tree.png');
-        images.garden = loadImage('https://Rruslan007.github.io/my-city/garden.png');
-        images.cityHall = loadImage('https://Rruslan007.github.io/my-city/City_Hall.jpg');
-        images.greenCar = loadImage('https://Rruslan007.github.io/my-city/green_car.png');
-        images.redCar = loadImage('https://Rruslan007.github.io/my-city/red_car.png');
-        images.yellowCar = loadImage('https://Rruslan007.github.io/my-city/yellow_car.png');
-        images.orangeCar = loadImage('https://Rruslan007.github.io/my-city/orange_car.png');
-        images.cloud = loadImage('https://Rruslan007.github.io/my-city/cloud.png');
-        images.cloud2 = loadImage('https://Rruslan007.github.io/my-city/cloud_2.png');
-        images.lamp = loadImage('https://Rruslan007.github.io/my-city/street_lamp.png');
-        images.greenLight = loadImage('https://Rruslan007.github.io/my-city/green_light.png');
-        images.redLight = loadImage('https://Rruslan007.github.io/my-city/red_light.png');
+        const imgs = {};
+        function loadImg(src) { const i = new Image(); i.src = src; return i; }
+        imgs.tree = loadImg('https://Rruslan007.github.io/my-city/tree.png');
+        imgs.garden = loadImg('https://Rruslan007.github.io/my-city/garden.png');
+        imgs.cityHall = loadImg('https://Rruslan007.github.io/my-city/City_Hall.jpg');
+        imgs.greenCar = loadImg('https://Rruslan007.github.io/my-city/green_car.png');
+        imgs.redCar = loadImg('https://Rruslan007.github.io/my-city/red_car.png');
+        imgs.yellowCar = loadImg('https://Rruslan007.github.io/my-city/yellow_car.png');
+        imgs.orangeCar = loadImg('https://Rruslan007.github.io/my-city/orange_car.png');
+        imgs.cloud = loadImg('https://Rruslan007.github.io/my-city/cloud.png');
+        imgs.cloud2 = loadImg('https://Rruslan007.github.io/my-city/cloud_2.png');
+        imgs.lamp = loadImg('https://Rruslan007.github.io/my-city/street_lamp.png');
+        imgs.greenLight = loadImg('https://Rruslan007.github.io/my-city/green_light.png');
+        imgs.redLight = loadImg('https://Rruslan007.github.io/my-city/red_light.png');
 
         // Таймер день/ночь
-        let dayTime = 0; // 0-300 секунд (5 минут)
-        const CYCLE_DURATION = 300; // 5 минут в секундах
+        let dayTime = 120; // секунд от 0 до 300
+        const CYCLE = 300;
 
-        // Машины
-        let cars = [];
-        const MAX_CARS = 8;
-        const carImages = [images.greenCar, images.redCar, images.yellowCar, images.orangeCar];
-
-        // Генерация дорожной сети (упрощённая)
+        // ---------- ГЕНЕРАЦИЯ ДОРОГ И УЧАСТКОВ ----------
         const roads = [];
         const intersections = [];
         const plots = [];
+        const trees = [];
 
         function generateCity() {
-            // Несколько горизонтальных и вертикальных дорог
-            const hRoadsY = [4000, 8000, 12000, 16000];
-            const vRoadsX = [6000, 12000, 18000, 24000];
+            // Основные магистрали (широкие)
+            const hMain = [2000, 7000, 13000, 18000];
+            const vMain = [5000, 11000, 19000, 25000];
+            // Второстепенные (внутри кварталов)
+            const hSec = [4000, 9500, 15000];
+            const vSec = [8000, 15500, 22000];
 
-            hRoadsY.forEach(y => {
-                roads.push({ x: 0, y: y, width: MAP_WIDTH, height: 64, type: 'h' });
-            });
-            vRoadsX.forEach(x => {
-                roads.push({ x: x, y: 0, width: 64, height: MAP_HEIGHT, type: 'v' });
-            });
+            // Функция добавления дороги
+            function addRoad(x, y, w, h) {
+                roads.push({ x, y, width: w, height: h, type: w > h ? 'h' : 'v' });
+            }
+
+            // Горизонтальные дороги разной ширины
+            [...hMain].forEach(y => addRoad(0, y, MAP_WIDTH, 80));
+            [...hSec].forEach(y => addRoad(0, y, MAP_WIDTH, 56));
+            // Вертикальные
+            [...vMain].forEach(x => addRoad(x, 0, 80, MAP_HEIGHT));
+            [...vSec].forEach(x => addRoad(x, 0, 56, MAP_HEIGHT));
+
+            // Небольшие переулки для разнообразия
+            addRoad(0, 10500, MAP_WIDTH, 48);
+            addRoad(16000, 0, 48, MAP_HEIGHT);
+            addRoad(0, 16500, MAP_WIDTH, 48);
+            addRoad(21000, 0, 48, MAP_HEIGHT);
 
             // Перекрёстки
-            hRoadsY.forEach(y => {
-                vRoadsX.forEach(x => {
+            const allY = [...hMain, ...hSec, 10500, 16500];
+            const allX = [...vMain, ...vSec, 16000, 21000];
+            allY.forEach(y => {
+                allX.forEach(x => {
                     intersections.push({ x, y });
                 });
             });
 
-            // Участки между дорогами
-            for (let i = 0; i < hRoadsY.length - 1; i++) {
-                for (let j = 0; j < vRoadsX.length - 1; j++) {
-                    let x = vRoadsX[j] + 64;
-                    let y = hRoadsY[i] + 64;
-                    let w = vRoadsX[j+1] - vRoadsX[j] - 64;
-                    let h = hRoadsY[i+1] - hRoadsY[i] - 64;
-                    if (w > 160 && h > 160) {
+            // Участки: сетка по осям дорог
+            const sortedX = [...allX].sort((a,b)=>a-b);
+            const sortedY = [...allY].sort((a,b)=>a-b);
+            for (let i = 0; i < sortedX.length-1; i++) {
+                for (let j = 0; j < sortedY.length-1; j++) {
+                    const x = sortedX[i] + (roads.find(r=>r.x===sortedX[i] && r.type==='v')?.width || 80);
+                    const y = sortedY[j] + (roads.find(r=>r.y===sortedY[j] && r.type==='h')?.height || 80);
+                    const w = sortedX[i+1] - x;
+                    const h = sortedY[j+1] - y;
+                    if (w >= 120 && h >= 120) {
                         plots.push({ x, y, width: w, height: h });
                     }
                 }
             }
+
+            // Деревья (естественное распределение)
+            for (let i = 0; i < 380; i++) {
+                let attempts = 0;
+                let placed = false;
+                while (!placed && attempts < 50) {
+                    const tx = 200 + Math.random() * (MAP_WIDTH - 400);
+                    const ty = 200 + Math.random() * (MAP_HEIGHT - 400);
+                    // не на дорогах
+                    const onRoad = roads.some(r => tx > r.x-10 && tx < r.x+r.width+10 && ty > r.y-10 && ty < r.y+r.height+10);
+                    if (!onRoad) {
+                        trees.push({ x: tx, y: ty });
+                        placed = true;
+                    }
+                    attempts++;
+                }
+            }
         }
 
-        // Машины
-        function spawnCars() {
-            if (cars.length >= MAX_CARS) return;
-            if (roads.length === 0) return;
+        // ---------- МАШИНЫ ----------
+        let cars = [];
+        const MAX_CARS = 8;
+        function spawnCar() {
+            if (cars.length >= MAX_CARS || roads.length === 0) return;
             const road = roads[Math.floor(Math.random() * roads.length)];
-            const carImg = carImages[Math.floor(Math.random() * carImages.length)];
-            let startX, startY, dir;
+            const img = [imgs.greenCar, imgs.redCar, imgs.yellowCar, imgs.orangeCar][Math.floor(Math.random()*4)];
+            let x, y, dir;
             if (road.type === 'h') {
-                startY = road.y + road.height/2;
-                startX = road.x + Math.random() * road.width;
+                y = road.y + road.height/2;
+                x = road.x + Math.random() * road.width;
                 dir = Math.random() > 0.5 ? 1 : -1;
             } else {
-                startX = road.x + road.width/2;
-                startY = road.y + Math.random() * road.height;
+                x = road.x + road.width/2;
+                y = road.y + Math.random() * road.height;
                 dir = Math.random() > 0.5 ? 1 : -1;
             }
-            cars.push({
-                img: carImg,
-                x: startX, y: startY,
-                road: road,
-                dir: dir,
-                speed: 0.8 + Math.random() * 1.5,
-                turnProgress: 0
-            });
+            cars.push({ img, x, y, road, dir, speed: 1 + Math.random()*2 });
         }
-
         function updateCars() {
-            cars.forEach((car, idx) => {
-                if (car.road.type === 'h') {
-                    car.x += car.dir * car.speed;
-                    if (car.x > car.road.x + car.road.width || car.x < car.road.x) {
-                        cars.splice(idx, 1);
-                    }
-                } else {
-                    car.y += car.dir * car.speed;
-                    if (car.y > car.road.y + car.road.height || car.y < car.road.y) {
-                        cars.splice(idx, 1);
-                    }
-                }
-            });
-            // Удаление вышедших за границы
             for (let i = cars.length-1; i >= 0; i--) {
                 const c = cars[i];
-                if (c.x < 0 || c.x > MAP_WIDTH || c.y < 0 || c.y > MAP_HEIGHT) {
-                    cars.splice(i,1);
+                if (c.road.type === 'h') {
+                    c.x += c.dir * c.speed;
+                    if (c.x < c.road.x || c.x > c.road.x + c.road.width) cars.splice(i,1);
+                } else {
+                    c.y += c.dir * c.speed;
+                    if (c.y < c.road.y || c.y > c.road.y + c.road.height) cars.splice(i,1);
                 }
             }
         }
 
-        // Отрисовка
-        function drawMap() {
+        // ---------- ОТРИСОВКА (с отсечением) ----------
+        function isVisible(objX, objY, objW, objH) {
+            const left = camera.x - canvas.width/(2*SCALE);
+            const top = camera.y - canvas.height/(2*SCALE);
+            const right = left + canvas.width/SCALE;
+            const bottom = top + canvas.height/SCALE;
+            return !(objX + objW < left || objX > right || objY + objH < top || objY > bottom);
+        }
+
+        function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            // Применяем камеру
-            ctx.translate(-camera.x * SCALE + canvas.width/2, -camera.y * SCALE + canvas.height/2);
+            // Центрирование камеры
+            const offsetX = canvas.width/2 - camera.x * SCALE;
+            const offsetY = canvas.height/2 - camera.y * SCALE;
+            ctx.translate(offsetX, offsetY);
             ctx.scale(SCALE, SCALE);
 
             // Трава
             ctx.fillStyle = '#4c8b3a';
             ctx.fillRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
-            // Рамка трава + облака (упрощённо)
-            ctx.fillStyle = '#3b6e2b';
-            ctx.fillRect(0, 0, MAP_WIDTH, 20);
-            ctx.fillRect(0, MAP_HEIGHT-20, MAP_WIDTH, 20);
-            ctx.fillRect(0, 0, 20, MAP_HEIGHT);
-            ctx.fillRect(MAP_WIDTH-20, 0, 20, MAP_HEIGHT);
-
-            // Облака по краям (статичные)
-            if (images.cloud.complete && images.cloud2.complete) {
-                for (let i = 0; i < 15; i++) {
-                    ctx.drawImage(images.cloud, i*1200, 100, 200, 100);
-                    ctx.drawImage(images.cloud2, i*1100+400, MAP_HEIGHT-200, 200, 100);
+            // Облака края (статично)
+            if (imgs.cloud.complete) {
+                for (let i=0; i<20; i++) {
+                    ctx.drawImage(imgs.cloud, i*1100, 50, 180, 90);
+                    ctx.drawImage(imgs.cloud2, i*1050+300, MAP_HEIGHT-140, 180, 90);
                 }
             }
 
             // Дороги
             roads.forEach(r => {
+                if (!isVisible(r.x, r.y, r.width, r.height)) return;
                 ctx.fillStyle = '#3a3a3a';
                 ctx.fillRect(r.x, r.y, r.width, r.height);
                 // Тротуары
                 ctx.fillStyle = '#b0b0b0';
                 if (r.type === 'h') {
-                    ctx.fillRect(r.x, r.y-18, r.width, 18);
-                    ctx.fillRect(r.x, r.y+r.height, r.width, 18);
+                    ctx.fillRect(r.x, r.y-20, r.width, 20);
+                    ctx.fillRect(r.x, r.y+r.height, r.width, 20);
                 } else {
-                    ctx.fillRect(r.x-18, r.y, 18, r.height);
-                    ctx.fillRect(r.x+r.width, r.y, 18, r.height);
+                    ctx.fillRect(r.x-20, r.y, 20, r.height);
+                    ctx.fillRect(r.x+r.width, r.y, 20, r.height);
                 }
                 // Разметка
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 2;
-                ctx.setLineDash([20, 30]);
+                ctx.setLineDash([22, 32]);
+                ctx.beginPath();
                 if (r.type === 'h') {
-                    ctx.beginPath();
                     ctx.moveTo(r.x, r.y + r.height/2);
                     ctx.lineTo(r.x + r.width, r.y + r.height/2);
-                    ctx.stroke();
                 } else {
-                    ctx.beginPath();
                     ctx.moveTo(r.x + r.width/2, r.y);
                     ctx.lineTo(r.x + r.width/2, r.y + r.height);
-                    ctx.stroke();
                 }
-                ctx.setLineDash([]); // сброс
+                ctx.stroke();
+                ctx.setLineDash([]);
             });
 
-            // Перекрёстки (без тротуаров)
+            // Перекрёстки
             intersections.forEach(i => {
+                if (!isVisible(i.x-40, i.y-40, 160, 160)) return;
                 ctx.fillStyle = '#3a3a3a';
-                ctx.fillRect(i.x-10, i.y-10, 84, 84);
+                ctx.fillRect(i.x-30, i.y-30, 120, 120);
             });
 
-            // Пешеходные переходы (зебры) перед перекрёстками
+            // Зебры
             intersections.forEach(i => {
+                if (!isVisible(i.x-50, i.y-50, 180, 180)) return;
                 ctx.fillStyle = 'white';
                 for (let k = -2; k <= 2; k++) {
-                    ctx.fillRect(i.x-44, i.y-6 + k*8, 22, 6);
-                    ctx.fillRect(i.x+22, i.y-6 + k*8, 22, 6);
-                    ctx.fillRect(i.x-6 + k*8, i.y-44, 6, 22);
-                    ctx.fillRect(i.x-6 + k*8, i.y+22, 6, 22);
+                    ctx.fillRect(i.x-50, i.y-5 + k*10, 24, 6);
+                    ctx.fillRect(i.x+26, i.y-5 + k*10, 24, 6);
+                    ctx.fillRect(i.x-5 + k*10, i.y-50, 6, 24);
+                    ctx.fillRect(i.x-5 + k*10, i.y+26, 6, 24);
                 }
             });
 
             // Участки
             plots.forEach(p => {
-                ctx.fillStyle = 'rgba(200, 200, 100, 0.25)';
+                if (!isVisible(p.x, p.y, p.width, p.height)) return;
+                ctx.fillStyle = 'rgba(210, 210, 120, 0.3)';
                 ctx.fillRect(p.x, p.y, p.width, p.height);
-                ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
                 ctx.lineWidth = 2;
-                ctx.setLineDash([8, 6]);
+                ctx.setLineDash([10, 8]);
                 ctx.strokeRect(p.x, p.y, p.width, p.height);
                 ctx.setLineDash([]);
                 ctx.fillStyle = 'white';
-                ctx.font = 'bold 20px sans-serif';
+                ctx.font = 'bold 22px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(`${Math.round(p.width/64)}x${Math.round(p.height/64)}`, p.x+p.width/2, p.y+p.height/2);
+                ctx.fillText(`${Math.round(p.width/80)}x${Math.round(p.height/80)}`, p.x+p.width/2, p.y+p.height/2);
             });
 
             // Деревья
-            if (images.tree.complete) {
-                for (let i = 0; i < 400; i++) {
-                    let tx = (i * 137 + 500) % (MAP_WIDTH-200);
-                    let ty = (i * 251 + 800) % (MAP_HEIGHT-200);
-                    // Проверка, не на дороге ли
-                    let onRoad = roads.some(r => tx > r.x-10 && tx < r.x+r.width+10 && ty > r.y-10 && ty < r.y+r.height+10);
-                    if (!onRoad) {
-                        ctx.drawImage(images.tree, tx, ty, 40, 60);
-                    }
-                }
+            if (imgs.tree.complete) {
+                trees.forEach(t => {
+                    if (!isVisible(t.x-20, t.y-30, 40, 60)) return;
+                    ctx.drawImage(imgs.tree, t.x-20, t.y-30, 40, 60);
+                });
             }
 
-            // Фонари на тротуарах
-            if (images.lamp.complete) {
+            // Фонари
+            if (imgs.lamp.complete) {
                 roads.forEach(r => {
-                    let count = Math.floor((r.type==='h'?r.width:r.height) / 200);
-                    for (let j = 0; j < count; j++) {
+                    if (!isVisible(r.x-30, r.y-50, r.width+60, r.height+100)) return;
+                    const count = Math.floor((r.type==='h'?r.width:r.height) / 250);
+                    for (let j=0; j<count; j++) {
                         let lx, ly;
-                        if (r.type === 'h') {
-                            lx = r.x + j * 200 + 100;
-                            ly = r.y - 30;
+                        if (r.type==='h') {
+                            lx = r.x + j*250 + 125;
+                            ly = r.y - 35;
+                            ctx.drawImage(imgs.lamp, lx, ly, 20, 44);
+                            ctx.drawImage(imgs.lamp, lx, r.y+r.height+15, 20, 44);
                         } else {
-                            lx = r.x - 30;
-                            ly = r.y + j * 200 + 100;
-                        }
-                        ctx.drawImage(images.lamp, lx, ly, 18, 40);
-                        // Симметрично с другой стороны
-                        if (r.type === 'h') {
-                            ctx.drawImage(images.lamp, lx, r.y + r.height + 12, 18, 40);
-                        } else {
-                            ctx.drawImage(images.lamp, r.x + r.width + 12, ly, 18, 40);
+                            lx = r.x - 35;
+                            ly = r.y + j*250 + 125;
+                            ctx.drawImage(imgs.lamp, lx, ly, 20, 44);
+                            ctx.drawImage(imgs.lamp, r.x+r.width+15, ly, 20, 44);
                         }
                     }
                 });
             }
 
-            // Светофоры на двух углах перекрёстков (нижний правый и верхний левый)
+            // Светофоры
             intersections.forEach((i, idx) => {
-                if (idx % 2 === 0 && images.greenLight.complete && images.redLight.complete) {
-                    ctx.drawImage(images.greenLight, i.x+60, i.y+60, 20, 30);
-                    ctx.drawImage(images.redLight, i.x-80, i.y-80, 20, 30);
+                if (idx%2===0 && imgs.greenLight.complete) {
+                    ctx.drawImage(imgs.greenLight, i.x+40, i.y+40, 24, 36);
+                    ctx.drawImage(imgs.redLight, i.x-64, i.y-64, 24, 36);
                 }
             });
 
-            // Центр города
-            if (images.garden.complete) {
-                ctx.drawImage(images.garden, MAP_WIDTH/2-200, MAP_HEIGHT/2-200, 400, 400);
-            }
-            if (images.cityHall.complete) {
-                ctx.drawImage(images.cityHall, MAP_WIDTH/2+220, MAP_HEIGHT/2-120, 240, 240);
-            }
+            // Центр
+            if (imgs.garden.complete) ctx.drawImage(imgs.garden, MAP_WIDTH/2-200, MAP_HEIGHT/2-200, 400, 400);
+            if (imgs.cityHall.complete) ctx.drawImage(imgs.cityHall, MAP_WIDTH/2+240, MAP_HEIGHT/2-120, 240, 240);
 
             // Машины
-            cars.forEach(car => {
-                if (car.img.complete) {
-                    ctx.save();
-                    ctx.translate(car.x, car.y);
-                    if (car.road.type === 'v') ctx.rotate(Math.PI/2);
-                    ctx.drawImage(car.img, -16, -10, 32, 20);
-                    ctx.restore();
-                }
+            cars.forEach(c => {
+                if (!c.img.complete) return;
+                if (!isVisible(c.x-16, c.y-10, 32, 20)) return;
+                ctx.save();
+                ctx.translate(c.x, c.y);
+                if (c.road.type === 'v') ctx.rotate(Math.PI/2);
+                ctx.drawImage(c.img, -16, -10, 32, 20);
+                ctx.restore();
             });
 
             ctx.restore();
 
-            // Затемнение (ночь)
-            let alpha = 0;
-            if (dayTime < 60) alpha = 0.35 * (1 - dayTime/60);
-            else if (dayTime > 240) alpha = 0.35 * ((dayTime-240)/60);
-            else alpha = 0;
-            ctx.fillStyle = `rgba(0, 0, 20, ${alpha})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Ночной фильтр
+            let night = 0;
+            if (dayTime < 60) night = 0.35 * (1 - dayTime/60);
+            else if (dayTime > 240) night = 0.35 * ((dayTime-240)/60);
+            ctx.fillStyle = `rgba(0,0,20,${night})`;
+            ctx.fillRect(0,0,canvas.width,canvas.height);
         }
 
-        function resizeCanvas() {
-            const container = document.getElementById('game-container');
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        }
-
-        function gameLoop() {
+        // ---------- ИГРОВОЙ ЦИКЛ ----------
+        function loop() {
             updateCars();
-            if (Math.random() < 0.02) spawnCars();
-            dayTime = (dayTime + 1/60) % CYCLE_DURATION;
-            drawMap();
-            requestAnimationFrame(gameLoop);
+            if (Math.random() < 0.03) spawnCar();
+            dayTime = (dayTime + 1/60) % CYCLE;
+            // Плавное приближение камеры к target
+            camera.x += (targetCamera.x - camera.x) * 0.2;
+            camera.y += (targetCamera.y - camera.y) * 0.2;
+            draw();
+            requestAnimationFrame(loop);
         }
 
-        // Обработчики перемещения
-        function getEventPos(e) {
+        // ---------- УПРАВЛЕНИЕ ----------
+        function getPos(e) {
             if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
             return { x: e.clientX, y: e.clientY };
         }
 
-        canvas.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            const pos = getEventPos(e);
-            dragStart = { x: pos.x, y: pos.y };
-            lastCamera = { x: camera.x, y: camera.y };
-        });
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const pos = getEventPos(e);
-            const dx = (pos.x - dragStart.x) / SCALE;
-            const dy = (pos.y - dragStart.y) / SCALE;
-            camera.x = lastCamera.x - dx;
-            camera.y = lastCamera.y - dy;
-            // Границы
-            camera.x = Math.max(0, Math.min(MAP_WIDTH - canvas.width/SCALE, camera.x));
-            camera.y = Math.max(0, Math.min(MAP_HEIGHT - canvas.height/SCALE, camera.y));
-        });
-        window.addEventListener('mouseup', () => { isDragging = false; });
-
-        canvas.addEventListener('touchstart', (e) => {
+        canvas.addEventListener('touchstart', e => {
             e.preventDefault();
             isDragging = true;
-            const pos = getEventPos(e);
-            dragStart = { x: pos.x, y: pos.y };
-            lastCamera = { x: camera.x, y: camera.y };
+            const p = getPos(e);
+            dragStartCam = { x: p.x, y: p.y, camX: targetCamera.x, camY: targetCamera.y };
         });
-        canvas.addEventListener('touchmove', (e) => {
+        canvas.addEventListener('touchmove', e => {
             e.preventDefault();
             if (!isDragging) return;
-            const pos = getEventPos(e);
-            const dx = (pos.x - dragStart.x) / SCALE;
-            const dy = (pos.y - dragStart.y) / SCALE;
-            camera.x = lastCamera.x - dx;
-            camera.y = lastCamera.y - dy;
-            camera.x = Math.max(0, Math.min(MAP_WIDTH - canvas.width/SCALE, camera.x));
-            camera.y = Math.max(0, Math.min(MAP_HEIGHT - canvas.height/SCALE, camera.y));
+            const p = getPos(e);
+            const dx = (p.x - dragStartCam.x) / SCALE;
+            const dy = (p.y - dragStartCam.y) / SCALE;
+            let newX = dragStartCam.camX - dx;
+            let newY = dragStartCam.camY - dy;
+            newX = Math.max(canvas.width/(2*SCALE), Math.min(MAP_WIDTH - canvas.width/(2*SCALE), newX));
+            newY = Math.max(canvas.height/(2*SCALE), Math.min(MAP_HEIGHT - canvas.height/(2*SCALE), newY));
+            targetCamera.x = newX;
+            targetCamera.y = newY;
         });
-        canvas.addEventListener('touchend', () => { isDragging = false; });
+        canvas.addEventListener('touchend', () => isDragging = false);
+        // Мышь
+        canvas.addEventListener('mousedown', e => {
+            isDragging = true;
+            const p = getPos(e);
+            dragStartCam = { x: p.x, y: p.y, camX: targetCamera.x, camY: targetCamera.y };
+        });
+        window.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            const p = getPos(e);
+            const dx = (p.x - dragStartCam.x) / SCALE;
+            const dy = (p.y - dragStartCam.y) / SCALE;
+            targetCamera.x = Math.max(canvas.width/(2*SCALE), Math.min(MAP_WIDTH - canvas.width/(2*SCALE), dragStartCam.camX - dx));
+            targetCamera.y = Math.max(canvas.height/(2*SCALE), Math.min(MAP_HEIGHT - canvas.height/(2*SCALE), dragStartCam.camY - dy));
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
 
-        // Кнопки футера
+        // Кнопки
         document.getElementById('btn-home').addEventListener('click', () => {
-            camera.x = MAP_WIDTH/2 - canvas.width/(2*SCALE);
-            camera.y = MAP_HEIGHT/2 - canvas.height/(2*SCALE);
+            targetCamera.x = MAP_WIDTH/2;
+            targetCamera.y = MAP_HEIGHT/2;
         });
-        document.getElementById('btn-bank').addEventListener('click', () => alert('Bank page (заглушка)'));
-        document.getElementById('btn-resources').addEventListener('click', () => alert('Resources page'));
-        document.getElementById('btn-build').addEventListener('click', () => alert('Build page'));
-        document.getElementById('btn-stats').addEventListener('click', () => alert('Stats page'));
+        document.getElementById('btn-bank').addEventListener('click', () => alert('Bank (заглушка)'));
+        document.getElementById('btn-resources').addEventListener('click', () => alert('Resources'));
+        document.getElementById('btn-build').addEventListener('click', () => alert('Build'));
+        document.getElementById('btn-stats').addEventListener('click', () => alert('Stats'));
 
         // Старт
         generateCity();
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        gameLoop();
-        // Начальная позиция камеры в центр
-        camera.x = MAP_WIDTH/2 - canvas.width/(2*SCALE);
-        camera.y = MAP_HEIGHT/2 - canvas.height/(2*SCALE);
+        function resize() {
+            canvas.width = document.getElementById('game-container').clientWidth;
+            canvas.height = document.getElementById('game-container').clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        targetCamera.x = MAP_WIDTH/2;
+        targetCamera.y = MAP_HEIGHT/2;
+        camera = { ...targetCamera };
+        loop();
     })();
 </script>
 </body>
