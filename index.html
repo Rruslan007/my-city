@@ -21,7 +21,7 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            touch-action: pan-x pan-y; /* разрешаем жесты */
+            touch-action: pan-x pan-y;
         }
         #game-container {
             position: relative;
@@ -31,7 +31,7 @@
             background: #2d5a27;
             overflow: hidden;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            touch-action: none; /* полностью перехватываем touch */
+            touch-action: none;
         }
         canvas {
             position: absolute;
@@ -101,9 +101,10 @@
             height: 20px;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
         }
+        /* Квесты - подняты выше на 1 мм (~4px) */
         #quest-btn {
             position: absolute;
-            bottom: 120px;
+            bottom: 124px; /* было 120px */
             right: 12px;
             display: flex;
             flex-direction: column;
@@ -128,9 +129,10 @@
             transform: scale(0.95);
             background: rgba(255,255,255,0.3);
         }
+        /* Полоска опыта - ближе к футеру (меньше расстояние) */
         #xp-bar-container {
             position: absolute;
-            bottom: 95px;
+            bottom: 86px; /* было 95px, уменьшили до 86px */
             left: 8px;
             right: 8px;
             height: 24px;
@@ -283,12 +285,12 @@
 
         const MAP_WIDTH = 30000;
         const MAP_HEIGHT = 20000;
-        const SCALE = 0.22; // чуть крупнее для удобства
+        const SCALE = 0.22;
 
+        // Камера — теперь без плавности, мгновенное перемещение
         let camera = { x: MAP_WIDTH/2, y: MAP_HEIGHT/2 };
-        let targetCamera = { x: camera.x, y: camera.y };
         let isDragging = false;
-        let dragStartCam = { x: 0, y: 0 };
+        let dragStart = { x: 0, y: 0, camX: 0, camY: 0 };
 
         // Изображения
         const imgs = {};
@@ -306,58 +308,47 @@
         imgs.greenLight = loadImg('https://Rruslan007.github.io/my-city/green_light.png');
         imgs.redLight = loadImg('https://Rruslan007.github.io/my-city/red_light.png');
 
-        // Таймер день/ночь
-        let dayTime = 120; // секунд от 0 до 300
+        // День/ночь
+        let dayTime = 120;
         const CYCLE = 300;
 
-        // ---------- ГЕНЕРАЦИЯ ДОРОГ И УЧАСТКОВ ----------
+        // Дороги, участки, деревья
         const roads = [];
         const intersections = [];
         const plots = [];
-        const trees = [];
+        const trees = []; // массив объектов { x, y, scale }
 
         function generateCity() {
-            // Основные магистрали (широкие)
             const hMain = [2000, 7000, 13000, 18000];
             const vMain = [5000, 11000, 19000, 25000];
-            // Второстепенные (внутри кварталов)
             const hSec = [4000, 9500, 15000];
             const vSec = [8000, 15500, 22000];
 
-            // Функция добавления дороги
             function addRoad(x, y, w, h) {
                 roads.push({ x, y, width: w, height: h, type: w > h ? 'h' : 'v' });
             }
 
-            // Горизонтальные дороги разной ширины
             [...hMain].forEach(y => addRoad(0, y, MAP_WIDTH, 80));
             [...hSec].forEach(y => addRoad(0, y, MAP_WIDTH, 56));
-            // Вертикальные
             [...vMain].forEach(x => addRoad(x, 0, 80, MAP_HEIGHT));
             [...vSec].forEach(x => addRoad(x, 0, 56, MAP_HEIGHT));
-
-            // Небольшие переулки для разнообразия
             addRoad(0, 10500, MAP_WIDTH, 48);
             addRoad(16000, 0, 48, MAP_HEIGHT);
             addRoad(0, 16500, MAP_WIDTH, 48);
             addRoad(21000, 0, 48, MAP_HEIGHT);
 
-            // Перекрёстки
             const allY = [...hMain, ...hSec, 10500, 16500];
             const allX = [...vMain, ...vSec, 16000, 21000];
-            allY.forEach(y => {
-                allX.forEach(x => {
-                    intersections.push({ x, y });
-                });
-            });
+            allY.forEach(y => allX.forEach(x => intersections.push({ x, y })));
 
-            // Участки: сетка по осям дорог
             const sortedX = [...allX].sort((a,b)=>a-b);
             const sortedY = [...allY].sort((a,b)=>a-b);
             for (let i = 0; i < sortedX.length-1; i++) {
                 for (let j = 0; j < sortedY.length-1; j++) {
-                    const x = sortedX[i] + (roads.find(r=>r.x===sortedX[i] && r.type==='v')?.width || 80);
-                    const y = sortedY[j] + (roads.find(r=>r.y===sortedY[j] && r.type==='h')?.height || 80);
+                    const roadW = roads.find(r=>r.x===sortedX[i] && r.type==='v')?.width || 80;
+                    const roadH = roads.find(r=>r.y===sortedY[j] && r.type==='h')?.height || 80;
+                    const x = sortedX[i] + roadW;
+                    const y = sortedY[j] + roadH;
                     const w = sortedX[i+1] - x;
                     const h = sortedY[j+1] - y;
                     if (w >= 120 && h >= 120) {
@@ -366,17 +357,18 @@
                 }
             }
 
-            // Деревья (естественное распределение)
-            for (let i = 0; i < 380; i++) {
+            // Деревья: 150 штук, случайное положение и размер
+            for (let i = 0; i < 150; i++) {
                 let attempts = 0;
                 let placed = false;
-                while (!placed && attempts < 50) {
+                while (!placed && attempts < 100) {
                     const tx = 200 + Math.random() * (MAP_WIDTH - 400);
                     const ty = 200 + Math.random() * (MAP_HEIGHT - 400);
-                    // не на дорогах
-                    const onRoad = roads.some(r => tx > r.x-10 && tx < r.x+r.width+10 && ty > r.y-10 && ty < r.y+r.height+10);
+                    const onRoad = roads.some(r => tx > r.x-15 && tx < r.x+r.width+15 && ty > r.y-15 && ty < r.y+r.height+15);
                     if (!onRoad) {
-                        trees.push({ x: tx, y: ty });
+                        // Случайный масштаб от 0.8 до 2.0
+                        const scale = 0.8 + Math.random() * 1.2;
+                        trees.push({ x: tx, y: ty, scale });
                         placed = true;
                     }
                     attempts++;
@@ -384,7 +376,7 @@
             }
         }
 
-        // ---------- МАШИНЫ ----------
+        // Машины
         let cars = [];
         const MAX_CARS = 8;
         function spawnCar() {
@@ -416,19 +408,19 @@
             }
         }
 
-        // ---------- ОТРИСОВКА (с отсечением) ----------
-        function isVisible(objX, objY, objW, objH) {
+        // Проверка видимости
+        function isVisible(x, y, w, h) {
             const left = camera.x - canvas.width/(2*SCALE);
             const top = camera.y - canvas.height/(2*SCALE);
             const right = left + canvas.width/SCALE;
             const bottom = top + canvas.height/SCALE;
-            return !(objX + objW < left || objX > right || objY + objH < top || objY > bottom);
+            return !(x + w < left || x > right || y + h < top || y > bottom);
         }
 
+        // Отрисовка
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
-            // Центрирование камеры
             const offsetX = canvas.width/2 - camera.x * SCALE;
             const offsetY = canvas.height/2 - camera.y * SCALE;
             ctx.translate(offsetX, offsetY);
@@ -438,7 +430,7 @@
             ctx.fillStyle = '#4c8b3a';
             ctx.fillRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
 
-            // Облака края (статично)
+            // Облака
             if (imgs.cloud.complete) {
                 for (let i=0; i<20; i++) {
                     ctx.drawImage(imgs.cloud, i*1100, 50, 180, 90);
@@ -451,7 +443,6 @@
                 if (!isVisible(r.x, r.y, r.width, r.height)) return;
                 ctx.fillStyle = '#3a3a3a';
                 ctx.fillRect(r.x, r.y, r.width, r.height);
-                // Тротуары
                 ctx.fillStyle = '#b0b0b0';
                 if (r.type === 'h') {
                     ctx.fillRect(r.x, r.y-20, r.width, 20);
@@ -460,7 +451,6 @@
                     ctx.fillRect(r.x-20, r.y, 20, r.height);
                     ctx.fillRect(r.x+r.width, r.y, 20, r.height);
                 }
-                // Разметка
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([22, 32]);
@@ -511,11 +501,14 @@
                 ctx.fillText(`${Math.round(p.width/80)}x${Math.round(p.height/80)}`, p.x+p.width/2, p.y+p.height/2);
             });
 
-            // Деревья
+            // Деревья с разным размером
             if (imgs.tree.complete) {
                 trees.forEach(t => {
-                    if (!isVisible(t.x-20, t.y-30, 40, 60)) return;
-                    ctx.drawImage(imgs.tree, t.x-20, t.y-30, 40, 60);
+                    const baseW = 40, baseH = 60;
+                    const w = baseW * t.scale;
+                    const h = baseH * t.scale;
+                    if (!isVisible(t.x - w/2, t.y - h/2, w, h)) return;
+                    ctx.drawImage(imgs.tree, t.x - w/2, t.y - h/2, w, h);
                 });
             }
 
@@ -574,64 +567,66 @@
             ctx.fillRect(0,0,canvas.width,canvas.height);
         }
 
-        // ---------- ИГРОВОЙ ЦИКЛ ----------
+        // Игровой цикл
         function loop() {
             updateCars();
             if (Math.random() < 0.03) spawnCar();
             dayTime = (dayTime + 1/60) % CYCLE;
-            // Плавное приближение камеры к target
-            camera.x += (targetCamera.x - camera.x) * 0.2;
-            camera.y += (targetCamera.y - camera.y) * 0.2;
             draw();
             requestAnimationFrame(loop);
         }
 
-        // ---------- УПРАВЛЕНИЕ ----------
+        // Управление (мгновенный драг)
         function getPos(e) {
             if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
             return { x: e.clientX, y: e.clientY };
+        }
+
+        function clampCamera() {
+            const halfW = canvas.width / (2 * SCALE);
+            const halfH = canvas.height / (2 * SCALE);
+            camera.x = Math.max(halfW, Math.min(MAP_WIDTH - halfW, camera.x));
+            camera.y = Math.max(halfH, Math.min(MAP_HEIGHT - halfH, camera.y));
         }
 
         canvas.addEventListener('touchstart', e => {
             e.preventDefault();
             isDragging = true;
             const p = getPos(e);
-            dragStartCam = { x: p.x, y: p.y, camX: targetCamera.x, camY: targetCamera.y };
+            dragStart = { x: p.x, y: p.y, camX: camera.x, camY: camera.y };
         });
         canvas.addEventListener('touchmove', e => {
             e.preventDefault();
             if (!isDragging) return;
             const p = getPos(e);
-            const dx = (p.x - dragStartCam.x) / SCALE;
-            const dy = (p.y - dragStartCam.y) / SCALE;
-            let newX = dragStartCam.camX - dx;
-            let newY = dragStartCam.camY - dy;
-            newX = Math.max(canvas.width/(2*SCALE), Math.min(MAP_WIDTH - canvas.width/(2*SCALE), newX));
-            newY = Math.max(canvas.height/(2*SCALE), Math.min(MAP_HEIGHT - canvas.height/(2*SCALE), newY));
-            targetCamera.x = newX;
-            targetCamera.y = newY;
+            const dx = (p.x - dragStart.x) / SCALE;
+            const dy = (p.y - dragStart.y) / SCALE;
+            camera.x = dragStart.camX - dx;
+            camera.y = dragStart.camY - dy;
+            clampCamera();
         });
         canvas.addEventListener('touchend', () => isDragging = false);
-        // Мышь
+
         canvas.addEventListener('mousedown', e => {
             isDragging = true;
             const p = getPos(e);
-            dragStartCam = { x: p.x, y: p.y, camX: targetCamera.x, camY: targetCamera.y };
+            dragStart = { x: p.x, y: p.y, camX: camera.x, camY: camera.y };
         });
         window.addEventListener('mousemove', e => {
             if (!isDragging) return;
             const p = getPos(e);
-            const dx = (p.x - dragStartCam.x) / SCALE;
-            const dy = (p.y - dragStartCam.y) / SCALE;
-            targetCamera.x = Math.max(canvas.width/(2*SCALE), Math.min(MAP_WIDTH - canvas.width/(2*SCALE), dragStartCam.camX - dx));
-            targetCamera.y = Math.max(canvas.height/(2*SCALE), Math.min(MAP_HEIGHT - canvas.height/(2*SCALE), dragStartCam.camY - dy));
+            const dx = (p.x - dragStart.x) / SCALE;
+            const dy = (p.y - dragStart.y) / SCALE;
+            camera.x = dragStart.camX - dx;
+            camera.y = dragStart.camY - dy;
+            clampCamera();
         });
         window.addEventListener('mouseup', () => isDragging = false);
 
         // Кнопки
         document.getElementById('btn-home').addEventListener('click', () => {
-            targetCamera.x = MAP_WIDTH/2;
-            targetCamera.y = MAP_HEIGHT/2;
+            camera.x = MAP_WIDTH/2;
+            camera.y = MAP_HEIGHT/2;
         });
         document.getElementById('btn-bank').addEventListener('click', () => alert('Bank (заглушка)'));
         document.getElementById('btn-resources').addEventListener('click', () => alert('Resources'));
@@ -643,12 +638,11 @@
         function resize() {
             canvas.width = document.getElementById('game-container').clientWidth;
             canvas.height = document.getElementById('game-container').clientHeight;
+            clampCamera();
         }
         window.addEventListener('resize', resize);
         resize();
-        targetCamera.x = MAP_WIDTH/2;
-        targetCamera.y = MAP_HEIGHT/2;
-        camera = { ...targetCamera };
+        clampCamera();
         loop();
     })();
 </script>
