@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
         #mapContainer:active { cursor:grabbing; }
         #gameCanvas { display:block; width:100%; height:100%; image-rendering:auto; background:transparent; }
 
-        /* ===== Интерфейс (Стеклянный эффект) ===== */
+        /* ===== Интерфейс ===== */
         .top-panel { position:fixed; top:10px; left:0; right:0; z-index:1000; display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; padding:0 16px; pointer-events:none; }
         .top-panel>* { pointer-events:auto; }
         .game-title {
@@ -164,10 +164,10 @@
     </div>
 
     <!-- Страницы-заглушки -->
-    <div class="page-overlay" id="page-bank"><div class="page"><button class="close-btn" onclick="closePage('bank')">✕</button><h2>💰 Bank</h2><div class="content"><div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div><div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div><div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div><button class="action-btn">Take Loan</button></div></div></div>
-    <div class="page-overlay" id="page-resources"><div class="page"><button class="close-btn" onclick="closePage('resources')">✕</button><h2>📦 Resources</h2><div class="content"><div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div><div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div><div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div><button class="action-btn secondary">Trade</button></div></div></div>
-    <div class="page-overlay" id="page-build"><div class="page"><button class="close-btn" onclick="closePage('build')">✕</button><h2>🏗️ Build</h2><div class="content"><div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div><div class="row"><span class="label">🏢 Apartment (3×3)</span><span class="value">1200 🪙</span></div><button class="action-btn">Select Plot</button></div></div></div>
-    <div class="page-overlay" id="page-stats"><div class="page"><button class="close-btn" onclick="closePage('stats')">✕</button><h2>📊 Stats</h2><div class="content"><div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div><div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div><div class="row"><span class="label">📊 Level</span><span class="value">1</span></div></div></div></div>
+    <div class="page-overlay" id="page-bank"><div class="page"><button class="close-btn" onclick="closePage('bank')">✕</button><h2>💰 Bank</h2><div class="content"><div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div><div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div><button class="action-btn">Take Loan</button></div></div></div>
+    <div class="page-overlay" id="page-resources"><div class="page"><button class="close-btn" onclick="closePage('resources')">✕</button><h2>📦 Resources</h2><div class="content"><div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div><div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div><button class="action-btn secondary">Trade</button></div></div></div>
+    <div class="page-overlay" id="page-build"><div class="page"><button class="close-btn" onclick="closePage('build')">✕</button><h2>🏗️ Build</h2><div class="content"><div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div><button class="action-btn">Select Plot</button></div></div></div>
+    <div class="page-overlay" id="page-stats"><div class="page"><button class="close-btn" onclick="closePage('stats')">✕</button><h2>📊 Stats</h2><div class="content"><div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div><div class="row"><span class="label">📊 Level</span><span class="value">1</span></div></div></div></div>
     <div class="page-overlay" id="page-home"><div class="page"><button class="close-btn" onclick="closePage('home')">✕</button><h2>🏠 Home</h2><div class="content"><p style="text-align:center;color:#aaa;">Карта центрирована</p><button class="action-btn" onclick="closePage('home')">OK</button></div></div></div>
 
     <div class="toast" id="toast"></div>
@@ -184,7 +184,6 @@
         const ROAD_WIDTH = 64;
         const TROTTOIR_WIDTH = 40; // Широкие тротуары
 
-        // Добавили 7x7 (560px)
         const PLOT_SIZES = [160, 240, 320, 400, 480, 560, 640];
         const PLOT_NAMES = ['2×2', '3×3', '4×4', '5×5', '6×6', '7×7', '8×8'];
         const PLOT_COLORS = [
@@ -208,12 +207,26 @@
                 this.offset.x = Math.min(MAP_W - halfW - border, Math.max(halfW + border, this.offset.x));
                 this.offset.y = Math.min(MAP_H - halfH - border, Math.max(halfH + border, this.offset.y));
             }
-            worldToScreen(wx, wy) {
-                return {
-                    x: (wx - this.offset.x) * this.zoom + window.innerWidth / 2,
-                    y: (wy - this.offset.y) * this.zoom + window.innerHeight / 2
-                };
-            }
+        }
+
+        // ============================================================
+        // УНИВЕРСАЛЬНАЯ ФУНКЦИЯ ДЛЯ ЗАКРУГЛЕННЫХ УГЛОВ (надежная)
+        // ============================================================
+        function drawRoundRect(ctx, x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+            ctx.fill();
         }
 
         // ============================================================
@@ -225,13 +238,7 @@
                 this.intersections = [];
                 this.plots = [];
                 this.trees = [];
-                this.lamps = [];
-                this.cars = [];
                 this.trafficLights = [];
-                this.dayTime = true;
-                this.timeCounter = 0;
-                this.centerSquare = null;
-                this.cityHall = null;
                 this.generate();
             }
 
@@ -240,11 +247,9 @@
                 this.intersections = [];
                 this.plots = [];
                 this.trees = [];
-                this.lamps = [];
                 this.trafficLights = [];
-                this.cars = [];
 
-                // 1. Создаём пул ровно из 1000 участков с точными пропорциями
+                // 1. Создаём пул из 1000 участков с заданными пропорциями
                 let sizePool = [];
                 for(let i=0; i<500; i++) sizePool.push(160); // 2x2
                 for(let i=0; i<150; i++) sizePool.push(240); // 3x3
@@ -254,7 +259,6 @@
                 for(let i=0; i<25; i++)  sizePool.push(560); // 7x7
                 for(let i=0; i<25; i++)  sizePool.push(640); // 8x8
                 
-                // Перемешиваем пул
                 const shuffle = (arr) => {
                     for (let i = arr.length - 1; i > 0; i--) {
                         const j = Math.floor(Math.random() * (i + 1));
@@ -267,7 +271,6 @@
 
                 const getNextSize = () => {
                     let size = sizePool[poolIndex++];
-                    // Если пул закончился, перемешиваем и начинаем заново (чтобы заполнить всю карту)
                     if (poolIndex >= sizePool.length) {
                         shuffle(sizePool);
                         poolIndex = 0;
@@ -275,7 +278,7 @@
                     return size;
                 };
 
-                // 2. Генерация участков (строго квадратных) с широкими дорогами
+                // 2. Генерация сетки
                 const margin = 60;
                 let x = margin, y = margin;
                 let rowHeight = 0;
@@ -293,8 +296,7 @@
                         this.plots.push({ x, y, size, color: PLOT_COLORS[sizeIdx], border: PLOT_BORDER[sizeIdx], label: PLOT_NAMES[sizeIdx] });
                         if (size > rowHeight) rowHeight = size;
 
-                        // ОЧЕНЬ ШИРОКАЯ дорога (от 250 до 600 пикселей)
-                        const roadW = 250 + Math.random() * 350; 
+                        const roadW = 250 + Math.random() * 350; // Широкие дороги 250-600px
                         if (x + size + roadW < MAP_W - margin) {
                             this.roads.push({ x: x + size, y, w: roadW, h: size, type: 'v' });
                             x += size + roadW;
@@ -304,7 +306,6 @@
                         }
                     }
 
-                    // Широкие горизонтальные дороги между строками
                     const roadH = 250 + Math.random() * 350;
                     if (y + rowHeight + roadH < MAP_H - margin) {
                         this.roads.push({ x: rowStartX, y: y + rowHeight, w: x - rowStartX, h: roadH, type: 'h' });
@@ -315,7 +316,7 @@
                     }
                 }
 
-                // 3. Деревья (на каждом участке по 2-3)
+                // 3. Деревья
                 for (let p of this.plots) {
                     const count = 2 + Math.floor(Math.random() * 2);
                     for (let i=0; i<count; i++) {
@@ -323,7 +324,7 @@
                     }
                 }
 
-                // 4. Находим перекрёстки (для машин и светофоров)
+                // 4. Перекрёстки
                 for (let rH of this.roads.filter(r => r.type === 'h')) {
                     for (let rV of this.roads.filter(r => r.type === 'v')) {
                         if (rH.x < rV.x + rV.w && rH.x + rH.w > rV.x && rH.y < rV.y + rV.h && rH.y + rH.h > rV.y) {
@@ -334,7 +335,7 @@
                     }
                 }
 
-                // 5. Светофоры (на левом верхнем и правом нижнем углах)
+                // 5. Светофоры (Левый верхний / Правый нижний)
                 for (let inter of this.intersections) {
                     const halfRoad = 64; 
                     const offset = TROTTOIR_WIDTH + 14;
@@ -343,23 +344,22 @@
                     const dy = useTopLeft ? -halfRoad - offset : halfRoad + offset;
                     this.trafficLights.push({
                         x: inter.x + dx, y: inter.y + dy,
-                        state: Math.random() > 0.5 ? 'green' : 'red',
-                        timer: Math.floor(Math.random() * 200)
+                        state: Math.random() > 0.5 ? 'green' : 'red'
                     });
                 }
             }
 
             draw(ctx) {
-                // Фон (трава)
+                // Трава
                 ctx.fillStyle = '#4a8f5c';
                 ctx.fillRect(0, 0, MAP_W, MAP_H);
 
-                // ---- Отрисовка дорог ----
+                // ---- Отрисовка дорог (с надежными закругленными углами) ----
                 for (let r of this.roads) {
                     const w = r.w;
                     const half = w / 2;
                     
-                    // 1. Широкий тротуар (серая плитка)
+                    // Тротуары (серая плитка)
                     ctx.fillStyle = '#9a9a9a';
                     if (r.type === 'h') {
                         ctx.fillRect(r.x, r.y - half - TROTTOIR_WIDTH, r.w, TROTTOIR_WIDTH);
@@ -369,25 +369,20 @@
                         ctx.fillRect(r.x + half, r.y, TROTTOIR_WIDTH, r.h);
                     }
 
-                    // 2. Чёрный асфальт (закруглённый блок)
+                    // Асфальт (закруглённый блок, теперь через функцию drawRoundRect)
                     ctx.fillStyle = '#1a1a1a';
                     const radius = 20;
                     if (r.type === 'h') {
-                        ctx.beginPath();
-                        ctx.roundRect(r.x, r.y - half, r.w, w, radius);
-                        ctx.fill();
+                        drawRoundRect(ctx, r.x, r.y - half, r.w, w, radius);
                     } else {
-                        ctx.beginPath();
-                        ctx.roundRect(r.x - half, r.y, w, r.h, radius);
-                        ctx.fill();
+                        drawRoundRect(ctx, r.x - half, r.y, w, r.h, radius);
                     }
 
-                    // 3. Белая пунктирная разметка (ТОЛЬКО МЕЖДУ ПЕРЕКРЁСТКАМИ)
+                    // Пунктирная разметка (только между перекрёстками)
                     ctx.strokeStyle = 'rgba(255,255,255,0.7)';
                     ctx.lineWidth = 3;
                     ctx.setLineDash([15, 15]);
                     
-                    // Находим пересечения на этой дороге и "разрезаем" линию, чтобы не было на перекрёстке
                     let segments = [];
                     if (r.type === 'h') segments = this.intersections.filter(i => Math.abs(i.y - r.y) < 20);
                     else segments = this.intersections.filter(i => Math.abs(i.x - r.x) < 20);
@@ -417,7 +412,7 @@
                     ctx.setLineDash([]);
                 }
 
-                // ---- Участки (квадраты с внутренним пунктиром) ----
+                // ---- Участки ----
                 for (let p of this.plots) {
                     ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
@@ -436,7 +431,7 @@
                     ctx.fillText(p.label, p.x + p.size / 2, p.y + p.size / 2);
                 }
 
-                // ---- Отрисовка деревьев, светофоров, машин (упрощённо для демо) ----
+                // ---- Деревья ----
                 ctx.fillStyle = '#2e7d32';
                 for (let t of this.trees) {
                     ctx.beginPath();
@@ -444,6 +439,7 @@
                     ctx.fill();
                 }
 
+                // ---- Светофоры ----
                 for (let tl of this.trafficLights) {
                     ctx.fillStyle = tl.state === 'green' ? '#2ecc71' : '#e74c3c';
                     ctx.fillRect(tl.x - 4, tl.y - 8, 8, 16);
@@ -468,7 +464,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Drag (перетаскивание)
+        // Перетаскивание (Drag)
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
         let camStart = { x: 0, y: 0 };
@@ -487,7 +483,6 @@
         });
         document.addEventListener('mouseup', () => { isDragging = false; });
 
-        // Touch (для мобильных)
         container.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 const t = e.touches[0];
@@ -522,7 +517,7 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Центрирование (Кнопка Home)
+        // Кнопка Home
         document.getElementById('home-btn').addEventListener('click', () => {
             camera.offset.x = MAP_W / 2;
             camera.offset.y = MAP_H / 2;
@@ -532,7 +527,7 @@
         gameLoop();
 
         // ============================================================
-        // УПРАВЛЕНИЕ СТРАНИЦАМИ И ТОСТАМИ
+        // СТРАНИЦЫ И ТОСТЫ
         // ============================================================
         function openPage(page) {
             document.querySelectorAll('.page-overlay').forEach(el => el.classList.remove('active'));
