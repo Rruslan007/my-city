@@ -13,40 +13,24 @@
         #mapContainer:active { cursor:grabbing; }
         #gameCanvas { display:block; width:100%; height:100%; image-rendering:auto; background:transparent; }
 
-        /* Верхняя панель */
-        .top-panel {
-            position: fixed; top: 10px; left: 0; right: 0; z-index: 1000;
-            display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between;
-            padding: 0 16px; pointer-events: none;
-        }
-        .top-panel>* { pointer-events: auto; }
-
+        /* ===== Интерфейс (без изменений) ===== */
+        .top-panel { position:fixed; top:10px; left:0; right:0; z-index:1000; display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; padding:0 16px; pointer-events:none; }
+        .top-panel>* { pointer-events:auto; }
         .game-title {
-            font-family: 'Pacifico', cursive;
-            font-size: 28px; font-weight: 400; color: #fff;
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 6px 18px;
-            border-radius: 30px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
-            animation: glassPulse 4s ease-in-out infinite;
-            text-shadow: 0 0 20px rgba(233,69,96,0.3);
+            font-family:'Pacifico',cursive; font-size:28px; font-weight:400; color:#fff;
+            background:rgba(255,255,255,0.06); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+            padding:6px 18px; border-radius:30px; letter-spacing:1px;
+            box-shadow:0 4px 30px rgba(0,0,0,0.2);
+            animation:glassPulse 4s ease-in-out infinite;
+            text-shadow:0 0 20px rgba(233,69,96,0.3);
         }
-        @keyframes glassPulse {
-            0% { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); }
-            50% { background: rgba(255,255,255,0.12); backdrop-filter: blur(16px); }
-            100% { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); }
-        }
-
+        @keyframes glassPulse { 0% { background:rgba(255,255,255,0.06); backdrop-filter:blur(8px); } 50% { background:rgba(255,255,255,0.12); backdrop-filter:blur(16px); } 100% { background:rgba(255,255,255,0.06); backdrop-filter:blur(8px); } }
         .right-group { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
         .glass-box {
-            background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 30px;
-            padding: 4px 14px; box-shadow: 0 4px 30px rgba(0,0,0,0.2);
-            display: flex; align-items: center; gap: 6px;
-            font-weight: 700; color: #fff; font-size: 16px; white-space: nowrap;
+            background:rgba(255,255,255,0.06); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.08); border-radius:30px; padding:4px 14px;
+            box-shadow:0 4px 30px rgba(0,0,0,0.2); display:flex; align-items:center; gap:6px;
+            font-weight:700; color:#fff; font-size:16px; white-space:nowrap;
         }
         .glass-box .icon { font-size:20px; line-height:1; }
         .glass-box .amount { font-size:18px; font-weight:700; }
@@ -56,25 +40,24 @@
         .glass-box.gems .amount { font-size:15px; }
 
         .quest-box {
-            position: fixed; bottom: 100px; right: 16px; z-index: 1000;
-            background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 30px;
-            padding: 6px 14px; display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.2); color: #fff; font-weight:600;
-            cursor: pointer; transition:0.2s; pointer-events:auto;
+            position:fixed; bottom:100px; right:16px; z-index:1000;
+            background:rgba(255,255,255,0.06); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.08); border-radius:30px;
+            padding:6px 14px; display:flex; flex-direction:column; align-items:center;
+            box-shadow:0 4px 30px rgba(0,0,0,0.2); color:#fff; font-weight:600;
+            cursor:pointer; transition:0.2s; pointer-events:auto;
         }
         .quest-box:hover { background:rgba(255,255,255,0.12); }
         .quest-box .icon { font-size:24px; line-height:1; }
         .quest-box .label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8; margin-top:2px; }
 
-        /* Полоса уровня */
         .level-bar-wrapper {
-            position: fixed; bottom: 76px; left: 50%; transform:translateX(-50%);
-            z-index: 1000; width: calc(100% - 120px); max-width:700px;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
-            padding: 6px 16px 8px; box-shadow: 0 4px 30px rgba(0,0,0,0.2);
-            pointer-events: none;
+            position:fixed; bottom:76px; left:50%; transform:translateX(-50%);
+            z-index:1000; width:calc(100% - 120px); max-width:700px;
+            background:rgba(255,255,255,0.05); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.06); border-radius:20px;
+            padding:6px 16px 8px; box-shadow:0 4px 30px rgba(0,0,0,0.2);
+            pointer-events:none;
         }
         .level-bar-inner { display:flex; flex-direction:column; gap:2px; }
         .level-top { display:flex; justify-content:space-between; font-weight:700; color:#fff; font-size:13px; letter-spacing:0.5px; }
@@ -86,40 +69,38 @@
         .level-progress .ticks span { display:block; width:2px; height:100%; background:rgba(255,255,255,0.2); }
         .level-bottom { display:flex; justify-content:space-between; font-size:9px; color:rgba(255,255,255,0.4); margin-top:2px; }
 
-        /* Футер */
         .footer {
-            position: fixed; bottom: 12px; left: 50%; transform:translateX(-50%);
-            display: flex; align-items: center; gap: 4px; z-index: 1000;
-            background: rgba(0,0,0,0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-radius: 40px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+            position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+            display:flex; align-items:center; gap:4px; z-index:1000;
+            background:rgba(0,0,0,0.55); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border-radius:40px; padding:6px 10px; border:1px solid rgba(255,255,255,0.08);
+            box-shadow:0 8px 40px rgba(0,0,0,0.5);
         }
         .footer button {
-            background: none; border: none; color: #aaa; font-size: 9px; text-align: center;
-            padding: 4px 6px; cursor: pointer; border-radius: 20px;
-            transition: background 0.2s, color 0.2s; min-width: 48px;
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
-            font-weight: 500; outline: none;
+            background:none; border:none; color:#aaa; font-size:9px; text-align:center;
+            padding:4px 6px; cursor:pointer; border-radius:20px;
+            transition:background 0.2s, color 0.2s; min-width:48px;
+            display:flex; flex-direction:column; align-items:center; gap:2px;
+            font-weight:500; outline:none;
         }
-        .footer button:hover { background: rgba(255,255,255,0.06); color: #fff; }
-        .footer button .icon { width: 24px; height: 24px; object-fit: contain; display: block; }
-        .footer button .label { font-size: 8px; text-transform: uppercase; letter-spacing: 0.3px; opacity:0.7; }
-        .footer button.active { color: #e94560; }
+        .footer button:hover { background:rgba(255,255,255,0.06); color:#fff; }
+        .footer button .icon { width:24px; height:24px; object-fit:contain; display:block; }
+        .footer button .label { font-size:8px; text-transform:uppercase; letter-spacing:0.3px; opacity:0.7; }
+        .footer button.active { color:#e94560; }
         .footer button.active .label { opacity:1; }
 
-        /* Страницы */
         .page-overlay {
-            display: none; position: fixed; top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
-            z-index: 2000; justify-content: center; align-items: center;
-            padding: 20px;
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+            z-index:2000; justify-content:center; align-items:center;
+            padding:20px;
         }
-        .page-overlay.active { display: flex; }
+        .page-overlay.active { display:flex; }
         .page {
-            background: #1a1a2e; border-radius: 30px; padding: 30px;
-            max-width: 480px; width:100%; max-height:85vh; overflow-y:auto;
-            border: 1px solid rgba(255,255,255,0.06); color:#fff; position:relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            background:#1a1a2e; border-radius:30px; padding:30px;
+            max-width:480px; width:100%; max-height:85vh; overflow-y:auto;
+            border:1px solid rgba(255,255,255,0.06); color:#fff; position:relative;
+            box-shadow:0 20px 60px rgba(0,0,0,0.8);
         }
         .page .close-btn { position:absolute; top:16px; right:20px; background:none; border:none; color:#888; font-size:24px; cursor:pointer; transition:color 0.2s; }
         .page .close-btn:hover { color:#fff; }
@@ -132,20 +113,18 @@
         .page .action-btn:hover { background:#c0392b; }
         .page .action-btn.secondary { background:rgba(255,255,255,0.08); }
         .page .action-btn.secondary:hover { background:rgba(255,255,255,0.15); }
-
         .toast {
-            position: fixed; bottom: 120px; left: 50%; transform:translateX(-50%);
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-            padding: 12px 24px; border-radius: 16px; font-size: 14px;
-            z-index: 3000; opacity:0; transition:opacity 0.3s;
-            pointer-events: none; border:1px solid rgba(255,255,255,0.1);
+            position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+            background:rgba(0,0,0,0.85); backdrop-filter:blur(8px);
+            padding:12px 24px; border-radius:16px; font-size:14px;
+            z-index:3000; opacity:0; transition:opacity 0.3s;
+            pointer-events:none; border:1px solid rgba(255,255,255,0.1);
             color:#fff; white-space:nowrap;
         }
         .toast.show { opacity:1; }
         .toast.success { border-color:#2ecc71; }
         .toast.error { border-color:#e74c3c; }
         .toast.info { border-color:#3498db; }
-
         @media (max-width:600px) {
             .game-title { font-size:20px; padding:4px 12px; }
             .glass-box { font-size:13px; padding:3px 10px; }
@@ -170,141 +149,38 @@
     <div class="top-panel">
         <div class="game-title">🏙️ Городской Магнат</div>
         <div class="right-group">
-            <div class="glass-box coins">
-                <span class="icon">🪙</span>
-                <span class="amount" id="coinAmount">12 340</span>
-            </div>
-            <div class="glass-box gems">
-                <span class="icon">💎</span>
-                <span class="amount" id="gemAmount">85</span>
-            </div>
+            <div class="glass-box coins"><span class="icon">🪙</span><span class="amount" id="coinAmount">12 340</span></div>
+            <div class="glass-box gems"><span class="icon">💎</span><span class="amount" id="gemAmount">85</span></div>
         </div>
     </div>
 
     <!-- Полоса уровня -->
     <div class="level-bar-wrapper">
         <div class="level-bar-inner">
-            <div class="level-top">
-                <span class="lvl">LVL 1</span>
-                <span class="xp">0 / 100 XP</span>
-            </div>
-            <div class="level-progress">
-                <div class="fill" style="width:0%;"></div>
-                <div class="ticks">
-                    <span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span>
-                    <span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-            <div class="level-bottom">
-                <span>0 XP</span>
-                <span>100 XP</span>
-            </div>
+            <div class="level-top"><span class="lvl">LVL 1</span><span class="xp">0 / 100 XP</span></div>
+            <div class="level-progress"><div class="fill" style="width:0%;"></div><div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+            <div class="level-bottom"><span>0 XP</span><span>100 XP</span></div>
         </div>
     </div>
 
     <!-- Задания -->
-    <div class="quest-box" onclick="openQuests()">
-        <span class="icon">📋</span>
-        <span class="label">Quests</span>
-    </div>
+    <div class="quest-box" onclick="openQuests()"><span class="icon">📋</span><span class="label">Quests</span></div>
 
     <!-- Футер -->
     <div class="footer" id="footer">
-        <button onclick="openPage('bank')">
-            <img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'">
-            <span class="label">Bank</span>
-        </button>
-        <button onclick="openPage('resources')">
-            <img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'">
-            <span class="label">Resources</span>
-        </button>
-        <button onclick="openPage('home')" class="active">
-            <img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'">
-            <span class="label">Home</span>
-        </button>
-        <button onclick="openPage('build')">
-            <img src="build_icon.png" alt="Build" class="icon" onerror="this.textContent='🏗️'">
-            <span class="label">Build</span>
-        </button>
-        <button onclick="openPage('stats')">
-            <img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'">
-            <span class="label">Stats</span>
-        </button>
+        <button onclick="openPage('bank')"><img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'"><span class="label">Bank</span></button>
+        <button onclick="openPage('resources')"><img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'"><span class="label">Resources</span></button>
+        <button onclick="openPage('home')" class="active"><img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'"><span class="label">Home</span></button>
+        <button onclick="openPage('build')"><img src="build_icon.png" alt="Build" class="icon" onerror="this.textContent='🏗️'"><span class="label">Build</span></button>
+        <button onclick="openPage('stats')"><img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'"><span class="label">Stats</span></button>
     </div>
 
     <!-- Страницы -->
-    <div class="page-overlay" id="page-bank">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('bank')">✕</button>
-            <h2>💰 Bank</h2>
-            <div class="content">
-                <div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div>
-                <div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div>
-                <div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div>
-                <button class="action-btn">Take Loan</button>
-                <button class="action-btn secondary">Repay Loan</button>
-                <button class="action-btn secondary">Deposit</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-resources">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('resources')">✕</button>
-            <h2>📦 Resources</h2>
-            <div class="content">
-                <div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div>
-                <div class="row"><span class="label">🔥 Gas</span><span class="value">32</span></div>
-                <div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div>
-                <div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div>
-                <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
-                <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
-                <button class="action-btn secondary">Trade</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-build">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('build')">✕</button>
-            <h2>🏗️ Build</h2>
-            <div class="content">
-                <div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div>
-                <div class="row"><span class="label">🏢 Apartment (3×3)</span><span class="value">1200 🪙</span></div>
-                <div class="row"><span class="label">🏫 School (3×3)</span><span class="value">700 🪙</span></div>
-                <div class="row"><span class="label">🏥 Hospital (4×4)</span><span class="value">1500 🪙</span></div>
-                <div class="row"><span class="label">🏬 Mall (5×5)</span><span class="value">2000 🪙</span></div>
-                <button class="action-btn">Select Plot</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-stats">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('stats')">✕</button>
-            <h2>📊 Stats</h2>
-            <div class="content">
-                <div class="row"><span class="label">🏙️ City</span><span class="value">Новый Уренгой</span></div>
-                <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
-                <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
-                <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
-                <div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div>
-                <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-home">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('home')">✕</button>
-            <h2>🏠 Home</h2>
-            <div class="content">
-                <p style="text-align:center; color:#aaa;">Карта центрирована</p>
-                <button class="action-btn" onclick="closePage('home')">OK</button>
-            </div>
-        </div>
-    </div>
+    <div class="page-overlay" id="page-bank"><div class="page"><button class="close-btn" onclick="closePage('bank')">✕</button><h2>💰 Bank</h2><div class="content"><div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div><div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div><div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div><button class="action-btn">Take Loan</button><button class="action-btn secondary">Repay Loan</button><button class="action-btn secondary">Deposit</button></div></div></div>
+    <div class="page-overlay" id="page-resources"><div class="page"><button class="close-btn" onclick="closePage('resources')">✕</button><h2>📦 Resources</h2><div class="content"><div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div><div class="row"><span class="label">🔥 Gas</span><span class="value">32</span></div><div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div><div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div><div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div><div class="row"><span class="label">💧 Water</span><span class="value">42</span></div><button class="action-btn secondary">Trade</button></div></div></div>
+    <div class="page-overlay" id="page-build"><div class="page"><button class="close-btn" onclick="closePage('build')">✕</button><h2>🏗️ Build</h2><div class="content"><div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div><div class="row"><span class="label">🏢 Apartment (3×3)</span><span class="value">1200 🪙</span></div><div class="row"><span class="label">🏫 School (3×3)</span><span class="value">700 🪙</span></div><div class="row"><span class="label">🏥 Hospital (4×4)</span><span class="value">1500 🪙</span></div><div class="row"><span class="label">🏬 Mall (5×5)</span><span class="value">2000 🪙</span></div><button class="action-btn">Select Plot</button></div></div></div>
+    <div class="page-overlay" id="page-stats"><div class="page"><button class="close-btn" onclick="closePage('stats')">✕</button><h2>📊 Stats</h2><div class="content"><div class="row"><span class="label">🏙️ City</span><span class="value">Новый Уренгой</span></div><div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div><div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div><div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div><div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div><div class="row"><span class="label">📊 Level</span><span class="value">1</span></div></div></div></div>
+    <div class="page-overlay" id="page-home"><div class="page"><button class="close-btn" onclick="closePage('home')">✕</button><h2>🏠 Home</h2><div class="content"><p style="text-align:center;color:#aaa;">Карта центрирована</p><button class="action-btn" onclick="closePage('home')">OK</button></div></div></div>
 
     <div class="toast" id="toast"></div>
 
@@ -322,19 +198,20 @@
         const MAP_W = 20000;
         const MAP_H = 30000;
         const ROAD_WIDTH = 64;
-        const TROTTOIR_WIDTH = 18;
+        const TROTTOIR_WIDTH = 20;
         const HALF_ROAD = ROAD_WIDTH / 2;
         const HALF_TROTTOIR = TROTTOIR_WIDTH / 2;
 
+        // Размеры участков (в пикселях) и их названия
         const PLOT_SIZES = [160, 240, 320, 400, 480, 640];
         const PLOT_NAMES = ['2×2', '3×3', '4×4', '5×5', '6×6', '8×8'];
         const PLOT_COLORS = [
-            'rgba(231,76,60,0.25)',
-            'rgba(46,204,113,0.25)',
-            'rgba(52,152,219,0.25)',
-            'rgba(241,196,15,0.25)',
-            'rgba(230,126,34,0.25)',
-            'rgba(155,89,182,0.25)'
+            'rgba(231,76,60,0.2)',
+            'rgba(46,204,113,0.2)',
+            'rgba(52,152,219,0.2)',
+            'rgba(241,196,15,0.2)',
+            'rgba(230,126,34,0.2)',
+            'rgba(155,89,182,0.2)'
         ];
         const PLOT_BORDER = ['#e74c3c', '#2ecc71', '#3498db', '#f1c40f', '#e67e22', '#9b59b6'];
 
@@ -344,12 +221,12 @@
         class Camera {
             constructor() {
                 this.offset = { x: MAP_W / 2, y: MAP_H / 2 };
-                this.zoom = 0.4;
+                this.zoom = 0.35;
             }
             update() {
                 const halfW = window.innerWidth / 2 / this.zoom;
                 const halfH = window.innerHeight / 2 / this.zoom;
-                const border = 50;
+                const border = 100;
                 this.offset.x = Math.min(MAP_W - halfW - border, Math.max(halfW + border, this.offset.x));
                 this.offset.y = Math.min(MAP_H - halfH - border, Math.max(halfH + border, this.offset.y));
             }
@@ -368,7 +245,7 @@
         }
 
         // ============================================================
-        // 4. ГОРОД (новая генерация по зонам)
+        // 4. ГОРОД (красивая карта)
         // ============================================================
         class City {
             constructor() {
@@ -380,6 +257,7 @@
                 this.cars = [];
                 this.trafficLights = [];
                 this.clouds = [];
+                this.greenZones = [];
                 this.dayTime = true;
                 this.timeCounter = 0;
                 this.centerSquare = null;
@@ -388,128 +266,85 @@
             }
 
             generate() {
-                // ---- 4.1 Разбиваем карту на 8 зон (4 по ширине, 2 по высоте) ----
-                const zonesX = 4;
-                const zonesY = 2;
-                const zoneW = MAP_W / zonesX;
-                const zoneH = MAP_H / zonesY;
+                // ---- 4.1 Генерация сетки с переменным шагом, плавно меняющимся от центра к краям ----
+                const centerX = MAP_W / 2;
+                const centerY = MAP_H / 2;
 
-                // Для каждой зоны выбираем размер участка из PLOT_SIZES случайно, но можно задать вручную.
-                // Создадим массив размеров для каждой зоны.
-                const sizeMap = [];
-                for (let iy = 0; iy < zonesY; iy++) {
-                    for (let ix = 0; ix < zonesX; ix++) {
-                        // Случайный размер, но чтобы не было слишком много мелких, можно рандомно выбрать
-                        const idx = Math.floor(Math.random() * PLOT_SIZES.length);
-                        sizeMap.push(PLOT_SIZES[idx]);
-                    }
+                // Функция для получения размера участка в зависимости от расстояния от центра
+                function getSize(dist) {
+                    // dist – расстояние от центра в пикселях
+                    const maxDist = Math.min(MAP_W, MAP_H) / 2;
+                    const normalized = Math.min(dist / maxDist, 1);
+                    // В центре – мелкие (2×2, 3×3), на краях – крупные (6×6, 8×8)
+                    if (normalized < 0.3) return 160 + Math.random() * 80; // 160-240
+                    else if (normalized < 0.6) return 240 + Math.random() * 160; // 240-400
+                    else return 400 + Math.random() * 240; // 400-640
                 }
-                // Назначим вручную для разнообразия:
-                // Можно переопределить: верхний ряд (первая Y-зона) – маленькие, средний – средние, нижний – крупные.
-                // Но у нас 2 Y-зоны: верхняя и нижняя.
-                // Зададим явно для каждой из 8 зон.
-                const manualSizes = [
-                    160, 240, 320, 400,  // верхняя половина (зоны 0-3)
-                    480, 640, 320, 480   // нижняя половина (зоны 4-7)
-                ];
-                // Используем manualSizes
-                const zoneSizes = manualSizes.map(s => s);
 
-                // ---- 4.2 Генерация координат дорог для каждой зоны ----
-                // Сначала соберем все горизонтальные и вертикальные линии.
-                // Для каждой зоны мы создадим набор координат X и Y внутри зоны.
-                // Затем объединим их, чтобы получить общую сетку.
+                // Генерируем координаты X и Y, используя адаптивный шаг
+                let xCoords = [0];
+                let yCoords = [0];
 
-                let xCoords = [];
-                let yCoords = [];
-
-                // Проходим по зонам и генерируем координаты
-                for (let iy = 0; iy < zonesY; iy++) {
-                    for (let ix = 0; ix < zonesX; ix++) {
-                        const idx = iy * zonesX + ix;
-                        const size = zoneSizes[idx];
-                        const xStart = ix * zoneW;
-                        const xEnd = (ix + 1) * zoneW;
-                        const yStart = iy * zoneH;
-                        const yEnd = (iy + 1) * zoneH;
-
-                        // Генерируем X-координаты внутри этой зоны (не включая границы, они будут общими)
-                        let localX = [xStart];
-                        let curX = xStart;
-                        while (curX + size + ROAD_WIDTH < xEnd) {
-                            curX += size + ROAD_WIDTH;
-                            localX.push(curX);
-                        }
-                        // Добавляем последнюю границу, если она не совпадает
-                        if (localX[localX.length - 1] < xEnd - 10) {
-                            localX.push(xEnd);
-                        }
-                        // Добавляем в общий массив xCoords (только уникальные)
-                        for (let x of localX) {
-                            if (!xCoords.includes(x)) xCoords.push(x);
-                        }
-
-                        // Аналогично для Y
-                        let localY = [yStart];
-                        let curY = yStart;
-                        while (curY + size + ROAD_WIDTH < yEnd) {
-                            curY += size + ROAD_WIDTH;
-                            localY.push(curY);
-                        }
-                        if (localY[localY.length - 1] < yEnd - 10) {
-                            localY.push(yEnd);
-                        }
-                        for (let y of localY) {
-                            if (!yCoords.includes(y)) yCoords.push(y);
-                        }
+                // Проходим слева направо и сверху вниз, подбирая шаг
+                while (xCoords[xCoords.length - 1] < MAP_W - 50) {
+                    const lastX = xCoords[xCoords.length - 1];
+                    const distX = Math.abs(lastX - centerX);
+                    const size = Math.round(getSize(distX) / 10) * 10; // округляем до 10
+                    const step = size + ROAD_WIDTH;
+                    const nextX = Math.min(lastX + step, MAP_W);
+                    if (nextX - lastX > 50) {
+                        xCoords.push(nextX);
+                    } else {
+                        xCoords.push(MAP_W);
+                        break;
                     }
                 }
 
-                // Сортируем координаты
-                xCoords.sort((a, b) => a - b);
-                yCoords.sort((a, b) => a - b);
+                while (yCoords[yCoords.length - 1] < MAP_H - 50) {
+                    const lastY = yCoords[yCoords.length - 1];
+                    const distY = Math.abs(lastY - centerY);
+                    const size = Math.round(getSize(distY) / 10) * 10;
+                    const step = size + ROAD_WIDTH;
+                    const nextY = Math.min(lastY + step, MAP_H);
+                    if (nextY - lastY > 50) {
+                        yCoords.push(nextY);
+                    } else {
+                        yCoords.push(MAP_H);
+                        break;
+                    }
+                }
 
-                // ---- 4.3 Создаём дороги (горизонтальные и вертикальные) ----
-                // Горизонтальные дороги на каждой y-координате (кроме последней, если она на границе)
+                // Убираем дубликаты
+                xCoords = [...new Set(xCoords)].sort((a, b) => a - b);
+                yCoords = [...new Set(yCoords)].sort((a, b) => a - b);
+
+                // Добавляем крайние точки, если их нет
+                if (xCoords[xCoords.length - 1] < MAP_W - 10) xCoords.push(MAP_W);
+                if (yCoords[yCoords.length - 1] < MAP_H - 10) yCoords.push(MAP_H);
+
+                // ---- 4.2 Создаём дороги (с закруглениями на перекрёстках) ----
+                // Горизонтальные дороги
                 for (let y of yCoords) {
-                    if (y === yCoords[yCoords.length - 1]) continue; // последняя граница — не дорога
-                    // Определяем ширину дороги: делаем четырёхполосные (утолщённые) для некоторых дорог
-                    // Сделаем все дороги четырёхполосными: ширина = ROAD_WIDTH * 1.8
-                    const width = ROAD_WIDTH * 1.8;
-                    this.roads.push({
-                        x1: 0,
-                        y1: y,
-                        x2: MAP_W,
-                        y2: y,
-                        isHorizontal: true,
-                        width: width
-                    });
+                    if (y === yCoords[yCoords.length - 1]) continue;
+                    const width = ROAD_WIDTH * 1.8; // четырёхполосная
+                    this.roads.push({ x1: 0, y1: y, x2: MAP_W, y2: y, isHorizontal: true, width: width });
                 }
-
                 // Вертикальные дороги
                 for (let x of xCoords) {
                     if (x === xCoords[xCoords.length - 1]) continue;
                     const width = ROAD_WIDTH * 1.8;
-                    this.roads.push({
-                        x1: x,
-                        y1: 0,
-                        x2: x,
-                        y2: MAP_H,
-                        isHorizontal: false,
-                        width: width
-                    });
+                    this.roads.push({ x1: x, y1: 0, x2: x, y2: MAP_H, isHorizontal: false, width: width });
                 }
 
-                // ---- 4.4 Перекрёстки ----
+                // ---- 4.3 Перекрёстки ----
                 for (let x of xCoords) {
                     for (let y of yCoords) {
                         this.intersections.push({ x, y });
                     }
                 }
 
-                // ---- 4.5 Участки (квадраты) ----
-                // Для каждой ячейки между соседними дорогами создаём участок, если его размер соответствует одному из PLOT_SIZES.
-                // Размер ячейки = расстояние между дорогами.
+                // ---- 4.4 Участки и зелёные зоны ----
+                // Пройдём по всем ячейкам и создадим участки, если они квадратные и подходят по размеру
                 for (let i = 0; i < xCoords.length - 1; i++) {
                     for (let j = 0; j < yCoords.length - 1; j++) {
                         const x1 = xCoords[i];
@@ -518,77 +353,92 @@
                         const y2 = yCoords[j + 1];
                         const cellW = x2 - x1;
                         const cellH = y2 - y1;
-                        if (cellW !== cellH) continue; // не квадрат — пропускаем
+                        // Определяем размер участка как минимальную сторону ячейки (она может быть не квадратной)
+                        const size = Math.min(cellW, cellH) - 4; // небольшой отступ
                         // Проверяем, есть ли такой размер в PLOT_SIZES
-                        const sizeIdx = PLOT_SIZES.indexOf(cellW);
-                        if (sizeIdx === -1) continue; // размер не подходит
-                        // Рандомно решаем, оставлять участок или пропустить (чтобы было ~250)
-                        if (Math.random() > 0.5) continue; // примерно половина ячеек станут участками
+                        const sizeIdx = PLOT_SIZES.findIndex(s => Math.abs(s - size) < 10);
+                        if (sizeIdx === -1) {
+                            // Не подходит по размеру – эта зона станет зелёной зоной
+                            this.greenZones.push({
+                                x: (x1 + x2) / 2 - 40,
+                                y: (y1 + y2) / 2 - 40,
+                                w: 80,
+                                h: 80
+                            });
+                            continue;
+                        }
+                        // Если ячейка квадратная (cellW ≈ cellH) и размер входит в список
+                        if (Math.abs(cellW - cellH) > 10) continue; // пропускаем неквадратные ячейки
+                        // Рандомно оставляем участок (вероятность 0.6)
+                        if (Math.random() > 0.6) continue;
                         const color = PLOT_COLORS[sizeIdx];
                         const border = PLOT_BORDER[sizeIdx];
                         const label = PLOT_NAMES[sizeIdx];
                         const cx = (x1 + x2) / 2;
                         const cy = (y1 + y2) / 2;
-                        const x = cx - cellW / 2;
-                        const y = cy - cellH / 2;
-                        // Исключаем центр для сквера и мэрии
-                        const centerX = MAP_W / 2;
-                        const centerY = MAP_H / 2;
+                        const x = cx - size / 2;
+                        const y = cy - size / 2;
+                        // Исключаем центральную зону (для сквера и мэрии)
                         const distCenter = Math.hypot(cx - centerX, cy - centerY);
                         if (distCenter < 600) continue;
-                        this.plots.push({ x, y, size: cellW, color, border, label });
+                        this.plots.push({ x, y, size, color, border, label });
                     }
                 }
 
-                // ---- 4.6 Центр: сквер и мэрия (вручную) ----
-                const centerX = MAP_W / 2;
-                const centerY = MAP_H / 2;
-                // Сквер – квадрат 5×5 (400px)
+                // ---- 4.5 Центр: сквер и мэрия ----
                 const sqSize = 400;
                 this.centerSquare = {
                     x: centerX - sqSize / 2,
                     y: centerY - sqSize / 2,
                     w: sqSize,
-                    h: sqSize
+                    h: sqSize,
+                    type: 'square'
                 };
-                // Мэрия – квадрат 4×4 (320px), расположим справа от сквера
                 const hallSize = 320;
                 this.cityHall = {
-                    x: centerX + sqSize / 2 + 40,
+                    x: centerX + sqSize / 2 + 30,
                     y: centerY - hallSize / 2,
                     w: hallSize,
-                    h: hallSize
+                    h: hallSize,
+                    type: 'hall'
                 };
 
-                // Добавляем тротуары вокруг них (для отрисовки)
-
-                // ---- 4.7 Деревья (на траве) ----
-                for (let i = 0; i < 600; i++) {
-                    const x = 20 + Math.random() * (MAP_W - 40);
-                    const y = 20 + Math.random() * (MAP_H - 40);
-                    // Проверка на дорогу
-                    let onRoad = false;
-                    for (let r of this.roads) {
+                // ---- 4.6 Деревья (в зелёных зонах и между участками) ----
+                for (let g of this.greenZones) {
+                    for (let i = 0; i < 3; i++) {
+                        const tx = g.x + Math.random() * g.w;
+                        const ty = g.y + Math.random() * g.h;
+                        this.trees.push({ x: tx, y: ty });
+                    }
+                }
+                // Также добавим деревья вдоль дорог (на тротуарах) – но в ограниченном количестве
+                for (let r of this.roads) {
+                    const step = 200;
+                    const count = Math.floor((r.isHorizontal ? (r.x2 - r.x1) : (r.y2 - r.y1)) / step);
+                    for (let i = 0; i < count; i++) {
+                        const t = (i + 0.5) / count;
+                        let x, y;
                         if (r.isHorizontal) {
-                            if (Math.abs(y - r.y1) < r.width / 2 + 8 && x > r.x1 && x < r.x2) { onRoad = true; break; }
+                            x = r.x1 + t * (r.x2 - r.x1);
+                            y = r.y1 - r.width / 2 - TROTTOIR_WIDTH - 10;
+                            if (Math.random() > 0.5) y = r.y1 + r.width / 2 + TROTTOIR_WIDTH + 10;
                         } else {
-                            if (Math.abs(x - r.x1) < r.width / 2 + 8 && y > r.y1 && y < r.y2) { onRoad = true; break; }
+                            y = r.y1 + t * (r.y2 - r.y1);
+                            x = r.x1 - r.width / 2 - TROTTOIR_WIDTH - 10;
+                            if (Math.random() > 0.5) x = r.x1 + r.width / 2 + TROTTOIR_WIDTH + 10;
+                        }
+                        // Не ставить слишком близко к перекрёсткам
+                        let tooClose = false;
+                        for (let inter of this.intersections) {
+                            if (Math.hypot(x - inter.x, y - inter.y) < 100) { tooClose = true; break; }
+                        }
+                        if (!tooClose && !this.trees.some(t => Math.hypot(t.x - x, t.y - y) < 40)) {
+                            this.trees.push({ x, y });
                         }
                     }
-                    if (onRoad) continue;
-                    // Проверка на участок
-                    let onPlot = false;
-                    for (let p of this.plots) {
-                        if (x > p.x && x < p.x + p.size && y > p.y && y < p.y + p.size) { onPlot = true; break; }
-                    }
-                    if (onPlot) continue;
-                    // Проверка на центр (сквер и мэрия)
-                    const inCenter = Math.hypot(x - centerX, y - centerY) < 500;
-                    if (inCenter) continue;
-                    this.trees.push({ x, y });
                 }
 
-                // ---- 4.8 Фонари (симметрично на тротуарах) ----
+                // ---- 4.7 Фонари (на тротуарах) ----
                 for (let r of this.roads) {
                     const step = 150;
                     const count = Math.floor((r.isHorizontal ? (r.x2 - r.x1) : (r.y2 - r.y1)) / step);
@@ -598,14 +448,12 @@
                         if (r.isHorizontal) {
                             x = r.x1 + t * (r.x2 - r.x1);
                             y = r.y1 - r.width / 2 - TROTTOIR_WIDTH / 2 - 4;
-                            // добавляем с двух сторон
                             if (Math.random() > 0.5) y = r.y1 + r.width / 2 + TROTTOIR_WIDTH / 2 + 4;
                         } else {
                             y = r.y1 + t * (r.y2 - r.y1);
                             x = r.x1 - r.width / 2 - TROTTOIR_WIDTH / 2 - 4;
                             if (Math.random() > 0.5) x = r.x1 + r.width / 2 + TROTTOIR_WIDTH / 2 + 4;
                         }
-                        // Проверка на перекрёсток
                         let onInter = false;
                         for (let inter of this.intersections) {
                             if (Math.hypot(x - inter.x, y - inter.y) < r.width / 2 + TROTTOIR_WIDTH + 10) {
@@ -619,12 +467,12 @@
                     }
                 }
 
-                // ---- 4.9 Светофоры (на двух углах каждого перекрёстка) ----
+                // ---- 4.8 Светофоры (на двух углах перекрёстков) ----
                 for (let inter of this.intersections) {
                     const { x, y } = inter;
                     const offsets = [
-                        { dx: -HALF_ROAD - 20, dy: -HALF_ROAD - 20 },
-                        { dx: HALF_ROAD + 20, dy: HALF_ROAD + 20 }
+                        { dx: -HALF_ROAD - 25, dy: -HALF_ROAD - 25 },
+                        { dx: HALF_ROAD + 25, dy: HALF_ROAD + 25 }
                     ];
                     for (let off of offsets) {
                         this.trafficLights.push({
@@ -636,20 +484,20 @@
                     }
                 }
 
-                // ---- 4.10 Облака ----
-                for (let i = 0; i < 50; i++) {
+                // ---- 4.9 Облака ----
+                for (let i = 0; i < 40; i++) {
                     let x, y;
                     const side = Math.floor(Math.random() * 4);
                     if (side === 0) { x = Math.random() * MAP_W;
-                        y = -50 - Math.random() * 500; } else if (side === 1) { x = Math.random() * MAP_W;
-                        y = MAP_H + 50 + Math.random() * 500; } else if (side === 2) { x = -50 - Math.random() * 500;
-                        y = Math.random() * MAP_H; } else { x = MAP_W + 50 + Math.random() * 500;
+                        y = -50 - Math.random() * 400; } else if (side === 1) { x = Math.random() * MAP_W;
+                        y = MAP_H + 50 + Math.random() * 400; } else if (side === 2) { x = -50 - Math.random() * 400;
+                        y = Math.random() * MAP_H; } else { x = MAP_W + 50 + Math.random() * 400;
                         y = Math.random() * MAP_H; }
-                    this.clouds.push({ x, y, w: 150 + Math.random() * 300, h: 60 + Math.random() * 150, opacity: 0.6 + Math
+                    this.clouds.push({ x, y, w: 150 + Math.random() * 250, h: 60 + Math.random() * 120, opacity: 0.5 + Math
                             .random() * 0.4 });
                 }
 
-                // ---- 4.11 Машины ----
+                // ---- 4.10 Машины ----
                 for (let i = 0; i < 20; i++) this.spawnCar();
             }
 
@@ -674,7 +522,7 @@
                     x,
                     y,
                     angle,
-                    speed: 0.5 + Math.random() * 0.8,
+                    speed: 0.6 + Math.random() * 0.8,
                     image: img,
                     color: colorKey,
                     turning: false,
@@ -707,7 +555,7 @@
                     car.y += Math.sin(car.angle) * car.speed;
                     // Поворот на перекрёстке
                     for (let inter of this.intersections) {
-                        if (Math.hypot(car.x - inter.x, car.y - inter.y) < 25 && !car.turning && Math.random() < 0.02) {
+                        if (Math.hypot(car.x - inter.x, car.y - inter.y) < 30 && !car.turning && Math.random() < 0.02) {
                             car.targetAngle = car.angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI / 2;
                             car.turning = true;
                             car.turnProgress = 0;
@@ -732,32 +580,34 @@
                 }
             }
 
-            // ---- Отрисовка ----
+            // ---- Отрисовка (красивая) ----
             draw(ctx) {
-                // Трава
+                // Трава с лёгкой текстурой
                 ctx.fillStyle = '#4a8f5c';
                 ctx.fillRect(0, 0, MAP_W, MAP_H);
+                for (let i = 0; i < 5000; i++) {
+                    const x = Math.random() * MAP_W;
+                    const y = Math.random() * MAP_H;
+                    ctx.fillStyle = Math.random() > 0.5 ? '#3d7a4e' : '#5a9f6a';
+                    ctx.fillRect(x, y, 2, 2);
+                }
 
-                // Дороги (с четырьмя полосами — две сплошные линии по центру)
+                // ---- Дороги ----
                 for (let r of this.roads) {
                     const w = r.width;
-                    // Основное полотно
                     ctx.strokeStyle = '#4a4a4a';
                     ctx.lineWidth = w;
                     ctx.beginPath();
                     ctx.moveTo(r.x1, r.y1);
                     ctx.lineTo(r.x2, r.y2);
                     ctx.stroke();
-
-                    // Четыре полосы: две сплошные линии по центру (разделитель)
+                    // Две сплошные линии по центру
                     const half = w / 2;
                     const offset = 4;
-                    ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+                    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
                     ctx.lineWidth = 3;
-                    ctx.setLineDash([]);
                     if (r.isHorizontal) {
                         const cy = r.y1;
-                        // центральная линия (двойная сплошная)
                         ctx.beginPath();
                         ctx.moveTo(r.x1, cy - offset);
                         ctx.lineTo(r.x2, cy - offset);
@@ -777,12 +627,40 @@
                         ctx.lineTo(cx + offset, r.y2);
                         ctx.stroke();
                     }
+                    // Крайние линии разметки (пунктир)
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([10, 15]);
+                    if (r.isHorizontal) {
+                        const yTop = r.y1 - half + 8;
+                        const yBot = r.y1 + half - 8;
+                        ctx.beginPath();
+                        ctx.moveTo(r.x1, yTop);
+                        ctx.lineTo(r.x2, yTop);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(r.x1, yBot);
+                        ctx.lineTo(r.x2, yBot);
+                        ctx.stroke();
+                    } else {
+                        const xLeft = r.x1 - half + 8;
+                        const xRight = r.x1 + half - 8;
+                        ctx.beginPath();
+                        ctx.moveTo(xLeft, r.y1);
+                        ctx.lineTo(xLeft, r.y2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(xRight, r.y1);
+                        ctx.lineTo(xRight, r.y2);
+                        ctx.stroke();
+                    }
+                    ctx.setLineDash([]);
                 }
 
-                // Тротуары
+                // ---- Тротуары ----
                 for (let r of this.roads) {
                     const w = r.width;
-                    const offset = w / 2 + 2;
+                    const offset = w / 2 + 4;
                     ctx.fillStyle = '#9a9a9a';
                     if (r.isHorizontal) {
                         const y1 = r.y1 - offset - TROTTOIR_WIDTH;
@@ -797,7 +675,20 @@
                     }
                 }
 
-                // Участки
+                // ---- Зелёные зоны ----
+                for (let g of this.greenZones) {
+                    ctx.fillStyle = '#3a7a4a';
+                    ctx.fillRect(g.x, g.y, g.w, g.h);
+                    // небольшие кусты
+                    for (let i = 0; i < 4; i++) {
+                        ctx.fillStyle = '#2d6a3a';
+                        ctx.beginPath();
+                        ctx.arc(g.x + Math.random() * g.w, g.y + Math.random() * g.h, 8 + Math.random() * 6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // ---- Участки ----
                 for (let p of this.plots) {
                     ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
@@ -813,24 +704,34 @@
                     ctx.font = '14px Arial';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(p.size / 80 + '×' + p.size / 80, p.x + p.size / 2, p.y + p.size / 2);
+                    ctx.fillText(p.label, p.x + p.size / 2, p.y + p.size / 2);
                 }
 
-                // Деревья
+                // ---- Деревья ----
                 if (treeImg.complete && treeImg.naturalWidth) {
                     for (let t of this.trees) {
-                        ctx.drawImage(treeImg, t.x - 12, t.y - 12, 24, 24);
+                        ctx.drawImage(treeImg, t.x - 14, t.y - 14, 28, 28);
                     }
                 }
 
-                // Фонари
+                // ---- Фонари ----
                 if (lampImg.complete && lampImg.naturalWidth) {
                     for (let l of this.lamps) {
-                        ctx.drawImage(lampImg, l.x - 8, l.y - 20, 16, 30);
+                        ctx.drawImage(lampImg, l.x - 8, l.y - 22, 16, 32);
+                        // Свет ночью
+                        if (!this.dayTime) {
+                            const grad = ctx.createRadialGradient(l.x, l.y - 20, 4, l.x, l.y - 20, 50);
+                            grad.addColorStop(0, 'rgba(255,200,100,0.3)');
+                            grad.addColorStop(1, 'rgba(255,200,100,0)');
+                            ctx.fillStyle = grad;
+                            ctx.beginPath();
+                            ctx.arc(l.x, l.y - 20, 50, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
                     }
                 }
 
-                // Светофоры
+                // ---- Светофоры ----
                 for (let tl of this.trafficLights) {
                     const img = tl.state === 'green' ? greenLightImg : redLightImg;
                     if (img.complete && img.naturalWidth) {
@@ -838,7 +739,7 @@
                     }
                 }
 
-                // Облака
+                // ---- Облака ----
                 const cloudImages = [cloudImg, cloud2Img];
                 for (let c of this.clouds) {
                     const img = cloudImages[Math.floor(Math.random() * cloudImages.length)];
@@ -849,23 +750,34 @@
                     }
                 }
 
-                // Сквер и мэрия
+                // ---- Центр: сквер и мэрия ----
+                // Сначала рисуем тротуар вокруг сквера
                 if (squareImg.complete && squareImg.naturalWidth) {
                     const s = this.centerSquare;
-                    const pad = 12;
+                    const pad = 20;
                     ctx.fillStyle = '#9a9a9a';
                     ctx.fillRect(s.x - pad, s.y - pad, s.w + pad * 2, s.h + pad * 2);
+                    // Узорная плитка
+                    for (let i = 0; i < 8; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            ctx.fillStyle = (i + j) % 2 === 0 ? '#b0b0b0' : '#8a8a8a';
+                            ctx.fillRect(s.x - pad + i * (s.w + pad * 2) / 8,
+                                s.y - pad + j * (s.h + pad * 2) / 8,
+                                (s.w + pad * 2) / 8 - 1,
+                                (s.h + pad * 2) / 8 - 1);
+                        }
+                    }
                     ctx.drawImage(squareImg, s.x, s.y, s.w, s.h);
                 }
                 if (hallImg.complete && hallImg.naturalWidth) {
                     const h = this.cityHall;
-                    const pad = 12;
+                    const pad = 15;
                     ctx.fillStyle = '#9a9a9a';
                     ctx.fillRect(h.x - pad, h.y - pad, h.w + pad * 2, h.h + pad * 2);
                     ctx.drawImage(hallImg, h.x, h.y, h.w, h.h);
                 }
 
-                // Машины
+                // ---- Машины ----
                 for (let car of this.cars) {
                     if (car.image && car.image.complete) {
                         ctx.save();
@@ -876,7 +788,7 @@
                     }
                 }
 
-                // Ночной режим
+                // ---- Ночной режим ----
                 if (!this.dayTime) {
                     ctx.fillStyle = 'rgba(0,0,30,0.4)';
                     ctx.fillRect(0, 0, MAP_W, MAP_H);
@@ -902,7 +814,6 @@
         squareImg.src = 'garden.png';
         const hallImg = new Image();
         hallImg.src = 'City_Hall.jpg';
-
         const treeImg = new Image();
         treeImg.src = 'tree.png';
         const lampImg = new Image();
@@ -1068,7 +979,7 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        console.log('🏙️ Городской Магнат загружен!');
+        console.log('🏙️ Городской Магнат загружен (красивая карта)');
         console.log(`📐 Размер карты: ${MAP_W}×${MAP_H}`);
         console.log(`📦 Участков: ${city.plots.length}`);
         console.log(`🌳 Деревьев: ${city.trees.length}`);
