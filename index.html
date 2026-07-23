@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>NEXUS</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -69,12 +70,11 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
-            font-family: 'Georgia', serif;
-            font-style: italic;
+            font-family: 'Pacifico', cursive;
             font-size: clamp(40px, 9vw, 60px);
             font-weight: 400;
             color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 4px;
+            letter-spacing: 2px;
             background: transparent;
             padding: 0;
             border: none;
@@ -135,41 +135,12 @@
             pointer-events: none;
         }
 
-        .menu-btn img.onerror + .fallback-text,
-        .menu-btn img:not([src]) + .fallback-text {
+        .menu-btn img.onerror+.fallback-text,
+        .menu-btn img:not([src])+.fallback-text {
             display: block;
         }
 
-        /* ===== ИГРА ===== */
-        #gameContainer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            overflow: hidden;
-            display: none;
-            flex-direction: column;
-            background: #4a8f5c;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        #gameContainer.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        #gameCanvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #4a8f5c;
-            image-rendering: auto;
-        }
-
-        /* ===== ОБЛАКА ДЛЯ АНИМАЦИИ ===== */
+        /* ===== ОБЛАКА ===== */
         .clouds-overlay {
             position: fixed;
             top: 0;
@@ -229,206 +200,498 @@
             background: rgba(200, 210, 230, 0.6);
         }
 
-        /* ===== ИНТЕРФЕЙС ===== */
-        .game-top-panel {
+        /* ===== ИГРА ===== */
+        #gameContainer {
             position: fixed;
-            top: env(safe-area-inset-top, 12px);
+            top: 0;
             left: 0;
-            right: 0;
-            z-index: 10;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            padding: 0 16px;
-            pointer-events: none;
-        }
-        .game-top-panel>* {
-            pointer-events: auto;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            background: #4a8f5c;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 30px;
-            padding: 5px 12px;
+        #gameContainer.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #4a8f5c;
+            image-rendering: auto;
+        }
+
+        /* ===== БАНК ===== */
+        #bankPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 20;
+            background: #ffffff;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #bankPage.active {
+            display: flex;
+        }
+
+        .bank-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bank-header h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 28px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bank-header h1 img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .bank-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #888;
             cursor: pointer;
-            transition: 0.2s;
+            padding: 4px 12px;
+        }
+
+        .bank-section {
+            background: #ffffff;
+            border: 2px solid #ddd;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .bank-section-header {
             display: flex;
             align-items: center;
-            gap: 4px;
-            color: #fff;
-            font-size: 12px;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .back-btn img {
-            width: 18px;
-            height: 18px;
-            object-fit: contain;
-        }
-
-        .right-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .glass-box {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 30px;
-            padding: 3px 12px 3px 10px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 700;
-            color: #fff;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .glass-box .icon {
-            font-size: 14px;
-            line-height: 1;
-        }
-        .glass-box .amount {
-            font-size: 14px;
-            font-weight: 700;
-        }
-        .glass-box.coins .amount {
-            color: #f1c40f;
-        }
-        .glass-box.gems .amount {
-            color: #5dade2;
-        }
-        .glass-box.gems {
-            font-size: 11px;
-            padding: 2px 8px;
-        }
-        .glass-box.gems .amount {
-            font-size: 12px;
-        }
-
-        .district-header {
-            position: fixed;
-            top: 68px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: clamp(20px, 4.5vw, 32px);
-            color: rgba(255, 255, 255, 0.85);
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(6px);
-            padding: 4px 16px 4px 12px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            white-space: nowrap;
-        }
-
-        .district-header .sticker {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-
-        .level-bar-wrapper {
-            position: fixed;
-            bottom: 68px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            width: calc(100% - 40px);
-            max-width: 680px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 18px;
-            padding: 5px 14px 6px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-            pointer-events: none;
-        }
-
-        .level-bar-inner {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .level-top {
-            display: flex;
             justify-content: space-between;
-            font-weight: 700;
-            color: #fff;
-            font-size: 11px;
+            padding: 14px 18px;
+            cursor: pointer;
+            background: #fafafa;
+            transition: background 0.2s;
+        }
+
+        .bank-section-header:hover {
+            background: #f5f5f5;
+        }
+
+        .bank-section-header .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .bank-section-header .left img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .bank-section-header .arrow {
+            font-size: 20px;
+            color: #999;
+            transition: transform 0.3s;
+        }
+
+        .bank-section-header .arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .bank-section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 18px;
+            background: #ffffff;
+        }
+
+        .bank-section-body.open {
+            max-height: 800px;
+            padding: 16px 18px;
+        }
+
+        /* ===== БАЛАНС ===== */
+        .balance-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .balance-item {
+            flex: 1;
+            min-width: 100px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .balance-item .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .level-top .lvl {
-            font-size: 12px;
-            color: #e94560;
-        }
-        .level-top .xp {
-            font-size: 10px;
-            opacity: 0.6;
+
+        .balance-item .value {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 4px;
         }
 
-        .level-progress {
+        .balance-item .value.coins {
+            color: #f1c40f;
+        }
+        .balance-item .value.gems {
+            color: #3498db;
+        }
+
+        .donate-section {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .donate-section .label {
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .donate-btn {
+            background: #f1c40f;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .donate-btn:hover {
+            background: #e0b50a;
+            transform: scale(1.02);
+        }
+
+        /* ===== КРЕДИТ ===== */
+        .credit-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .credit-item .amount {
+            font-family: 'Pacifico', cursive;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .credit-item .percent {
+            font-family: 'Pacifico', cursive;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .credit-item .remaining {
+            font-family: 'Pacifico', cursive;
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .credit-progress {
             width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.06);
+            height: 8px;
+            background: #eee;
             border-radius: 10px;
+            margin: 8px 0;
             overflow: hidden;
             position: relative;
         }
 
-        .level-progress .fill {
+        .credit-progress .fill {
             height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #e94560, #f39c12);
+            background: #2ecc71;
             border-radius: 10px;
             transition: width 0.6s;
         }
 
-        .level-progress .ticks {
+        .credit-progress .time-label {
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            color: #fff;
+            font-weight: 600;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .credit-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .credit-pay-btn {
+            background: #f1c40f;
+            border: none;
+            padding: 4px 16px;
+            border-radius: 16px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .credit-pay-btn:hover {
+            background: #e0b50a;
+            transform: scale(1.02);
+        }
+
+        .no-credits {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            padding: 20px 0;
+            font-style: italic;
+        }
+
+        /* ===== ВЗЯТЬ КРЕДИТ ===== */
+        .loan-slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .loan-slider-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .loan-slider-item .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .loan-slider-item .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .loan-slider-item input[type="range"] {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .loan-slider-item input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .loan-slider-item .value-display {
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .loan-slider-item .value-display.time {
+            color: #9b59b6;
+        }
+        .loan-slider-item .value-display.percent {
+            color: #f1c40f;
+        }
+        .loan-slider-item .value-display.amount {
+            color: #2ecc71;
+        }
+
+        .loan-slider-item input[type="range"].time-slider::-webkit-slider-thumb {
+            background: #9b59b6;
+        }
+        .loan-slider-item input[type="range"].percent-slider::-webkit-slider-thumb {
+            background: #f1c40f;
+        }
+        .loan-slider-item input[type="range"].amount-slider::-webkit-slider-thumb {
+            background: #2ecc71;
+        }
+
+        .loan-take-btn {
+            background: #2ecc71;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .loan-take-btn:hover {
+            background: #27ae60;
+            transform: scale(1.01);
+        }
+
+        /* ===== МИНИ ОКНА ===== */
+        .mini-modal {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mini-modal.active {
+            display: flex;
+        }
+
+        .mini-modal-content {
+            background: #fff;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 340px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .mini-modal-content .close-cross {
+            position: absolute;
+            top: 10px;
+            left: 16px;
+            font-size: 22px;
+            color: #e74c3c;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 700;
+        }
+
+        .mini-modal-content h3 {
+            text-align: center;
+            font-family: 'Pacifico', cursive;
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .mini-modal-content .slider-label {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .mini-modal-content input[type="range"] {
             width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 2px;
-            pointer-events: none;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+            outline: none;
+            margin: 8px 0;
         }
 
-        .level-progress .ticks span {
-            display: block;
-            width: 2px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.08);
+        .mini-modal-content input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #f1c40f;
+            cursor: pointer;
         }
 
-        .level-bottom {
-            display: flex;
-            justify-content: space-between;
-            font-size: 7px;
-            color: rgba(255, 255, 255, 0.25);
-            margin-top: 1px;
+        .mini-modal-content .mini-value {
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #333;
         }
 
+        .mini-modal-content .mini-confirm {
+            background: #f1c40f;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+
+        .mini-modal-content .mini-confirm:hover {
+            background: #e0b50a;
+        }
+
+        /* ===== ФУТЕР ===== */
         .footer {
             position: fixed;
             bottom: 0;
@@ -491,109 +754,6 @@
             opacity: 1;
         }
 
-        /* ===== СТРАНИЦЫ ===== */
-        .page-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(6px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .page-overlay.active {
-            display: flex;
-        }
-
-        .page {
-            background: #1a1a2e;
-            border-radius: 28px;
-            padding: 28px;
-            max-width: 460px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            color: #fff;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
-
-        .page .close-btn {
-            position: absolute;
-            top: 14px;
-            right: 18px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 22px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .page .close-btn:hover {
-            color: #fff;
-        }
-
-        .page h2 {
-            font-size: 20px;
-            margin-bottom: 18px;
-            color: #e94560;
-            text-align: center;
-        }
-
-        .page .content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .page .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .page .row .label {
-            color: #888;
-        }
-        .page .row .value {
-            font-weight: 600;
-        }
-
-        .page .action-btn {
-            background: #e94560;
-            border: none;
-            color: #fff;
-            padding: 10px;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: 6px;
-        }
-
-        .page .action-btn:hover {
-            background: #c0392b;
-        }
-
-        .page .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .page .action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
         .toast {
             position: fixed;
             bottom: 110px;
@@ -617,7 +777,6 @@
             opacity: 1;
         }
 
-        /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 480px) {
             .menu-buttons {
                 gap: 10px;
@@ -631,26 +790,6 @@
             .game-title {
                 top: 6%;
                 font-size: clamp(32px, 8vw, 40px);
-            }
-            .district-header {
-                top: 58px;
-                font-size: clamp(16px, 4vw, 22px);
-                padding: 3px 12px 3px 8px;
-            }
-            .district-header .sticker {
-                width: 22px;
-                height: 22px;
-            }
-            .level-bar-wrapper {
-                bottom: 58px;
-                width: calc(100% - 32px);
-                padding: 4px 10px 5px;
-            }
-            .level-top {
-                font-size: 10px;
-            }
-            .level-top .lvl {
-                font-size: 11px;
             }
             .footer {
                 padding: 4px 4px env(safe-area-inset-bottom, 4px) 4px;
@@ -666,27 +805,21 @@
             .footer button .label {
                 font-size: 6px;
             }
-            .glass-box {
-                font-size: 11px;
-                padding: 2px 8px;
+            .bank-header h1 {
+                font-size: 22px;
             }
-            .glass-box .amount {
-                font-size: 12px;
+            .bank-section-header {
+                padding: 10px 14px;
             }
-            .glass-box.gems {
-                font-size: 10px;
-                padding: 1px 6px;
+            .bank-section-body.open {
+                padding: 12px 14px;
             }
-            .glass-box.gems .amount {
-                font-size: 11px;
+            .balance-row {
+                flex-direction: column;
+                gap: 8px;
             }
-            .back-btn {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
-            .back-btn img {
-                width: 14px;
-                height: 14px;
+            .credit-item {
+                padding: 12px;
             }
         }
 
@@ -708,173 +841,195 @@
 
     <!-- ===== МЕНЮ ===== -->
     <div id="menuContainer">
-        <img id="bgImage" src="menu.PNG" alt="NEXUS" onerror="this.style.display='none'">
+        <img id="bgImage" src="menu.PNG" alt="NEXUS">
         <div class="overlay"></div>
         <div class="game-title">NEXUS</div>
         <div class="menu-buttons">
             <button class="menu-btn" onclick="selectDistrict('centre')">
-                <img src="icon_centre.jpg" alt="Centre" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_centre.jpg" alt="Centre">
                 <span class="fallback-text">🏙️ Centre</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('suburbs')">
-                <img src="icon_suburbs.jpg" alt="Suburbs" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_suburbs.jpg" alt="Suburbs">
                 <span class="fallback-text">🌳 Suburbs</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('park')">
-                <img src="icon_park.jpg" alt="Park" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_park.jpg" alt="Park">
                 <span class="fallback-text">🌿 Park</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('residential')">
-                <img src="icon_residential.jpg" alt="Residential" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_residential.jpg" alt="Residential">
                 <span class="fallback-text">🏘️ Residential</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('industrial')">
-                <img src="icon_industrial.jpg" alt="Industrial" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_industrial.jpg" alt="Industrial">
                 <span class="fallback-text">🏭 Industrial</span>
             </button>
         </div>
     </div>
 
-    <!-- ===== ИГРА ===== -->
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
+    <!-- ===== БАНК ===== -->
+    <div id="bankPage">
+        <div class="bank-header">
+            <h1>
+                <img src="bank_icon.png" alt="Bank">
+                Bank
+            </h1>
+            <button class="bank-close" onclick="closeBank()">✕</button>
+        </div>
 
-        <div class="game-top-panel">
-            <button class="back-btn" onclick="goBack()">
-                <img src="back.png" alt="Back" onerror="this.textContent='←'">
-                Back
-            </button>
-            <div class="right-group">
-                <div class="glass-box coins">
-                    <span class="icon">🪙</span>
-                    <span class="amount" id="coinAmount">12 340</span>
+        <!-- 1. Мой банк -->
+        <div class="bank-section">
+            <div class="bank-section-header" onclick="toggleSection(this)">
+                <div class="left">
+                    <img src="bank_icon.png" alt="Bank">
+                    Мой банк
                 </div>
-                <div class="glass-box gems">
-                    <span class="icon">💎</span>
-                    <span class="amount" id="gemAmount">85</span>
-                </div>
+                <span class="arrow">▼</span>
             </div>
-        </div>
-
-        <div class="district-header" id="districtHeader">
-            <img class="sticker" id="districtSticker" src="icon_centre.jpg" alt="">
-            <span id="districtName">Centre</span>
-        </div>
-
-        <div class="level-bar-wrapper">
-            <div class="level-bar-inner">
-                <div class="level-top">
-                    <span class="lvl">LEVEL 1</span>
-                    <span class="xp">0 / 100 XP</span>
-                </div>
-                <div class="level-progress">
-                    <div class="fill" style="width:0%;"></div>
-                    <div class="ticks">
-                        <span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span>
-                        <span></span><span></span><span></span><span></span>
+            <div class="bank-section-body open">
+                <div class="balance-row">
+                    <div class="balance-item">
+                        <div class="label">Баланс</div>
+                        <div class="value coins" id="balanceCoins">10000 🪙</div>
+                    </div>
+                    <div class="balance-item">
+                        <div class="label">Кристаллы</div>
+                        <div class="value gems" id="balanceGems">10 💎</div>
                     </div>
                 </div>
-                <div class="level-bottom"><span>0 XP</span><span>100 XP</span></div>
+
+                <div class="donate-section">
+                    <span class="label">❤️ Благотворительность: <span id="donatedAmount">0</span> 🪙</span>
+                    <button class="donate-btn" onclick="openDonateModal()">Пожертвовать</button>
+                </div>
             </div>
         </div>
 
-        <div class="footer" id="footer">
-            <button onclick="openPage('bank')">
-                <img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'">
-                <span class="label">Bank</span>
-            </button>
-            <button onclick="openPage('resources')">
-                <img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'">
-                <span class="label">Resources</span>
-            </button>
-            <button onclick="openPage('home')" class="active">
-                <img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'">
-                <span class="label">Home</span>
-            </button>
-            <button onclick="openPage('quests')">
-                <img src="tasks_icon.png" alt="Quests" class="icon" onerror="this.textContent='📋'">
-                <span class="label">Quests</span>
-            </button>
-            <button onclick="openPage('stats')">
-                <img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'">
-                <span class="label">Stats</span>
-            </button>
-        </div>
-    </div>
+        <!-- 2. Кредит -->
+        <div class="bank-section">
+            <div class="bank-section-header" onclick="toggleSection(this)">
+                <div class="left">
+                    <img src="bank_icon.png" alt="Credit">
+                    Кредит
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="bank-section-body">
+                <!-- Мой кредит -->
+                <div style="margin-bottom: 12px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #aaa; margin-bottom: 8px;">Мой кредит</div>
+                    <div id="myCreditContainer">
+                        <div class="no-credits">Нет кредитов</div>
+                    </div>
+                </div>
 
-    <!-- ===== СТРАНИЦЫ ===== -->
-    <div class="page-overlay" id="page-bank">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('bank')">✕</button>
-            <h2>💰 Bank</h2>
-            <div class="content">
-                <div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div>
-                <div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div>
-                <div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div>
-                <button class="action-btn">Take Loan</button>
-                <button class="action-btn secondary">Repay Loan</button>
-                <button class="action-btn secondary">Deposit</button>
+                <!-- Оформление кредита -->
+                <div style="border-top: 1px solid #eee; padding-top: 12px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #aaa; margin-bottom: 8px;">Оформление кредита</div>
+                    <div class="loan-slider-group">
+                        <div class="loan-slider-item">
+                            <div class="label">⏱️ Время (дни)</div>
+                            <div class="slider-row">
+                                <input type="range" class="time-slider" id="loanTime" min="3" max="30" value="7">
+                                <span class="value-display time" id="loanTimeValue">7</span>
+                            </div>
+                        </div>
+                        <div class="loan-slider-item">
+                            <div class="label">📈 Процент (%)</div>
+                            <div class="slider-row">
+                                <input type="range" class="percent-slider" id="loanPercent" min="5" max="25" value="10">
+                                <span class="value-display percent" id="loanPercentValue">10</span>
+                            </div>
+                        </div>
+                        <div class="loan-slider-item">
+                            <div class="label">💰 Сумма</div>
+                            <div class="slider-row">
+                                <input type="range" class="amount-slider" id="loanAmount" min="100" max="10000" step="100" value="1000">
+                                <span class="value-display amount" id="loanAmountValue">1000</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="loan-take-btn" onclick="takeLoan()">Взять кредит</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="page-overlay" id="page-resources">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('resources')">✕</button>
-            <h2>📦 Resources</h2>
-            <div class="content">
-                <div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div>
-                <div class="row"><span class="label">🔥 Gas</span><span class="value">32</span></div>
-                <div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div>
-                <div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div>
-                <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
-                <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
-                <button class="action-btn secondary">Trade</button>
+        <!-- 3. Доходы и расходы -->
+        <div class="bank-section">
+            <div class="bank-section-header" onclick="toggleSection(this)">
+                <div class="left">
+                    <img src="statistic_icon.png" alt="Stats">
+                    Доходы и расходы
+                </div>
+                <span class="arrow">▼</span>
             </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-quests">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('quests')">✕</button>
-            <h2>📋 Quests</h2>
-            <div class="content">
-                <div class="row"><span class="label">🚀 Build 5 houses</span><span class="value">0/5</span></div>
-                <div class="row"><span class="label">💰 Earn 1000 coins</span><span class="value">340/1000</span></div>
-                <div class="row"><span class="label">👥 Reach 100 population</span><span class="value">42/100</span></div>
-                <button class="action-btn secondary">Refresh</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-stats">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('stats')">✕</button>
-            <h2>📊 Stats</h2>
-            <div class="content">
-                <div class="row"><span class="label">🏙️ City</span><span class="value">NEXUS</span></div>
-                <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
-                <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
-                <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
-                <div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div>
-                <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
+            <div class="bank-section-body">
+                <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                    <span style="color: #888;">📈 Доходы:</span>
+                    <span id="incomeDisplay">0 🪙</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                    <span style="color: #888;">📉 Расходы:</span>
+                    <span id="expenseDisplay">0 🪙</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px solid #eee; margin-top: 4px;">
+                    <span style="font-weight: 600;">💰 Итого:</span>
+                    <span id="totalDisplay">0 🪙</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="page-overlay" id="page-home">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('home')">✕</button>
-            <h2>🏠 Home</h2>
-            <div class="content">
-                <p style="text-align:center;color:#888;">Карта центрирована</p>
-                <button class="action-btn" onclick="closePage('home')">OK</button>
-            </div>
+    <!-- ===== МИНИ ОКНА ===== -->
+    <div class="mini-modal" id="donateModal">
+        <div class="mini-modal-content">
+            <button class="close-cross" onclick="closeDonateModal()">✕</button>
+            <h3>❤️ Пожертвование</h3>
+            <div class="slider-label">Сумма: <span id="donateSliderValue">100</span> 🪙</div>
+            <input type="range" id="donateSlider" min="1" max="10000" value="100">
+            <button class="mini-confirm" onclick="confirmDonate()">Подтвердить</button>
         </div>
     </div>
 
-    <div class="toast" id="toast"></div>
+    <div class="mini-modal" id="payCreditModal">
+        <div class="mini-modal-content">
+            <button class="close-cross" onclick="closePayCreditModal()">✕</button>
+            <h3>💰 Выплата кредита</h3>
+            <div class="slider-label">Сумма: <span id="payCreditSliderValue">100</span> 🪙</div>
+            <input type="range" id="payCreditSlider" min="1" max="10000" value="100">
+            <button class="mini-confirm" onclick="confirmPayCredit()">Подтвердить выплату</button>
+        </div>
+    </div>
+
+    <!-- ===== ИГРОВОЙ КОНТЕЙНЕР ===== -->
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- ===== ФУТЕР ===== -->
+    <div class="footer" id="footer">
+        <button onclick="openBankWithClouds()">
+            <img src="bank_icon.png" alt="Bank" class="icon">
+            <span class="label">Bank</span>
+        </button>
+        <button onclick="openPage('resources')">
+            <img src="resources_icon.png" alt="Resources" class="icon">
+            <span class="label">Resources</span>
+        </button>
+        <button onclick="goHome()" class="active">
+            <img src="home_icon.png" alt="Home" class="icon">
+            <span class="label">Home</span>
+        </button>
+        <button onclick="openPage('quests')">
+            <img src="tasks_icon.png" alt="Quests" class="icon">
+            <span class="label">Quests</span>
+        </button>
+        <button onclick="openPage('stats')">
+            <img src="statistic_icon.png" alt="Stats" class="icon">
+            <span class="label">Stats</span>
+        </button>
+    </div>
 
     <!-- ===== ОБЛАКА ===== -->
     <div class="clouds-overlay" id="cloudsOverlay">
@@ -888,6 +1043,8 @@
         <div class="cloud dark" id="cloud8"></div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
         // ============================================================
         // 1. TELEGRAM
@@ -899,6 +1056,15 @@
         // ============================================================
         // 2. ДАННЫЕ
         // ============================================================
+        let balance = 10000;
+        let gems = 10;
+        let donated = 0;
+        let loans = [];
+        let loanIdCounter = 0;
+        let currentDonateMax = 10000;
+        let currentPayMax = 10000;
+        let activeLoanId = null;
+
         const districtData = {
             centre: { name: 'Centre', sticker: 'icon_centre.jpg' },
             suburbs: { name: 'Suburbs', sticker: 'icon_suburbs.jpg' },
@@ -912,55 +1078,66 @@
         let animationRunning = false;
 
         // ============================================================
-        // 3. ВЫБОР РАЙОНА (АНИМАЦИЯ)
+        // 3. ОБЛАКА (универсальная анимация)
+        // ============================================================
+        function runCloudsAnimation(callback, duration = 3800) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('cloudsOverlay');
+                overlay.classList.add('active');
+
+                const clouds = document.querySelectorAll('.cloud');
+                const containerWidth = window.innerWidth;
+
+                clouds.forEach((cloud, i) => {
+                    const size = 80 + Math.random() * 120;
+                    const top = 10 + Math.random() * (window.innerHeight - 160);
+                    cloud.style.width = size + 'px';
+                    cloud.style.height = (size * 0.5) + 'px';
+                    cloud.style.top = top + 'px';
+                    cloud.style.opacity = '0';
+                    cloud.style.transform = 'translateX(-200px)';
+                    cloud.style.transition = 'none';
+                });
+
+                clouds.forEach((cloud, i) => {
+                    const delay = 100 + i * 100 + Math.random() * 150;
+                    setTimeout(() => {
+                        cloud.style.transition =
+                            `all ${1.5 + Math.random() * 1.2}s cubic-bezier(0.2, 0.85, 0.4, 1)`;
+                        cloud.style.opacity = 0.5 + Math.random() * 0.4;
+                        cloud.style.transform = `translateX(${containerWidth + 150}px)`;
+                    }, delay);
+                });
+
+                setTimeout(() => {
+                    overlay.classList.remove('active');
+                    clouds.forEach(c => {
+                        c.style.transition = 'none';
+                        c.style.opacity = '0';
+                        c.style.transform = 'translateX(-200px)';
+                    });
+                    if (callback) callback();
+                    resolve();
+                }, duration);
+            });
+        }
+
+        // ============================================================
+        // 4. ВЫБОР РАЙОНА
         // ============================================================
         function selectDistrict(district) {
             if (animationRunning) return;
             animationRunning = true;
-
             currentDistrict = district;
 
-            const overlay = document.getElementById('cloudsOverlay');
-            overlay.classList.add('active');
-
-            const clouds = document.querySelectorAll('.cloud');
-            const containerWidth = window.innerWidth;
-
-            clouds.forEach((cloud, i) => {
-                const size = 80 + Math.random() * 120;
-                const top = 10 + Math.random() * (window.innerHeight - 160);
-                cloud.style.width = size + 'px';
-                cloud.style.height = (size * 0.5) + 'px';
-                cloud.style.top = top + 'px';
-                cloud.style.opacity = '0';
-                cloud.style.transform = 'translateX(-200px)';
-                cloud.style.transition = 'none';
-            });
-
-            clouds.forEach((cloud, i) => {
-                const delay = 100 + i * 100 + Math.random() * 150;
-                setTimeout(() => {
-                    cloud.style.transition =
-                        `all ${1.5 + Math.random() * 1.2}s cubic-bezier(0.2, 0.85, 0.4, 1)`;
-                    cloud.style.opacity = 0.5 + Math.random() * 0.4;
-                    cloud.style.transform = `translateX(${containerWidth + 150}px)`;
-                }, delay);
-            });
-
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                clouds.forEach(c => {
-                    c.style.transition = 'none';
-                    c.style.opacity = '0';
-                    c.style.transform = 'translateX(-200px)';
-                });
+            runCloudsAnimation(() => {
                 openGame(district);
                 animationRunning = false;
             }, 3800);
         }
 
         // ============================================================
-        // 4. ОТКРЫТИЕ ИГРЫ
+        // 5. ОТКРЫТИЕ ИГРЫ
         // ============================================================
         function openGame(district) {
             const data = districtData[district];
@@ -973,14 +1150,11 @@
             const gameContainer = document.getElementById('gameContainer');
             gameContainer.classList.add('active');
 
-            document.getElementById('districtName').textContent = data.name;
-            document.getElementById('districtSticker').src = data.sticker;
-
             initMap();
         }
 
         // ============================================================
-        // 5. КАРТА (ОПТИМИЗИРОВАННАЯ)
+        // 6. КАРТА
         // ============================================================
         function initMap() {
             if (mapInitialized) return;
@@ -1025,41 +1199,247 @@
         }
 
         // ============================================================
-        // 6. ВОЗВРАТ
+        // 7. ВОЗВРАТ В МЕНЮ
         // ============================================================
-        function goBack() {
-            const gameContainer = document.getElementById('gameContainer');
-            gameContainer.classList.remove('active');
-            setTimeout(() => {
-                gameContainer.style.display = 'none';
-                document.getElementById('menuContainer').style.display = 'flex';
-                setTimeout(() => {
-                    document.getElementById('menuContainer').style.opacity = '1';
-                }, 50);
-            }, 400);
-            mapInitialized = false;
-        }
-
-        // ============================================================
-        // 7. СТРАНИЦЫ
-        // ============================================================
-        function openPage(page) {
-            document.querySelectorAll('.page-overlay').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
+        function goHome() {
             document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.footer button');
-            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'quests': 3, 'stats': 4 };
-            if (map[page] !== undefined) btns[map[page]].classList.add('active');
-        }
+            btns[2].classList.add('active');
 
-        function closePage(page) {
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.remove('active');
+            if (document.getElementById('bankPage').classList.contains('active')) {
+                closeBank();
+                return;
+            }
+
+            runCloudsAnimation(() => {
+                const gameContainer = document.getElementById('gameContainer');
+                gameContainer.classList.remove('active');
+                setTimeout(() => {
+                    gameContainer.style.display = 'none';
+                    document.getElementById('menuContainer').style.display = 'flex';
+                    setTimeout(() => {
+                        document.getElementById('menuContainer').style.opacity = '1';
+                    }, 50);
+                }, 400);
+                mapInitialized = false;
+            }, 3500);
         }
 
         // ============================================================
-        // 8. TOAST
+        // 8. БАНК
+        // ============================================================
+        function openBankWithClouds() {
+            if (animationRunning) return;
+            animationRunning = true;
+
+            runCloudsAnimation(() => {
+                document.getElementById('bankPage').classList.add('active');
+                updateBankUI();
+                animationRunning = false;
+            }, 3500);
+        }
+
+        function closeBank() {
+            document.getElementById('bankPage').classList.remove('active');
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            const btns = document.querySelectorAll('.footer button');
+            btns[2].classList.add('active');
+        }
+
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            body.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
+
+        // ============================================================
+        // 9. БАНК: UI ОБНОВЛЕНИЕ
+        // ============================================================
+        function updateBankUI() {
+            document.getElementById('balanceCoins').textContent = balance + ' 🪙';
+            document.getElementById('balanceGems').textContent = gems + ' 💎';
+            document.getElementById('donatedAmount').textContent = donated;
+
+            // Кредиты
+            const container = document.getElementById('myCreditContainer');
+            if (loans.length === 0) {
+                container.innerHTML = '<div class="no-credits">Нет кредитов</div>';
+            } else {
+                container.innerHTML = '';
+                loans.forEach((loan, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'credit-item';
+                    const progress = (1 - loan.remaining / loan.total) * 100;
+                    const daysLeft = Math.ceil(loan.remaining / (loan.total / loan.days));
+
+                    div.innerHTML = `
+                        <div class="amount">💰 ${loan.amount} 🪙</div>
+                        <div class="percent">📈 Процент: ${loan.percent}%</div>
+                        <div class="remaining">⏱️ Осталось: ${Math.ceil(loan.remaining)} 🪙</div>
+                        <div class="credit-progress">
+                            <div class="fill" style="width:${Math.min(progress, 100)}%;"></div>
+                            <span class="time-label">${daysLeft} дн.</span>
+                        </div>
+                        <div class="credit-actions">
+                            <button class="credit-pay-btn" onclick="openPayCreditModal(${index})">Выплатить</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            // Доходы и расходы (заглушка)
+            document.getElementById('incomeDisplay').textContent = Math.floor(Math.random() * 500 + 200) + ' 🪙';
+            document.getElementById('expenseDisplay').textContent = Math.floor(Math.random() * 300 + 100) + ' 🪙';
+            document.getElementById('totalDisplay').textContent = Math.floor(Math.random() * 300 + 100) + ' 🪙';
+        }
+
+        // ============================================================
+        // 10. БАНК: ПОЖЕРТВОВАНИЕ
+        // ============================================================
+        function openDonateModal() {
+            currentDonateMax = balance;
+            document.getElementById('donateSlider').max = currentDonateMax;
+            document.getElementById('donateSlider').value = Math.min(100, currentDonateMax);
+            document.getElementById('donateSliderValue').textContent = Math.min(100, currentDonateMax);
+            document.getElementById('donateModal').classList.add('active');
+        }
+
+        function closeDonateModal() {
+            document.getElementById('donateModal').classList.remove('active');
+        }
+
+        document.getElementById('donateSlider').addEventListener('input', function() {
+            document.getElementById('donateSliderValue').textContent = this.value;
+        });
+
+        function confirmDonate() {
+            const amount = parseInt(document.getElementById('donateSlider').value);
+            if (amount <= 0 || amount > balance) {
+                showToast('❌ Недостаточно средств!', 'error');
+                return;
+            }
+            balance -= amount;
+            donated += amount;
+            closeDonateModal();
+            updateBankUI();
+            showToast('❤️ Спасибо за пожертвование!', 'success');
+        }
+
+        // ============================================================
+        // 11. БАНК: ВЗЯТЬ КРЕДИТ
+        // ============================================================
+        document.getElementById('loanTime').addEventListener('input', function() {
+            document.getElementById('loanTimeValue').textContent = this.value;
+        });
+
+        document.getElementById('loanPercent').addEventListener('input', function() {
+            document.getElementById('loanPercentValue').textContent = this.value;
+        });
+
+        document.getElementById('loanAmount').addEventListener('input', function() {
+            document.getElementById('loanAmountValue').textContent = this.value;
+        });
+
+        function takeLoan() {
+            const days = parseInt(document.getElementById('loanTime').value);
+            const percent = parseInt(document.getElementById('loanPercent').value);
+            const amount = parseInt(document.getElementById('loanAmount').value);
+
+            if (amount <= 0) {
+                showToast('❌ Сумма должна быть больше 0', 'error');
+                return;
+            }
+
+            // Проверка на общий долг (не более 200% от баланса)
+            const totalDebt = loans.reduce((sum, l) => sum + l.remaining, 0);
+            if (totalDebt + amount > balance * 2) {
+                showToast('❌ Слишком большая кредитная нагрузка!', 'error');
+                return;
+            }
+
+            const totalAmount = amount + (amount * percent / 100);
+            loans.push({
+                id: loanIdCounter++,
+                amount: amount,
+                percent: percent,
+                total: totalAmount,
+                remaining: totalAmount,
+                days: days,
+                takenAt: Date.now()
+            });
+
+            balance += amount;
+            updateBankUI();
+            showToast(`✅ Кредит ${amount} 🪙 одобрен!`, 'success');
+        }
+
+        // ============================================================
+        // 12. БАНК: ВЫПЛАТА КРЕДИТА
+        // ============================================================
+        let payCreditIndex = -1;
+
+        function openPayCreditModal(index) {
+            payCreditIndex = index;
+            const loan = loans[index];
+            if (!loan) return;
+            currentPayMax = Math.min(balance, loan.remaining);
+            document.getElementById('payCreditSlider').max = currentPayMax;
+            document.getElementById('payCreditSlider').value = Math.min(100, currentPayMax);
+            document.getElementById('payCreditSliderValue').textContent = Math.min(100, currentPayMax);
+            document.getElementById('payCreditModal').classList.add('active');
+        }
+
+        function closePayCreditModal() {
+            document.getElementById('payCreditModal').classList.remove('active');
+            payCreditIndex = -1;
+        }
+
+        document.getElementById('payCreditSlider').addEventListener('input', function() {
+            document.getElementById('payCreditSliderValue').textContent = this.value;
+        });
+
+        function confirmPayCredit() {
+            if (payCreditIndex < 0 || payCreditIndex >= loans.length) {
+                showToast('❌ Ошибка', 'error');
+                return;
+            }
+            const amount = parseInt(document.getElementById('payCreditSlider').value);
+            const loan = loans[payCreditIndex];
+            if (amount <= 0 || amount > loan.remaining || amount > balance) {
+                showToast('❌ Недостаточно средств!', 'error');
+                return;
+            }
+
+            balance -= amount;
+            loan.remaining -= amount;
+
+            if (loan.remaining <= 0.01) {
+                loans.splice(payCreditIndex, 1);
+                showToast('✅ Кредит полностью погашен! 🎉', 'success');
+            } else {
+                showToast(`✅ Выплачено ${amount} 🪙, осталось ${Math.ceil(loan.remaining)} 🪙`, 'success');
+            }
+
+            closePayCreditModal();
+            updateBankUI();
+        }
+
+        // ============================================================
+        // 13. СТРАНИЦЫ (заглушки)
+        // ============================================================
+        function openPage(page) {
+            const names = {
+                resources: '📦 Resources',
+                quests: '📋 Quests',
+                stats: '📊 Stats'
+            };
+            showToast(`${names[page] || page} — в разработке`, 'info');
+        }
+
+        // ============================================================
+        // 14. TOAST
         // ============================================================
         let toastTimeout;
 
@@ -1071,7 +1451,11 @@
             toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
+        // ============================================================
+        // 15. ЗАПУСК
+        // ============================================================
         console.log('🏙️ NEXUS загружена!');
+        console.log('📱 Telegram Mini App:', !!tg);
     </script>
 </body>
 </html>
