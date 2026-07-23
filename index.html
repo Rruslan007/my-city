@@ -3,441 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>City Magnat</title>
+    <title>URBANIA</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ ===== */
-        * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #0d0d1a;
-            overflow:hidden;
-            height:100vh;
-            width:100vw;
-            position:relative;
-            touch-action:none;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
             padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
         }
-        #mapContainer {
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            height:100vh;
-            overflow:hidden;
-            cursor:grab;
-            background:#4a8f5c;
-            touch-action:none;
-            z-index:1;
-        }
-        #mapContainer:active { cursor:grabbing; }
-        #gameCanvas {
-            display:block;
-            width:100%;
-            height:100%;
-            image-rendering:auto;
-            background:transparent;
+
+        /* ===== КОНТЕЙНЕР С ФОНОМ ===== */
+        #menuContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0d0d1a;
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
-        .top-panel {
-            position:fixed;
-            top: env(safe-area-inset-top, 12px);
-            left:0;
-            right:0;
-            z-index:100;
-            display:flex;
-            justify-content:space-between;
-            align-items:flex-start;
-            padding:0 16px;
-            pointer-events:none;
+        /* ===== ФОН С РАЗМЫТИЕМ ===== */
+        #bgImage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(4px);
+            transform: scale(1.02);
+            z-index: 0;
         }
-        .top-panel>* { pointer-events:auto; }
 
+        /* ===== ТЁМНЫЙ ОВЕРЛЕЙ ===== */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 1;
+        }
+
+        /* ===== НАЗВАНИЕ (рукописное, стеклянное) ===== */
         .game-title {
-            font-family:'Pacifico',cursive;
-            font-size:32px;
-            font-weight:400;
-            color:rgba(255,255,255,0.9);
-            text-shadow:0 0 30px rgba(233,69,96,0.2);
-            background:rgba(255,255,255,0.06);
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
-            padding:2px 20px 4px;
-            border-radius:40px;
-            letter-spacing:0.5px;
-            box-shadow:0 4px 30px rgba(0,0,0,0.15);
-            animation:glassPulse 5s ease-in-out infinite;
-            line-height:1.2;
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(32px, 7vw, 52px);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
+            letter-spacing: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 4px 28px 8px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+            opacity: 0.7;
+            animation: glassPulse 4s ease-in-out infinite;
+            white-space: nowrap;
+            text-align: center;
         }
+
         @keyframes glassPulse {
-            0%,100% { background:rgba(255,255,255,0.05); backdrop-filter:blur(8px); }
-            50% { background:rgba(255,255,255,0.10); backdrop-filter:blur(16px); }
+            0%,
+            100% {
+                background: rgba(255, 255, 255, 0.06);
+                backdrop-filter: blur(16px);
+            }
+            50% {
+                background: rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(24px);
+            }
         }
 
-        .right-group {
-            display:flex;
-            flex-direction:column;
-            align-items:flex-end;
-            gap:4px;
+        /* ===== КНОПКИ (вертикальный список) ===== */
+        .menu-buttons {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            width: 88%;
+            max-width: 480px;
+            margin-top: 10%;
         }
-        .glass-box {
-            background:rgba(255,255,255,0.06);
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:30px;
-            padding:4px 14px 4px 12px;
-            box-shadow:0 4px 30px rgba(0,0,0,0.15);
-            display:flex;
-            align-items:center;
-            gap:6px;
-            font-weight:700;
-            color:#fff;
-            font-size:15px;
-            white-space:nowrap;
-            min-width:70px;
-            justify-content:flex-end;
-        }
-        .glass-box .icon { font-size:18px; line-height:1; }
-        .glass-box .amount { font-size:17px; font-weight:700; }
-        .glass-box.coins .amount { color:#f1c40f; }
-        .glass-box.gems .amount { color:#5dade2; }
-        .glass-box.gems { font-size:13px; padding:2px 12px 2px 10px; min-width:60px; }
-        .glass-box.gems .amount { font-size:14px; }
 
-        /* ===== КНОПКА QUESTS ===== */
-        .quest-box {
-            position:fixed;
-            bottom:100px;
-            right:16px;
-            z-index:100;
-            background:rgba(255,255,255,0.06);
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:30px;
-            padding:6px 14px 6px 12px;
-            box-shadow:0 4px 30px rgba(0,0,0,0.15);
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            color:#fff;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.2s;
-            pointer-events:auto;
-            min-width:56px;
+        .menu-btn {
+            width: 100%;
+            height: 72px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .quest-box:hover { background:rgba(255,255,255,0.12); }
-        .quest-box .icon { font-size:22px; line-height:1; }
-        .quest-box .label { font-size:9px; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8; margin-top:2px; }
 
-        /* ===== ПОЛОСА ОПЫТА ===== */
-        .level-bar-wrapper {
-            position:fixed;
-            bottom:74px;
-            left:50%;
-            transform:translateX(-50%);
-            z-index:100;
-            width:calc(100% - 40px);
-            max-width:700px;
-            background:rgba(255,255,255,0.04);
-            backdrop-filter:blur(14px);
-            -webkit-backdrop-filter:blur(14px);
-            border:1px solid rgba(255,255,255,0.05);
-            border-radius:20px;
-            padding:6px 16px 8px;
-            box-shadow:0 4px 30px rgba(0,0,0,0.15);
-            pointer-events:none;
+        .menu-btn:active {
+            transform: scale(0.96);
         }
-        .level-bar-inner { display:flex; flex-direction:column; gap:2px; }
-        .level-top { display:flex; justify-content:space-between; font-weight:700; color:#fff; font-size:13px; letter-spacing:0.5px; }
-        .level-top .lvl { font-size:14px; color:#e94560; }
-        .level-top .xp { font-size:11px; opacity:0.7; }
-        .level-progress { width:100%; height:6px; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; position:relative; }
-        .level-progress .fill { height:100%; width:0%; background:linear-gradient(90deg,#e94560,#f39c12); border-radius:10px; transition:width 0.6s; }
-        .level-progress .ticks { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:space-between; padding:0 2px; pointer-events:none; }
-        .level-progress .ticks span { display:block; width:2px; height:100%; background:rgba(255,255,255,0.12); }
-        .level-bottom { display:flex; justify-content:space-between; font-size:8px; color:rgba(255,255,255,0.3); margin-top:2px; }
 
-        /* ===== ФУТЕР ===== */
-        .footer {
-            position:fixed;
-            bottom:0;
-            left:0;
-            right:0;
-            z-index:100;
-            background:rgba(0,0,0,0.45);
-            backdrop-filter:blur(20px);
-            -webkit-backdrop-filter:blur(20px);
-            border-top:1px solid rgba(255,255,255,0.05);
-            border-radius:20px 20px 0 0;
-            padding:6px 8px env(safe-area-inset-bottom, 6px) 8px;
-            display:flex;
-            justify-content:space-around;
-            align-items:center;
-            min-height:62px;
-            box-shadow:0 -4px 30px rgba(0,0,0,0.2);
+        .menu-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
-        .footer button {
-            background:none;
-            border:none;
-            color:#aaa;
-            font-size:8px;
-            text-align:center;
-            padding:2px 4px;
-            cursor:pointer;
-            border-radius:16px;
-            transition:0.2s;
-            min-width:48px;
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:2px;
-            font-weight:500;
-            outline:none;
-            touch-action:manipulation;
-        }
-        .footer button:hover { color:#fff; }
-        .footer button .icon { width:26px; height:26px; object-fit:contain; display:block; }
-        .footer button .label { font-size:8px; text-transform:uppercase; letter-spacing:0.3px; opacity:0.7; }
-        .footer button.active { color:#e94560; }
-        .footer button.active .label { opacity:1; }
 
-        /* ===== СТРАНИЦЫ ===== */
-        .page-overlay {
-            display:none;
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            background:rgba(0,0,0,0.5);
-            backdrop-filter:blur(8px);
-            z-index:200;
-            justify-content:center;
-            align-items:center;
-            padding:20px;
+        /* ===== ПОДПИСЬ ПОД КНОПКОЙ ===== */
+        .btn-label {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            padding: 2px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
         }
-        .page-overlay.active { display:flex; }
-        .page {
-            background:#1a1a2e;
-            border-radius:30px;
-            padding:30px;
-            max-width:480px;
-            width:100%;
-            max-height:85vh;
-            overflow-y:auto;
-            border:1px solid rgba(255,255,255,0.06);
-            color:#fff;
-            position:relative;
-            box-shadow:0 20px 60px rgba(0,0,0,0.8);
-        }
-        .page .close-btn { position:absolute; top:16px; right:20px; background:none; border:none; color:#888; font-size:24px; cursor:pointer; transition:color 0.2s; }
-        .page .close-btn:hover { color:#fff; }
-        .page h2 { font-size:24px; margin-bottom:20px; color:#e94560; text-align:center; }
-        .page .content { display:flex; flex-direction:column; gap:12px; }
-        .page .row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
-        .page .row .label { color:#aaa; }
-        .page .row .value { font-weight:600; }
-        .page .action-btn { background:#e94560; border:none; color:#fff; padding:12px; border-radius:16px; font-size:16px; font-weight:600; cursor:pointer; transition:background 0.2s; width:100%; margin-top:8px; }
-        .page .action-btn:hover { background:#c0392b; }
-        .page .action-btn.secondary { background:rgba(255,255,255,0.08); }
-        .page .action-btn.secondary:hover { background:rgba(255,255,255,0.15); }
-
-        .toast {
-            position:fixed;
-            bottom:130px;
-            left:50%;
-            transform:translateX(-50%);
-            background:rgba(0,0,0,0.8);
-            backdrop-filter:blur(8px);
-            padding:12px 24px;
-            border-radius:16px;
-            font-size:14px;
-            z-index:300;
-            opacity:0;
-            transition:opacity 0.3s;
-            pointer-events:none;
-            border:1px solid rgba(255,255,255,0.1);
-            color:#fff;
-            white-space:nowrap;
-        }
-        .toast.show { opacity:1; }
-        .toast.success { border-color:#2ecc71; }
-        .toast.error { border-color:#e74c3c; }
-        .toast.info { border-color:#3498db; }
 
         /* ===== АДАПТАЦИЯ ===== */
-        @media (max-width:600px) {
-            .game-title { font-size:24px; padding:2px 14px; }
-            .glass-box { font-size:13px; padding:3px 10px; min-width:60px; }
-            .glass-box .amount { font-size:14px; }
-            .glass-box.gems { font-size:11px; padding:2px 8px; min-width:50px; }
-            .glass-box.gems .amount { font-size:12px; }
-            .quest-box { bottom:88px; right:10px; padding:4px 10px; min-width:46px; }
-            .quest-box .icon { font-size:18px; }
-            .level-bar-wrapper { width:calc(100% - 32px); bottom:66px; padding:4px 12px 6px; }
-            .level-top { font-size:11px; }
-            .level-top .lvl { font-size:12px; }
-            .level-top .xp { font-size:10px; }
-            .footer { padding:4px 4px env(safe-area-inset-bottom, 4px) 4px; min-height:52px; }
-            .footer button { min-width:36px; padding:1px 2px; }
-            .footer button .icon { width:20px; height:20px; }
-            .footer button .label { font-size:7px; }
-            .page { padding:20px; max-width:95%; }
+        @media (max-width: 480px) {
+            .menu-buttons {
+                gap: 10px;
+                width: 92%;
+                margin-top: 12%;
+            }
+            .menu-btn {
+                height: 60px;
+                border-radius: 16px;
+            }
+            .game-title {
+                top: 6%;
+                font-size: clamp(26px, 6vw, 36px);
+                padding: 2px 20px 6px;
+            }
+            .btn-label {
+                font-size: 9px;
+                padding: 1px 10px;
+                bottom: 5px;
+            }
         }
-        @media (max-width:400px) {
-            .game-title { font-size:18px; padding:2px 10px; }
-            .glass-box { font-size:11px; padding:2px 8px; min-width:48px; }
-            .glass-box .amount { font-size:12px; }
-            .glass-box.gems { font-size:10px; padding:1px 6px; min-width:40px; }
-            .glass-box.gems .amount { font-size:11px; }
-            .footer button { min-width:28px; }
-            .footer button .icon { width:16px; height:16px; }
-            .footer button .label { font-size:6px; }
+
+        @media (max-width: 380px) {
+            .menu-btn {
+                height: 50px;
+                border-radius: 12px;
+            }
+            .menu-buttons {
+                gap: 8px;
+            }
+            .game-title {
+                font-size: clamp(22px, 5vw, 28px);
+                padding: 2px 14px 4px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="mapContainer"><canvas id="gameCanvas"></canvas></div>
 
-    <!-- Верхняя панель -->
-    <div class="top-panel">
-        <div class="game-title">City Magnat</div>
-        <div class="right-group">
-            <div class="glass-box coins">
-                <span class="icon">🪙</span>
-                <span class="amount" id="coinAmount">12 340</span>
-            </div>
-            <div class="glass-box gems">
-                <span class="icon">💎</span>
-                <span class="amount" id="gemAmount">85</span>
-            </div>
+    <div id="menuContainer">
+
+        <!-- ===== ФОН ===== -->
+        <img id="bgImage" src="menu.PNG" alt="Urbania" onerror="this.style.display='none'">
+
+        <!-- ===== ТЁМНЫЙ СЛОЙ ===== -->
+        <div class="overlay"></div>
+
+        <!-- ===== НАЗВАНИЕ ===== -->
+        <div class="game-title">Urbania</div>
+
+        <!-- ===== КНОПКИ ===== -->
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="selectDistrict('centre')">
+                <img src="centre.png" alt="Centre" onerror="this.style.display='none'">
+                <span class="btn-label">Centre</span>
+            </button>
+
+            <button class="menu-btn" onclick="selectDistrict('suburbs')">
+                <img src="suburbs.png" alt="Suburbs" onerror="this.style.display='none'">
+                <span class="btn-label">Suburbs</span>
+            </button>
+
+            <button class="menu-btn" onclick="selectDistrict('park')">
+                <img src="park.png" alt="Park" onerror="this.style.display='none'">
+                <span class="btn-label">Park</span>
+            </button>
+
+            <button class="menu-btn" onclick="selectDistrict('residential')">
+                <img src="residential.png" alt="Residential" onerror="this.style.display='none'">
+                <span class="btn-label">Residential</span>
+            </button>
+
+            <button class="menu-btn" onclick="selectDistrict('industrial')">
+                <img src="industrial.png" alt="Industrial" onerror="this.style.display='none'">
+                <span class="btn-label">Industrial</span>
+            </button>
         </div>
-    </div>
 
-    <!-- Полоса опыта -->
-    <div class="level-bar-wrapper">
-        <div class="level-bar-inner">
-            <div class="level-top">
-                <span class="lvl">LEVEL 1</span>
-                <span class="xp">0 / 100 XP</span>
-            </div>
-            <div class="level-progress">
-                <div class="fill" style="width:0%;"></div>
-                <div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-            </div>
-            <div class="level-bottom"><span>0 XP</span><span>100 XP</span></div>
-        </div>
     </div>
-
-    <!-- Кнопка Quests -->
-    <div class="quest-box" onclick="openQuests()">
-        <span class="icon">📋</span>
-        <span class="label">Quests</span>
-    </div>
-
-    <!-- Футер -->
-    <div class="footer" id="footer">
-        <button onclick="openPage('bank')">
-            <img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'">
-            <span class="label">Bank</span>
-        </button>
-        <button onclick="openPage('resources')">
-            <img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'">
-            <span class="label">Resources</span>
-        </button>
-        <button onclick="openPage('home')" class="active">
-            <img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'">
-            <span class="label">Home</span>
-        </button>
-        <button onclick="openPage('build')">
-            <img src="build_icon.png" alt="Build" class="icon" onerror="this.textContent='🏗️'">
-            <span class="label">Build</span>
-        </button>
-        <button onclick="openPage('stats')">
-            <img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'">
-            <span class="label">Stats</span>
-        </button>
-    </div>
-
-    <!-- Страницы -->
-    <div class="page-overlay" id="page-bank">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('bank')">✕</button>
-            <h2>💰 Bank</h2>
-            <div class="content">
-                <div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div>
-                <div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div>
-                <div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div>
-                <button class="action-btn">Take Loan</button>
-                <button class="action-btn secondary">Repay Loan</button>
-                <button class="action-btn secondary">Deposit</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-resources">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('resources')">✕</button>
-            <h2>📦 Resources</h2>
-            <div class="content">
-                <div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div>
-                <div class="row"><span class="label">🔥 Gas</span><span class="value">32</span></div>
-                <div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div>
-                <div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div>
-                <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
-                <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
-                <button class="action-btn secondary">Trade</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-build">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('build')">✕</button>
-            <h2>🏗️ Build</h2>
-            <div class="content">
-                <div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div>
-                <div class="row"><span class="label">🏢 Apartment (3×3)</span><span class="value">1200 🪙</span></div>
-                <div class="row"><span class="label">🏫 School (3×3)</span><span class="value">700 🪙</span></div>
-                <div class="row"><span class="label">🏥 Hospital (4×4)</span><span class="value">1500 🪙</span></div>
-                <div class="row"><span class="label">🏬 Mall (5×5)</span><span class="value">2000 🪙</span></div>
-                <button class="action-btn">Select Plot</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-stats">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('stats')">✕</button>
-            <h2>📊 Stats</h2>
-            <div class="content">
-                <div class="row"><span class="label">🏙️ City</span><span class="value">Новый Уренгой</span></div>
-                <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
-                <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
-                <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
-                <div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div>
-                <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-home">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('home')">✕</button>
-            <h2>🏠 Home</h2>
-            <div class="content">
-                <p style="text-align:center;color:#aaa;">Карта центрирована</p>
-                <button class="action-btn" onclick="closePage('home')">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="toast" id="toast"></div>
 
     <script>
         // ============================================================
@@ -448,834 +257,60 @@
             tg.ready();
             tg.expand();
         }
-        const user = tg?.initDataUnsafe?.user || { id: 0, username: 'Guest' };
 
         // ============================================================
-        // 2. КОНСТАНТЫ
+        // 2. ВЫБОР РАЙОНА
         // ============================================================
-        const CELL = 160;
-        const ROAD_BASE = 64;
-        const TROTTOIR_W = 22;
-        const MIN_GRASS = 20;
+        function selectDistrict(district) {
+            console.log('Выбран район:', district);
 
-        // Размеры карты (кратны CELL)
-        const MAP_W = 28800;
-        const MAP_H = 22400;
+            const names = {
+                centre: 'Деловой центр',
+                suburbs: 'Пригород',
+                park: 'Городской парк',
+                residential: 'Жилой район',
+                industrial: 'Промышленная зона'
+            };
 
-        const PLOT_SIZES = [160, 240, 320, 400, 480, 640];
-        const PLOT_NAMES = ['2×2', '3×3', '4×4', '5×5', '6×6', '8×8'];
-        const PLOT_COLORS = [
-            'rgba(231,76,60,0.2)',
-            'rgba(46,204,113,0.2)',
-            'rgba(52,152,219,0.2)',
-            'rgba(241,196,15,0.2)',
-            'rgba(230,126,34,0.2)',
-            'rgba(155,89,182,0.2)'
-        ];
-        const PLOT_BORDER = ['#e74c3c', '#2ecc71', '#3498db', '#f1c40f', '#e67e22', '#9b59b6'];
-
-        // Зоны (yStart, yEnd) с разрешенными размерами
-        const ZONES = [
-            { name: 'Пригород', yStart: 0, yEnd: 4000, allowed: [0, 1] },
-            { name: 'Жилой', yStart: 4000, yEnd: 9000, allowed: [1, 2] },
-            { name: 'Деловой', yStart: 9000, yEnd: 13000, allowed: [2, 3, 4] },
-            { name: 'Промышленный', yStart: 13000, yEnd: 18000, allowed: [4, 5] },
-            { name: 'Пригород', yStart: 18000, yEnd: MAP_H, allowed: [0, 1] }
-        ];
-
-        // ============================================================
-        // 3. КАМЕРА
-        // ============================================================
-        class Camera {
-            constructor() {
-                this.offset = { x: MAP_W / 2, y: MAP_H / 2 };
-                this.zoom = 0.22;
-                this.minZoom = 0.18;
-                this.maxZoom = 0.35;
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'select_district',
+                    district: district,
+                    name: names[district] || district
+                }));
             }
-            clamp() {
-                const halfW = window.innerWidth / 2 / this.zoom;
-                const halfH = window.innerHeight / 2 / this.zoom;
-                const border = 50;
-                this.offset.x = Math.min(MAP_W - halfW - border, Math.max(halfW + border, this.offset.x));
-                this.offset.y = Math.min(MAP_H - halfH - border, Math.max(halfH + border, this.offset.y));
-            }
-            update() { this.clamp(); }
+
+            // Визуальный фидбек
+            const toast = document.createElement('div');
+            toast.textContent = `🏙️ ${names[district] || district}`;
+            toast.style.cssText = `
+                        position: fixed;
+                        bottom: 120px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: rgba(0,0,0,0.7);
+                        backdrop-filter: blur(8px);
+                        padding: 12px 28px;
+                        border-radius: 20px;
+                        color: white;
+                        font-size: 16px;
+                        font-weight: 600;
+                        z-index: 1000;
+                        border: 1px solid rgba(255,255,255,0.1);
+                        transition: opacity 0.3s;
+                        opacity: 1;
+                    `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 400);
+            }, 2000);
         }
 
-        // ============================================================
-        // 4. АЛГОРИТМ SQUARE PACKING
-        // ============================================================
-        function packPlots(blockW, blockH, allowedSizes) {
-            const sizes = allowedSizes.map(i => PLOT_SIZES[i]).sort((a, b) => b - a);
-            const plots = [];
-            const used = [];
-            for (let i = 0; i < blockW; i++) { used[i] = []; for (let j = 0; j < blockH; j++) used[i][j] = false; }
-
-            function canPlace(x, y, size) {
-                if (x + size > blockW || y + size > blockH) return false;
-                for (let i = x; i < x + size; i++) for (let j = y; j < y + size; j++) if (used[i][j]) return false;
-                return true;
-            }
-
-            function place(x, y, size) {
-                for (let i = x; i < x + size; i++) for (let j = y; j < y + size; j++) used[i][j] = true;
-                const idx = PLOT_SIZES.indexOf(size);
-                plots.push({ x, y, size, sizeIdx: idx });
-            }
-
-            let placed = true;
-            while (placed) {
-                placed = false;
-                for (let y = 0; y < blockH; y++) {
-                    for (let x = 0; x < blockW; x++) {
-                        if (used[x][y]) continue;
-                        for (let s of sizes) {
-                            if (canPlace(x, y, s)) {
-                                place(x, y, s);
-                                placed = true;
-                                break;
-                            }
-                        }
-                        if (placed) break;
-                    }
-                    if (placed) break;
-                }
-                if (!placed) break;
-            }
-
-            return plots;
-        }
-
-        // ============================================================
-        // 5. ГОРОД
-        // ============================================================
-        class City {
-            constructor() {
-                this.districts = [];
-                this.blocks = [];
-                this.roads = [];
-                this.intersections = [];
-                this.trottoirs = [];
-                this.crosswalks = [];
-                this.trafficLights = [];
-                this.plots = [];
-                this.trees = [];
-                this.lamps = [];
-                this.cars = [];
-                this.clouds = [];
-                this.centerSquare = null;
-                this.cityHall = null;
-                this.generate();
-            }
-
-            generate() {
-                this.generateDistricts();
-                this.generateBlocks();
-                this.generateRoads();
-                this.generateIntersections();
-                this.generateTrottoirs();
-                this.generateCrosswalks();
-                this.generateTrafficLights();
-                this.generatePlots();
-                this.generateCenter();
-                this.generateTrees();
-                this.generateLamps();
-                this.generateCars();
-                this.generateClouds();
-                this.validate();
-            }
-
-            // ---- 5.1 Районы ----
-            generateDistricts() {
-                const margin = 120;
-                this.districts = [
-                    { x: margin, y: margin, w: MAP_W - 2 * margin, h: 3800, name: 'Пригород', allowed: [0, 1] },
-                    { x: margin, y: 3800 + margin, w: MAP_W - 2 * margin, h: 4800, name: 'Жилой', allowed: [1, 2] },
-                    { x: margin, y: 3800 + 4800 + margin, w: MAP_W - 2 * margin, h: 4000, name: 'Деловой', allowed: [2, 3,
-                            4
-                        ] },
-                    { x: margin, y: 3800 + 4800 + 4000 + margin, w: MAP_W - 2 * margin, h: 4800, name: 'Промышленный',
-                        allowed: [4, 5] },
-                    { x: margin, y: 3800 + 4800 + 4000 + 4800 + margin, w: MAP_W - 2 * margin, h: MAP_H - (3800 + 4800 +
-                            4000 + 4800 + 2 * margin), name: 'Пригород', allowed: [0, 1] }
-                ];
-            }
-
-            // ---- 5.2 Кварталы ----
-            generateBlocks() {
-                const road = ROAD_BASE;
-                for (let d of this.districts) {
-                    const maxSize = Math.max(...d.allowed.map(i => PLOT_SIZES[i]));
-                    const step = maxSize + MIN_GRASS * 2 + road;
-                    const cols = Math.floor(d.w / step);
-                    const rows = Math.floor(d.h / step);
-                    const remainW = d.w - cols * step;
-                    const remainH = d.h - rows * step;
-                    for (let r = 0; r < rows; r++) {
-                        for (let c = 0; c < cols; c++) {
-                            const bw = step + (c === cols - 1 ? remainW : 0);
-                            const bh = step + (r === rows - 1 ? remainH : 0);
-                            // Проверяем, что размеры кратны CELL и подходят для упаковки
-                            // Если не подходят, корректируем
-                            const blockW = Math.floor(bw / CELL) * CELL;
-                            const blockH = Math.floor(bh / CELL) * CELL;
-                            if (blockW < CELL || blockH < CELL) continue;
-                            this.blocks.push({
-                                x: d.x + c * step,
-                                y: d.y + r * step,
-                                w: blockW,
-                                h: blockH,
-                                allowed: d.allowed
-                            });
-                        }
-                    }
-                }
-            }
-
-            // ---- 5.3 Дороги ----
-            generateRoads() {
-                const hSet = new Set();
-                const vSet = new Set();
-                for (let b of this.blocks) {
-                    hSet.add(Math.round(b.y - ROAD_BASE / 2));
-                    hSet.add(Math.round(b.y + b.h - ROAD_BASE / 2));
-                    vSet.add(Math.round(b.x - ROAD_BASE / 2));
-                    vSet.add(Math.round(b.x + b.w - ROAD_BASE / 2));
-                }
-                // Добавляем границы карты
-                hSet.add(0);
-                hSet.add(MAP_H);
-                vSet.add(0);
-                vSet.add(MAP_W);
-
-                const hList = Array.from(hSet).filter(y => y >= 0 && y <= MAP_H).sort((a, b) => a - b);
-                const vList = Array.from(vSet).filter(x => x >= 0 && x <= MAP_W).sort((a, b) => a - b);
-
-                for (let y of hList) {
-                    if (y === 0 || y === MAP_H) continue;
-                    const w = ROAD_BASE * (0.8 + Math.random() * 0.4);
-                    this.roads.push({ x1: 0, y1: y, x2: MAP_W, y2: y, isHorizontal: true, width: w });
-                }
-                for (let x of vList) {
-                    if (x === 0 || x === MAP_W) continue;
-                    const w = ROAD_BASE * (0.8 + Math.random() * 0.4);
-                    this.roads.push({ x1: x, y1: 0, x2: x, y2: MAP_H, isHorizontal: false, width: w });
-                }
-            }
-
-            // ---- 5.4 Перекрестки ----
-            generateIntersections() {
-                const hList = this.roads.filter(r => r.isHorizontal).map(r => r.y1);
-                const vList = this.roads.filter(r => !r.isHorizontal).map(r => r.x1);
-                for (let x of vList) {
-                    for (let y of hList) {
-                        if (x > 0 && x < MAP_W && y > 0 && y < MAP_H) {
-                            this.intersections.push({ x, y });
-                        }
-                    }
-                }
-            }
-
-            // ---- 5.5 Тротуары ----
-            generateTrottoirs() {
-                for (let r of this.roads) {
-                    const w = r.width;
-                    const off = w / 2 + 2;
-                    if (r.isHorizontal) {
-                        const y1 = r.y1 - off - TROTTOIR_W;
-                        const y2 = r.y1 + off + 2;
-                        this.trottoirs.push({ x1: 0, y1: y1, x2: MAP_W, y2: y1 + TROTTOIR_W });
-                        this.trottoirs.push({ x1: 0, y1: y2, x2: MAP_W, y2: y2 + TROTTOIR_W });
-                    } else {
-                        const x1 = r.x1 - off - TROTTOIR_W;
-                        const x2 = r.x1 + off + 2;
-                        this.trottoirs.push({ x1: x1, y1: 0, x2: x1 + TROTTOIR_W, y2: MAP_H });
-                        this.trottoirs.push({ x1: x2, y1: 0, x2: x2 + TROTTOIR_W, y2: MAP_H });
-                    }
-                }
-            }
-
-            // ---- 5.6 Пешеходные переходы ----
-            generateCrosswalks() {
-                for (let inter of this.intersections) {
-                    const { x, y } = inter;
-                    const dirs = [
-                        { dx: 0, dy: -1 },
-                        { dx: 0, dy: 1 },
-                        { dx: -1, dy: 0 },
-                        { dx: 1, dy: 0 }
-                    ];
-                    for (let dir of dirs) {
-                        const off = ROAD_BASE / 2 + 20;
-                        const cx = x + dir.dx * off;
-                        const cy = y + dir.dy * off;
-                        const cw = ROAD_BASE - 20;
-                        let x1, y1, x2, y2;
-                        if (dir.dx === 0) {
-                            x1 = cx - cw / 2;
-                            y1 = cy;
-                            x2 = cx + cw / 2;
-                            y2 = cy;
-                        } else {
-                            x1 = cx;
-                            y1 = cy - cw / 2;
-                            x2 = cx;
-                            y2 = cy + cw / 2;
-                        }
-                        this.crosswalks.push({ x1, y1, x2, y2 });
-                    }
-                }
-            }
-
-            // ---- 5.7 Светофоры ----
-            generateTrafficLights() {
-                for (let inter of this.intersections) {
-                    const { x, y } = inter;
-                    const off = ROAD_BASE / 2 + 30;
-                    const corners = [
-                        { dx: -off, dy: -off },
-                        { dx: off, dy: off }
-                    ];
-                    for (let c of corners) {
-                        this.trafficLights.push({
-                            x: x + c.dx,
-                            y: y + c.dy,
-                            state: Math.random() > 0.5 ? 'green' : 'red',
-                            timer: Math.floor(Math.random() * 200)
-                        });
-                    }
-                }
-            }
-
-            // ---- 5.8 Участки ----
-            generatePlots() {
-                for (let b of this.blocks) {
-                    const innerW = b.w - ROAD_BASE;
-                    const innerH = b.h - ROAD_BASE;
-                    if (innerW <= 0 || innerH <= 0) continue;
-                    const areaW = innerW - MIN_GRASS * 2;
-                    const areaH = innerH - MIN_GRASS * 2;
-                    if (areaW <= 0 || areaH <= 0) continue;
-                    // Округляем до CELL
-                    const packW = Math.floor(areaW / CELL) * CELL;
-                    const packH = Math.floor(areaH / CELL) * CELL;
-                    if (packW < CELL || packH < CELL) continue;
-                    const packed = packPlots(packW, packH, b.allowed);
-                    const offsetX = b.x + ROAD_BASE / 2 + MIN_GRASS + (areaW - packW) / 2;
-                    const offsetY = b.y + ROAD_BASE / 2 + MIN_GRASS + (areaH - packH) / 2;
-                    for (let p of packed) {
-                        this.plots.push({
-                            x: offsetX + p.x,
-                            y: offsetY + p.y,
-                            size: p.size,
-                            color: PLOT_COLORS[p.sizeIdx % PLOT_COLORS.length],
-                            border: PLOT_BORDER[p.sizeIdx % PLOT_BORDER.length],
-                            label: PLOT_NAMES[p.sizeIdx % PLOT_NAMES.length]
-                        });
-                    }
-                }
-            }
-
-            // ---- 5.9 Центр ----
-            generateCenter() {
-                const cx = MAP_W / 2;
-                const cy = MAP_H / 2;
-                const sqSize = 800;
-                this.centerSquare = { x: cx - sqSize / 2, y: cy - sqSize / 2, w: sqSize, h: sqSize };
-                const hallSize = 600;
-                this.cityHall = { x: cx + sqSize / 2 + 40, y: cy - hallSize / 2, w: hallSize, h: hallSize };
-            }
-
-            // ---- 5.10 Деревья ----
-            generateTrees() {
-                for (let i = 0; i < 600; i++) {
-                    const x = 100 + Math.random() * (MAP_W - 200);
-                    const y = 100 + Math.random() * (MAP_H - 200);
-                    if (this.isOnRoad(x, y) || this.isOnTrottoir(x, y) || this.isOnPlot(x, y)) continue;
-                    const inCenter = Math.hypot(x - MAP_W / 2, y - MAP_H / 2) < 600;
-                    if (inCenter) continue;
-                    this.trees.push({ x, y });
-                }
-            }
-
-            // ---- 5.11 Фонари ----
-            generateLamps() {
-                for (let t of this.trottoirs) {
-                    const step = 180;
-                    const w = t.x2 - t.x1;
-                    const h = t.y2 - t.y1;
-                    const len = Math.max(w, h);
-                    const count = Math.floor(len / step);
-                    for (let i = 0; i < count; i++) {
-                        const pos = (i + 0.5) / count;
-                        let x = t.x1 + pos * w;
-                        let y = t.y1 + pos * h;
-                        if (w > h) y = t.y1 + (t.y2 - t.y1) / 2;
-                        else x = t.x1 + (t.x2 - t.x1) / 2;
-                        this.lamps.push({ x, y });
-                    }
-                }
-            }
-
-            // ---- 5.12 Машины ----
-            generateCars() {
-                for (let i = 0; i < 30; i++) {
-                    const road = this.roads[Math.floor(Math.random() * this.roads.length)];
-                    if (!road) continue;
-                    let x, y, angle;
-                    if (road.isHorizontal) {
-                        x = road.x1 + Math.random() * (road.x2 - road.x1);
-                        y = road.y1 + (Math.random() > 0.5 ? -road.width / 4 : road.width / 4);
-                        angle = (Math.random() > 0.5) ? 0 : Math.PI;
-                    } else {
-                        y = road.y1 + Math.random() * (road.y2 - road.y1);
-                        x = road.x1 + (Math.random() > 0.5 ? -road.width / 4 : road.width / 4);
-                        angle = (Math.random() > 0.5) ? Math.PI / 2 : -Math.PI / 2;
-                    }
-                    const colors = ['green', 'red', 'yellow', 'orange'];
-                    const key = colors[Math.floor(Math.random() * colors.length)];
-                    const img = carImages[key];
-                    if (!img || !img.complete) continue;
-                    this.cars.push({ x, y, angle, speed: 0.4 + Math.random() * 0.8, image: img, color: key,
-                        turning: false, turnProgress: 0, targetAngle: angle, dead: false });
-                }
-            }
-
-            // ---- 5.13 Облака ----
-            generateClouds() {
-                for (let i = 0; i < 30; i++) {
-                    let x, y;
-                    const side = Math.floor(Math.random() * 4);
-                    if (side === 0) { x = Math.random() * MAP_W;
-                        y = -50 - Math.random() * 300; } else if (side === 1) { x = Math.random() * MAP_W;
-                        y = MAP_H + 50 + Math.random() * 300; } else if (side === 2) { x = -50 - Math.random() * 300;
-                        y = Math.random() * MAP_H; } else { x = MAP_W + 50 + Math.random() * 300;
-                        y = Math.random() * MAP_H; }
-                    this.clouds.push({ x, y, w: 150 + Math.random() * 250, h: 60 + Math.random() * 120, opacity: 0.5 + Math
-                            .random() * 0.4 });
-                }
-            }
-
-            // ---- Вспомогательные проверки ----
-            isOnRoad(x, y) {
-                for (let r of this.roads) {
-                    if (r.isHorizontal) {
-                        if (Math.abs(y - r.y1) < r.width / 2 + 10 && x > r.x1 && x < r.x2) return true;
-                    } else {
-                        if (Math.abs(x - r.x1) < r.width / 2 + 10 && y > r.y1 && y < r.y2) return true;
-                    }
-                }
-                return false;
-            }
-            isOnTrottoir(x, y) {
-                for (let t of this.trottoirs) {
-                    if (x > t.x1 && x < t.x2 && y > t.y1 && y < t.y2) return true;
-                }
-                return false;
-            }
-            isOnPlot(x, y) {
-                for (let p of this.plots) {
-                    if (x > p.x && x < p.x + p.size && y > p.y && y < p.y + p.size) return true;
-                }
-                return false;
-            }
-
-            // ---- Валидация ----
-            validate() {
-                // Простая проверка: нет пересечений участков с дорогами и тротуарами
-                for (let p of this.plots) {
-                    const cx = p.x + p.size / 2;
-                    const cy = p.y + p.size / 2;
-                    if (this.isOnRoad(cx, cy)) {
-                        console.warn('Участок на дороге:', p);
-                    }
-                    if (this.isOnTrottoir(cx, cy)) {
-                        console.warn('Участок на тротуаре:', p);
-                    }
-                }
-            }
-
-            // ---- Отрисовка ----
-            draw(ctx) {
-                // Трава
-                ctx.fillStyle = '#4a8f5c';
-                ctx.fillRect(0, 0, MAP_W, MAP_H);
-                for (let i = 0; i < 3000; i++) {
-                    const x = Math.random() * MAP_W;
-                    const y = Math.random() * MAP_H;
-                    ctx.fillStyle = Math.random() > 0.5 ? '#3d7a4e' : '#5a9f6a';
-                    ctx.fillRect(x, y, 2, 2);
-                }
-
-                // Тротуары
-                for (let t of this.trottoirs) {
-                    ctx.fillStyle = '#9a9a9a';
-                    ctx.fillRect(t.x1, t.y1, t.x2 - t.x1, t.y2 - t.y1);
-                }
-
-                // Дороги
-                for (let r of this.roads) {
-                    ctx.strokeStyle = '#4a4a4a';
-                    ctx.lineWidth = r.width;
-                    ctx.beginPath();
-                    ctx.moveTo(r.x1, r.y1);
-                    ctx.lineTo(r.x2, r.y2);
-                    ctx.stroke();
-                    // Разметка
-                    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([12, 18]);
-                    ctx.beginPath();
-                    ctx.moveTo(r.x1, r.y1);
-                    ctx.lineTo(r.x2, r.y2);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(r.x1, r.y1);
-                    ctx.lineTo(r.x2, r.y2);
-                    ctx.stroke();
-                }
-
-                // Перекрестки
-                for (let inter of this.intersections) {
-                    const s = ROAD_BASE + 4;
-                    ctx.fillStyle = '#3a3a3a';
-                    ctx.fillRect(inter.x - s / 2, inter.y - s / 2, s, s);
-                }
-
-                // Зебра
-                for (let cw of this.crosswalks) {
-                    const dx = cw.x2 - cw.x1;
-                    const dy = cw.y2 - cw.y1;
-                    const len = Math.hypot(dx, dy);
-                    if (len < 1) continue;
-                    const nx = -dy / len;
-                    const ny = dx / len;
-                    for (let i = -2; i <= 2; i++) {
-                        const off = i * 12;
-                        const x1 = cw.x1 + nx * off;
-                        const y1 = cw.y1 + ny * off;
-                        const x2 = cw.x2 + nx * off;
-                        const y2 = cw.y2 + ny * off;
-                        ctx.strokeStyle = (i % 2 === 0) ? '#ffffff' : '#f1c40f';
-                        ctx.lineWidth = 8;
-                        ctx.beginPath();
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        ctx.stroke();
-                    }
-                }
-
-                // Участки
-                for (let p of this.plots) {
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                    ctx.strokeStyle = p.border;
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(p.x, p.y, p.size, p.size);
-                    ctx.setLineDash([4, 6]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(p.x + 6, p.y + 6, p.size - 12, p.size - 12);
-                    ctx.setLineDash([]);
-                    ctx.fillStyle = 'rgba(255,255,255,0.8)';
-                    ctx.font = '14px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(p.label, p.x + p.size / 2, p.y + p.size / 2);
-                }
-
-                // Центр
-                if (squareImg.complete && squareImg.naturalWidth) {
-                    const s = this.centerSquare;
-                    const pad = 25;
-                    ctx.fillStyle = '#9a9a9a';
-                    ctx.fillRect(s.x - pad, s.y - pad, s.w + pad * 2, s.h + pad * 2);
-                    for (let i = 0; i < 10; i++) {
-                        for (let j = 0; j < 10; j++) {
-                            ctx.fillStyle = (i + j) % 2 === 0 ? '#b0b0b0' : '#8a8a8a';
-                            ctx.fillRect(s.x - pad + i * (s.w + pad * 2) / 10,
-                                s.y - pad + j * (s.h + pad * 2) / 10,
-                                (s.w + pad * 2) / 10 - 1,
-                                (s.h + pad * 2) / 10 - 1);
-                        }
-                    }
-                    ctx.drawImage(squareImg, s.x, s.y, s.w, s.h);
-                }
-                if (hallImg.complete && hallImg.naturalWidth) {
-                    const h = this.cityHall;
-                    const pad = 25;
-                    ctx.fillStyle = '#9a9a9a';
-                    ctx.fillRect(h.x - pad, h.y - pad, h.w + pad * 2, h.h + pad * 2);
-                    ctx.drawImage(hallImg, h.x, h.y, h.w, h.h);
-                }
-
-                // Деревья
-                if (treeImg.complete && treeImg.naturalWidth) {
-                    for (let t of this.trees) ctx.drawImage(treeImg, t.x - 14, t.y - 14, 28, 28);
-                }
-
-                // Фонари
-                if (lampImg.complete && lampImg.naturalWidth) {
-                    for (let l of this.lamps) ctx.drawImage(lampImg, l.x - 8, l.y - 20, 16, 30);
-                }
-
-                // Светофоры
-                for (let tl of this.trafficLights) {
-                    const img = tl.state === 'green' ? greenLightImg : redLightImg;
-                    if (img.complete && img.naturalWidth) ctx.drawImage(img, tl.x - 8, tl.y - 16, 16, 24);
-                }
-
-                // Машины
-                for (let car of this.cars) {
-                    if (car.image && car.image.complete) {
-                        ctx.save();
-                        ctx.translate(car.x, car.y);
-                        ctx.rotate(car.angle);
-                        ctx.drawImage(car.image, -16, -10, 32, 20);
-                        ctx.restore();
-                    }
-                }
-
-                // Облака
-                const cloudImgs = [cloudImg, cloud2Img];
-                for (let c of this.clouds) {
-                    const img = cloudImgs[Math.floor(Math.random() * cloudImgs.length)];
-                    if (img.complete && img.naturalWidth) {
-                        ctx.globalAlpha = c.opacity;
-                        ctx.drawImage(img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
-                        ctx.globalAlpha = 1;
-                    }
-                }
-
-                // Рамка травы по краям
-                ctx.strokeStyle = '#3d7a4e';
-                ctx.lineWidth = 20;
-                ctx.strokeRect(10, 10, MAP_W - 20, MAP_H - 20);
-            }
-
-            update() {
-                for (let car of this.cars) {
-                    if (car.turning) {
-                        car.turnProgress += 0.04;
-                        if (car.turnProgress >= 1) { car.turnProgress = 1;
-                            car.turning = false;
-                            car.angle = car.targetAngle; }
-                        car.angle += (car.targetAngle - car.angle) * 0.08;
-                    }
-                    car.x += Math.cos(car.angle) * car.speed;
-                    car.y += Math.sin(car.angle) * car.speed;
-                    for (let inter of this.intersections) {
-                        if (Math.hypot(car.x - inter.x, car.y - inter.y) < 30 && !car.turning && Math.random() < 0.02) {
-                            car.targetAngle = car.angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI / 2;
-                            car.turning = true;
-                            car.turnProgress = 0;
-                        }
-                    }
-                    if (car.x < -100 || car.x > MAP_W + 100 || car.y < -100 || car.y > MAP_H + 100) car.dead = true;
-                }
-                this.cars = this.cars.filter(c => !c.dead);
-                while (this.cars.length < 20) this.generateCars();
-            }
-        }
-
-        // ============================================================
-        // 6. ЗАГРУЗКА ИЗОБРАЖЕНИЙ
-        // ============================================================
-        const carImages = {
-            green: new Image(),
-            red: new Image(),
-            yellow: new Image(),
-            orange: new Image()
-        };
-        carImages.green.src = 'green_car.png';
-        carImages.red.src = 'red_car.png';
-        carImages.yellow.src = 'yellow_car.png';
-        carImages.orange.src = 'orange_car.png';
-
-        const squareImg = new Image();
-        squareImg.src = 'garden.png';
-        const hallImg = new Image();
-        hallImg.src = 'City_Hall.jpg';
-        const treeImg = new Image();
-        treeImg.src = 'tree.png';
-        const lampImg = new Image();
-        lampImg.src = 'street_lamp.png';
-        const cloudImg = new Image();
-        cloudImg.src = 'cloud.png';
-        const cloud2Img = new Image();
-        cloud2Img.src = 'cloud_2.png';
-        const greenLightImg = new Image();
-        greenLightImg.src = 'green_light.png';
-        const redLightImg = new Image();
-        redLightImg.src = 'red_light.png';
-
-        // ============================================================
-        // 7. ОСНОВНОЙ КОД
-        // ============================================================
-        const canvas = document.getElementById('gameCanvas');
-        const container = document.getElementById('mapContainer');
-        const ctx = canvas.getContext('2d');
-
-        let city = new City();
-        let camera = new Camera();
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // Drag
-        let isDragging = false;
-        let dragStart = { x: 0, y: 0 };
-        let camStart = { x: 0, y: 0 };
-
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            dragStart.x = e.clientX;
-            dragStart.y = e.clientY;
-            camStart.x = camera.offset.x;
-            camStart.y = camera.offset.y;
-            container.style.cursor = 'grabbing';
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const dx = (e.clientX - dragStart.x) / camera.zoom;
-            const dy = (e.clientY - dragStart.y) / camera.zoom;
-            camera.offset.x = camStart.x - dx;
-            camera.offset.y = camStart.y - dy;
-        });
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            container.style.cursor = 'grab';
-        });
-
-        // Touch
-        let touchStart = { x: 0, y: 0 };
-        let touchCam = { x: 0, y: 0 };
-        container.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                const t = e.touches[0];
-                touchStart.x = t.clientX;
-                touchStart.y = t.clientY;
-                touchCam.x = camera.offset.x;
-                touchCam.y = camera.offset.y;
-            }
-        }, { passive: true });
-        container.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1) {
-                const t = e.touches[0];
-                const dx = (t.clientX - touchStart.x) / camera.zoom;
-                const dy = (t.clientY - touchStart.y) / camera.zoom;
-                camera.offset.x = touchCam.x - dx;
-                camera.offset.y = touchCam.y - dy;
-            }
-        }, { passive: true });
-
-        // ============================================================
-        // 8. ЦИКЛ
-        // ============================================================
-        function gameLoop() {
-            camera.update();
-            city.update();
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.scale(camera.zoom, camera.zoom);
-            ctx.translate(-camera.offset.x, -camera.offset.y);
-
-            city.draw(ctx);
-
-            ctx.restore();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // ============================================================
-        // 9. ЗАПУСК
-        // ============================================================
-        let loaded = 0;
-        const total = 1 + Object.keys(carImages).length + 7;
-
-        function checkLoaded() {
-            loaded++;
-            if (loaded >= total) {
-                camera.offset.x = MAP_W / 2;
-                camera.offset.y = MAP_H / 2;
-                gameLoop();
-            }
-        }
-        squareImg.onload = checkLoaded;
-        hallImg.onload = checkLoaded;
-        treeImg.onload = checkLoaded;
-        lampImg.onload = checkLoaded;
-        cloudImg.onload = checkLoaded;
-        cloud2Img.onload = checkLoaded;
-        greenLightImg.onload = checkLoaded;
-        redLightImg.onload = checkLoaded;
-        Object.values(carImages).forEach(img => img.onload = checkLoaded);
-
-        setTimeout(() => {
-            if (loaded < total) {
-                console.warn('Некоторые изображения не загружены, запуск без них');
-                camera.offset.x = MAP_W / 2;
-                camera.offset.y = MAP_H / 2;
-                gameLoop();
-            }
-        }, 3000);
-
-        // ============================================================
-        // 10. СТРАНИЦЫ
-        // ============================================================
-        function openPage(page) {
-            document.querySelectorAll('.page-overlay').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
-            const btns = document.querySelectorAll('.footer button');
-            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'build': 3, 'stats': 4 };
-            if (map[page] !== undefined) btns[map[page]].classList.add('active');
-            if (page === 'home') {
-                camera.offset.x = MAP_W / 2;
-                camera.offset.y = MAP_H / 2;
-                setTimeout(() => closePage('home'), 200);
-            }
-        }
-
-        function closePage(page) {
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.remove('active');
-        }
-
-        function openQuests() {
-            showToast('📋 Quests coming soon!', 'info');
-        }
-
-        // ============================================================
-        // 11. TOAST
-        // ============================================================
-        let toastTimeout;
-
-        function showToast(text, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = text;
-            toast.className = 'toast ' + type + ' show';
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        console.log('🏙️ City Magnat загружен');
-        console.log(`📐 Размер карты: ${MAP_W}×${MAP_H}`);
-        console.log(`📦 Участков: ${city.plots.length}`);
-        console.log(`🌳 Деревьев: ${city.trees.length}`);
-        console.log(`💡 Фонарей: ${city.lamps.length}`);
-        console.log(`🚦 Светофоров: ${city.trafficLights.length}`);
-        console.log(`🚗 Машин: ${city.cars.length}`);
+        console.log('🏙️ Urbania загружена!');
+        console.log('📱 Telegram Mini App:', !!tg);
     </script>
+
 </body>
 </html>
