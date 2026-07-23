@@ -1,4 +1,4 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -708,28 +708,28 @@
 
     <!-- ===== МЕНЮ ===== -->
     <div id="menuContainer">
-        <img id="bgImage" src="menu.png" alt="NEXUS" onerror="this.style.display='none'">
+        <img id="bgImage" src="menu.PNG" alt="NEXUS" onerror="this.style.display='none'">
         <div class="overlay"></div>
         <div class="game-title">NEXUS</div>
         <div class="menu-buttons">
             <button class="menu-btn" onclick="selectDistrict('centre')">
-                <img src="centre.png" alt="Centre" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_centre.jpg" alt="Centre" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
                 <span class="fallback-text">🏙️ Centre</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('suburbs')">
-                <img src="suburbs.png" alt="Suburbs" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_suburbs.jpg" alt="Suburbs" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
                 <span class="fallback-text">🌳 Suburbs</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('park')">
-                <img src="park.png" alt="Park" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_park.jpg" alt="Park" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
                 <span class="fallback-text">🌿 Park</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('residential')">
-                <img src="residential.png" alt="Residential" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_residential.jpg" alt="Residential" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
                 <span class="fallback-text">🏘️ Residential</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('industrial')">
-                <img src="industrial.png" alt="Industrial" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <img src="icon_industrial.jpg" alt="Industrial" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
                 <span class="fallback-text">🏭 Industrial</span>
             </button>
         </div>
@@ -757,7 +757,7 @@
         </div>
 
         <div class="district-header" id="districtHeader">
-            <img class="sticker" id="districtSticker" src="centre.png" alt="">
+            <img class="sticker" id="districtSticker" src="icon_centre.jpg" alt="">
             <span id="districtName">Centre</span>
         </div>
 
@@ -900,11 +900,11 @@
         // 2. ДАННЫЕ
         // ============================================================
         const districtData = {
-            centre: { name: 'Centre', sticker: 'centre.png' },
-            suburbs: { name: 'Suburbs', sticker: 'suburbs.png' },
-            park: { name: 'Park', sticker: 'park.png' },
-            residential: { name: 'Residential', sticker: 'residential.png' },
-            industrial: { name: 'Industrial', sticker: 'industrial.png' }
+            centre: { name: 'Centre', sticker: 'icon_centre.jpg' },
+            suburbs: { name: 'Suburbs', sticker: 'icon_suburbs.jpg' },
+            park: { name: 'Park', sticker: 'icon_park.jpg' },
+            residential: { name: 'Residential', sticker: 'icon_residential.jpg' },
+            industrial: { name: 'Industrial', sticker: 'icon_industrial.jpg' }
         };
 
         let currentDistrict = null;
@@ -1004,7 +1004,6 @@
                 ctx.fillStyle = '#4a8f5c';
                 ctx.fillRect(0, 0, width, height);
 
-                // Текстура травы — меньше точек для производительности
                 for (let i = 0; i < 600; i++) {
                     const x = Math.random() * width;
                     const y = Math.random() * height;
