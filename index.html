@@ -783,7 +783,7 @@
             transform: scale(1.02);
         }
 
-        /* ===== СТРАНИЦЫ (ЗАГЛУШКИ) ===== */
+        /* ===== СТРАНИЦЫ ===== */
         .page-overlay {
             display: none;
             position: fixed;
@@ -995,13 +995,12 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- БАНК (ОВЕРЛЕЙ) -->
+    <!-- БАНК -->
     <!-- ============================================================ -->
     <div class="bank-overlay" id="bankOverlay">
         <button class="close-btn" onclick="closeBank()">✕</button>
         <div class="bank-title">💰 Bank</div>
 
-        <!-- Раздел 1: Мой банк -->
         <div class="bank-section active" id="bankSection1">
             <div class="bank-header" onclick="toggleBankSection('bankSection1')">
                 <span class="title"><img src="bank_1.png" alt="Bank"> Мой банк</span>
@@ -1017,7 +1016,6 @@
             </div>
         </div>
 
-        <!-- Раздел 2: Кредит -->
         <div class="bank-section" id="bankSection2">
             <div class="bank-header" onclick="toggleBankSection('bankSection2')">
                 <span class="title">🏦 Кредит</span>
@@ -1031,7 +1029,6 @@
             </div>
         </div>
 
-        <!-- Раздел 3: Доходы и расходы -->
         <div class="bank-section" id="bankSection3">
             <div class="bank-header" onclick="toggleBankSection('bankSection3')">
                 <span class="title">📊 Доходы и расходы</span>
@@ -1042,13 +1039,10 @@
                 <div class="item"><span class="name">📉 Расход за день</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
                 <div class="item"><span class="name">📈 Доход за неделю</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
                 <div class="item"><span class="name">📉 Расход за неделю</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
-                <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;border:1px dashed #ddd;border-radius:12px;margin-top:8px;">
-                    📊 График будет здесь
-                </div>
+                <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;border:1px dashed #ddd;border-radius:12px;margin-top:8px;">📊 График будет здесь</div>
             </div>
         </div>
 
-        <!-- Раздел 4: Криптовалюта -->
         <div class="bank-section" id="bankSection4">
             <div class="bank-header" onclick="toggleBankSection('bankSection4')">
                 <span class="title">🪙 Криптовалюта</span>
@@ -1064,7 +1058,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- СТРАНИЦЫ: RESOURCES, HOME, QUESTS, STATS -->
+    <!-- СТРАНИЦЫ -->
     <!-- ============================================================ -->
     <div class="page-overlay" id="page-resources">
         <div class="page">
@@ -1087,16 +1081,33 @@
             <button class="close-btn" onclick="closePage('home')">✕</button>
             <h2>🏠 Home</h2>
             <div class="content">
-                <p style="text-align:center;color:#aaa;">Выберите район города</p>
+                <p style="text-align:center;color:#aaa;margin-bottom:12px;">Выберите район города</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 0;">
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🏙️ Деловой центр', 'info')">🏙️ Центр</div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🏘️ Жилой район', 'info')">🏘️ Жилой</div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🌳 Пригород', 'info')">🌳 Пригород</div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🏭 Промзона', 'info')">🏭 Промзона</div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🌿 Парк', 'info')">🌿 Парк</div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🗺️ Карта города', 'info')">🗺️ Карта</div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('center')">
+                        <img src="icon_centre.jpg" alt="Центр" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏙️'">
+                        <span style="font-size:12px;">Деловой центр</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('residential')">
+                        <img src="icon_residential.jpg" alt="Жилой" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏘️'">
+                        <span style="font-size:12px;">Жилой район</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('suburbs')">
+                        <img src="icon_suburbs.jpg" alt="Пригород" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🌳'">
+                        <span style="font-size:12px;">Пригород</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('industrial')">
+                        <img src="icon_industrial.jpg" alt="Промзона" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏭'">
+                        <span style="font-size:12px;">Промзона</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('park')">
+                        <img src="icon_park.jpg" alt="Парк" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🌿'">
+                        <span style="font-size:12px;">Парк</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🗺️ Карта города', 'info')">
+                        <span style="font-size:32px;display:block;">🗺️</span>
+                        <span style="font-size:12px;">Карта</span>
+                    </div>
                 </div>
-                <button class="action-btn" onclick="showToast('🗺️ Карта загружена', 'info')">Открыть карту</button>
             </div>
         </div>
     </div>
@@ -1132,26 +1143,21 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- БИРЖА (ОВЕРЛЕЙ) -->
+    <!-- БИРЖА -->
     <!-- ============================================================ -->
     <div class="exchange-overlay" id="exchangeOverlay">
         <div class="exchange-window">
             <button class="close-btn" onclick="closeExchange()">✕</button>
             <div class="header">📈 Биржа криптовалют</div>
-
             <div class="tabs" id="exchangeTabs">
                 <button class="active" data-tab="main" onclick="switchExchangeTab('main')">Основные</button>
                 <button data-tab="exclusive" onclick="switchExchangeTab('exclusive')">Эксклюзив</button>
                 <button data-tab="sell" onclick="switchExchangeTab('sell')">Продажа</button>
             </div>
-
             <div class="search-box">
                 <input type="text" id="cryptoSearch" placeholder="🔍 Поиск криптовалюты..." oninput="filterCrypto()">
             </div>
-
-            <div class="crypto-list" id="cryptoList">
-                <!-- Заполняется JS -->
-            </div>
+            <div class="crypto-list" id="cryptoList"></div>
         </div>
     </div>
 
@@ -1246,7 +1252,8 @@
             const container = document.getElementById('cryptoPortfolio');
             const keys = Object.keys(portfolio);
             if (keys.length === 0) {
-                container.innerHTML = `<div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>`;
+                container.innerHTML =
+                    `<div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>`;
                 return;
             }
             let html = '';
@@ -1263,12 +1270,6 @@
             });
             container.innerHTML = html;
         }
-
-        // Открыт первый раздел по умолчанию
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('body1').classList.add('open');
-            document.getElementById('arrow1').classList.add('open');
-        });
 
         // ============================================================
         // 4. СТРАНИЦЫ
@@ -1291,6 +1292,18 @@
         function closePage(page) {
             const target = document.getElementById('page-' + page);
             if (target) target.classList.remove('active');
+        }
+
+        function openDistrict(district) {
+            const names = {
+                center: 'Деловой центр',
+                residential: 'Жилой район',
+                suburbs: 'Пригород',
+                industrial: 'Промзона',
+                park: 'Парк'
+            };
+            showToast(`🏙️ ${names[district] || district}`, 'info');
+            closePage('home');
         }
 
         // ============================================================
@@ -1488,7 +1501,7 @@
         }
 
         // ============================================================
-        // 8. КАРТА (Canvas)
+        // 8. КАРТА
         // ============================================================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
