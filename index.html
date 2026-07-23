@@ -25,7 +25,7 @@
             padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
         }
 
-        /* ===== КОНТЕЙНЕР С ФОНОМ ===== */
+        /* ===== КОНТЕЙНЕРЫ ===== */
         #menuContainer {
             position: fixed;
             top: 0;
@@ -39,9 +39,30 @@
             justify-content: center;
             align-items: center;
             background: #0d0d1a;
+            transition: opacity 0.5s ease;
         }
 
-        /* ===== ФОН С РАЗМЫТИЕМ ===== */
+        #gameContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            background: #4a8f5c;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #gameContainer.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* ===== ФОН МЕНЮ ===== */
         #bgImage {
             position: absolute;
             top: 0;
@@ -54,7 +75,6 @@
             z-index: 0;
         }
 
-        /* ===== ТЁМНЫЙ ОВЕРЛЕЙ ===== */
         .overlay {
             position: absolute;
             top: 0;
@@ -65,7 +85,7 @@
             z-index: 1;
         }
 
-        /* ===== НАЗВАНИЕ (рукописное, стеклянное) ===== */
+        /* ===== НАЗВАНИЕ ===== */
         .game-title {
             position: absolute;
             top: 8%;
@@ -103,7 +123,7 @@
             }
         }
 
-        /* ===== КНОПКИ (вертикальный список) ===== */
+        /* ===== КНОПКИ МЕНЮ ===== */
         .menu-buttons {
             position: relative;
             z-index: 2;
@@ -147,7 +167,6 @@
             display: block;
         }
 
-        /* ===== ПОДПИСЬ ПОД КНОПКОЙ ===== */
         .btn-label {
             position: absolute;
             bottom: 8px;
@@ -165,6 +184,446 @@
             padding: 2px 12px;
             border-radius: 12px;
             white-space: nowrap;
+        }
+
+        /* ===== ОБЛАКА ДЛЯ АНИМАЦИИ ===== */
+        .clouds-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            pointer-events: none;
+            display: none;
+            overflow: hidden;
+        }
+
+        .clouds-overlay.active {
+            display: block;
+            pointer-events: auto;
+        }
+
+        .cloud {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            object-fit: contain;
+            opacity: 0;
+            transform: translateX(-200px);
+            transition: none;
+        }
+
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ИГРЫ ===== */
+        .game-top-panel {
+            position: fixed;
+            top: env(safe-area-inset-top, 12px);
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 0 16px;
+            pointer-events: none;
+        }
+        .game-top-panel>* {
+            pointer-events: auto;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .back-btn img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .right-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            padding: 4px 14px 4px 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            color: #fff;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .glass-box .icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+        .glass-box .amount {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .glass-box.coins .amount {
+            color: #f1c40f;
+        }
+        .glass-box.gems .amount {
+            color: #5dade2;
+        }
+        .glass-box.gems {
+            font-size: 12px;
+            padding: 2px 10px;
+        }
+        .glass-box.gems .amount {
+            font-size: 13px;
+        }
+
+        /* ===== ЗАГОЛОВОК РАЙОНА ===== */
+        .district-header {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(22px, 5vw, 36px);
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 6px 20px 6px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            white-space: nowrap;
+        }
+
+        .district-header .sticker {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        /* ===== ПОЛОСА ОПЫТА ===== */
+        .level-bar-wrapper {
+            position: fixed;
+            bottom: 74px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: calc(100% - 40px);
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 6px 16px 8px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+        }
+
+        .level-bar-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .level-top {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        .level-top .lvl {
+            font-size: 13px;
+            color: #e94560;
+        }
+        .level-top .xp {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .level-progress {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .level-progress .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #e94560, #f39c12);
+            border-radius: 10px;
+            transition: width 0.6s;
+        }
+
+        .level-progress .ticks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2px;
+            pointer-events: none;
+        }
+
+        .level-progress .ticks span {
+            display: block;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .level-bottom {
+            display: flex;
+            justify-content: space-between;
+            font-size: 7px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px 20px 0 0;
+            padding: 6px 8px env(safe-area-inset-bottom, 6px) 8px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            min-height: 56px;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 7px;
+            text-align: center;
+            padding: 2px 4px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: 0.2s;
+            min-width: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-weight: 500;
+            outline: none;
+        }
+
+        .footer button:hover {
+            color: #fff;
+        }
+
+        .footer button .icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .footer button .label {
+            font-size: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            opacity: 0.7;
+        }
+
+        .footer button.active {
+            color: #e94560;
+        }
+        .footer button.active .label {
+            opacity: 1;
+        }
+
+        /* ===== СТРАНИЦЫ (модалки) ===== */
+        .page-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .page-overlay.active {
+            display: flex;
+        }
+
+        .page {
+            background: #1a1a2e;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .page .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .page .close-btn:hover {
+            color: #fff;
+        }
+
+        .page h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #e94560;
+            text-align: center;
+        }
+
+        .page .content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .page .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .page .row .label {
+            color: #aaa;
+        }
+        .page .row .value {
+            font-weight: 600;
+        }
+
+        .page .action-btn {
+            background: #e94560;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .page .action-btn:hover {
+            background: #c0392b;
+        }
+
+        .page .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .page .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 16px;
+            font-size: 13px;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+        .toast.success {
+            border-color: #2ecc71;
+        }
+        .toast.error {
+            border-color: #e74c3c;
+        }
+        .toast.info {
+            border-color: #3498db;
+        }
+
+        /* ===== КАНВАС ДЛЯ КАРТЫ ===== */
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #4a8f5c;
         }
 
         /* ===== АДАПТАЦИЯ ===== */
@@ -188,6 +647,65 @@
                 padding: 1px 10px;
                 bottom: 5px;
             }
+            .district-header {
+                top: 60px;
+                font-size: clamp(18px, 4vw, 26px);
+                padding: 4px 14px 4px 10px;
+            }
+            .district-header .sticker {
+                width: 24px;
+                height: 24px;
+            }
+            .level-bar-wrapper {
+                bottom: 64px;
+                width: calc(100% - 32px);
+                padding: 4px 12px 6px;
+            }
+            .level-top {
+                font-size: 11px;
+            }
+            .level-top .lvl {
+                font-size: 12px;
+            }
+            .level-top .xp {
+                font-size: 10px;
+            }
+            .footer {
+                padding: 4px 4px env(safe-area-inset-bottom, 4px) 4px;
+                min-height: 48px;
+            }
+            .footer button {
+                min-width: 32px;
+            }
+            .footer button .icon {
+                width: 18px;
+                height: 18px;
+            }
+            .footer button .label {
+                font-size: 6px;
+            }
+            .glass-box {
+                font-size: 12px;
+                padding: 3px 10px;
+            }
+            .glass-box .amount {
+                font-size: 13px;
+            }
+            .glass-box.gems {
+                font-size: 11px;
+                padding: 2px 8px;
+            }
+            .glass-box.gems .amount {
+                font-size: 12px;
+            }
+            .back-btn {
+                padding: 4px 10px;
+                font-size: 10px;
+            }
+            .back-btn img {
+                width: 16px;
+                height: 16px;
+            }
         }
 
         @media (max-width: 380px) {
@@ -207,45 +725,190 @@
 </head>
 <body>
 
+    <!-- ===== МЕНЮ ===== -->
     <div id="menuContainer">
-
-        <!-- ===== ФОН ===== -->
         <img id="bgImage" src="menu.PNG" alt="Urbania" onerror="this.style.display='none'">
-
-        <!-- ===== ТЁМНЫЙ СЛОЙ ===== -->
         <div class="overlay"></div>
-
-        <!-- ===== НАЗВАНИЕ ===== -->
         <div class="game-title">Urbania</div>
-
-        <!-- ===== КНОПКИ ===== -->
         <div class="menu-buttons">
             <button class="menu-btn" onclick="selectDistrict('centre')">
                 <img src="centre.png" alt="Centre" onerror="this.style.display='none'">
                 <span class="btn-label">Centre</span>
             </button>
-
             <button class="menu-btn" onclick="selectDistrict('suburbs')">
                 <img src="suburbs.png" alt="Suburbs" onerror="this.style.display='none'">
                 <span class="btn-label">Suburbs</span>
             </button>
-
             <button class="menu-btn" onclick="selectDistrict('park')">
                 <img src="park.png" alt="Park" onerror="this.style.display='none'">
                 <span class="btn-label">Park</span>
             </button>
-
             <button class="menu-btn" onclick="selectDistrict('residential')">
                 <img src="residential.png" alt="Residential" onerror="this.style.display='none'">
                 <span class="btn-label">Residential</span>
             </button>
-
             <button class="menu-btn" onclick="selectDistrict('industrial')">
                 <img src="industrial.png" alt="Industrial" onerror="this.style.display='none'">
                 <span class="btn-label">Industrial</span>
             </button>
         </div>
+    </div>
 
+    <!-- ===== ИГРОВОЙ КОНТЕЙНЕР ===== -->
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Верхняя панель -->
+        <div class="game-top-panel">
+            <button class="back-btn" onclick="goBack()">
+                <img src="back.png" alt="Back" onerror="this.textContent='←'">
+                Back
+            </button>
+            <div class="right-group">
+                <div class="glass-box coins">
+                    <span class="icon">🪙</span>
+                    <span class="amount" id="coinAmount">12 340</span>
+                </div>
+                <div class="glass-box gems">
+                    <span class="icon">💎</span>
+                    <span class="amount" id="gemAmount">85</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заголовок района -->
+        <div class="district-header" id="districtHeader">
+            <img class="sticker" id="districtSticker" src="centre.png" alt="">
+            <span id="districtName">Centre</span>
+        </div>
+
+        <!-- Полоса опыта -->
+        <div class="level-bar-wrapper">
+            <div class="level-bar-inner">
+                <div class="level-top">
+                    <span class="lvl">LEVEL 1</span>
+                    <span class="xp">0 / 100 XP</span>
+                </div>
+                <div class="level-progress">
+                    <div class="fill" style="width:0%;"></div>
+                    <div class="ticks">
+                        <span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div class="level-bottom"><span>0 XP</span><span>100 XP</span></div>
+            </div>
+        </div>
+
+        <!-- Футер -->
+        <div class="footer" id="footer">
+            <button onclick="openPage('bank')">
+                <img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'">
+                <span class="label">Bank</span>
+            </button>
+            <button onclick="openPage('resources')">
+                <img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'">
+                <span class="label">Resources</span>
+            </button>
+            <button onclick="openPage('home')" class="active">
+                <img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'">
+                <span class="label">Home</span>
+            </button>
+            <button onclick="openPage('quests')">
+                <img src="tasks_icon.png" alt="Quests" class="icon" onerror="this.textContent='📋'">
+                <span class="label">Quests</span>
+            </button>
+            <button onclick="openPage('stats')">
+                <img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'">
+                <span class="label">Stats</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== СТРАНИЦЫ ===== -->
+    <div class="page-overlay" id="page-bank">
+        <div class="page">
+            <button class="close-btn" onclick="closePage('bank')">✕</button>
+            <h2>💰 Bank</h2>
+            <div class="content">
+                <div class="row"><span class="label">Balance</span><span class="value">12 340 🪙</span></div>
+                <div class="row"><span class="label">Loans</span><span class="value">0 🪙</span></div>
+                <div class="row"><span class="label">Interest rate</span><span class="value">5%</span></div>
+                <button class="action-btn">Take Loan</button>
+                <button class="action-btn secondary">Repay Loan</button>
+                <button class="action-btn secondary">Deposit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="page-resources">
+        <div class="page">
+            <button class="close-btn" onclick="closePage('resources')">✕</button>
+            <h2>📦 Resources</h2>
+            <div class="content">
+                <div class="row"><span class="label">🛢️ Oil</span><span class="value">45</span></div>
+                <div class="row"><span class="label">🔥 Gas</span><span class="value">32</span></div>
+                <div class="row"><span class="label">🌲 Wood</span><span class="value">28</span></div>
+                <div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div>
+                <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
+                <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
+                <button class="action-btn secondary">Trade</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="page-quests">
+        <div class="page">
+            <button class="close-btn" onclick="closePage('quests')">✕</button>
+            <h2>📋 Quests</h2>
+            <div class="content">
+                <div class="row"><span class="label">🚀 Build 5 houses</span><span class="value">0/5</span></div>
+                <div class="row"><span class="label">💰 Earn 1000 coins</span><span class="value">340/1000</span></div>
+                <div class="row"><span class="label">👥 Reach 100 population</span><span class="value">42/100</span></div>
+                <button class="action-btn secondary">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="page-stats">
+        <div class="page">
+            <button class="close-btn" onclick="closePage('stats')">✕</button>
+            <h2>📊 Stats</h2>
+            <div class="content">
+                <div class="row"><span class="label">🏙️ City</span><span class="value">Urbania</span></div>
+                <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
+                <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
+                <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
+                <div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div>
+                <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="page-home">
+        <div class="page">
+            <button class="close-btn" onclick="closePage('home')">✕</button>
+            <h2>🏠 Home</h2>
+            <div class="content">
+                <p style="text-align:center;color:#aaa;">Карта центрирована</p>
+                <button class="action-btn" onclick="closePage('home')">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== ОБЛАКА ДЛЯ АНИМАЦИИ ===== -->
+    <div class="clouds-overlay" id="cloudsOverlay">
+        <img class="cloud" id="cloud1" src="cloud.png" alt="">
+        <img class="cloud" id="cloud2" src="cloud_2.png" alt="">
+        <img class="cloud" id="cloud3" src="cloud.png" alt="">
+        <img class="cloud" id="cloud4" src="cloud_2.png" alt="">
+        <img class="cloud" id="cloud5" src="cloud.png" alt="">
+        <img class="cloud" id="cloud6" src="cloud_2.png" alt="">
+        <img class="cloud" id="cloud7" src="cloud.png" alt="">
+        <img class="cloud" id="cloud8" src="cloud_2.png" alt="">
     </div>
 
     <script>
@@ -253,64 +916,193 @@
         // 1. TELEGRAM
         // ============================================================
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
+        if (tg) { tg.ready();
+            tg.expand(); }
+        const user = tg?.initDataUnsafe?.user || { id: 0, username: 'Guest' };
 
         // ============================================================
-        // 2. ВЫБОР РАЙОНА
+        // 2. ПЕРЕМЕННЫЕ
+        // ============================================================
+        let currentDistrict = null;
+        const districtData = {
+            centre: { name: 'Centre', sticker: 'centre.png' },
+            suburbs: { name: 'Suburbs', sticker: 'suburbs.png' },
+            park: { name: 'Park', sticker: 'park.png' },
+            residential: { name: 'Residential', sticker: 'residential.png' },
+            industrial: { name: 'Industrial', sticker: 'industrial.png' }
+        };
+
+        // ============================================================
+        // 3. ВЫБОР РАЙОНА С АНИМАЦИЕЙ ОБЛАКОВ
         // ============================================================
         function selectDistrict(district) {
-            console.log('Выбран район:', district);
+            currentDistrict = district;
+            const data = districtData[district];
 
-            const names = {
-                centre: 'Деловой центр',
-                suburbs: 'Пригород',
-                park: 'Городской парк',
-                residential: 'Жилой район',
-                industrial: 'Промышленная зона'
-            };
+            // Показываем облака
+            const overlay = document.getElementById('cloudsOverlay');
+            overlay.classList.add('active');
 
-            if (tg) {
-                tg.sendData(JSON.stringify({
-                    action: 'select_district',
-                    district: district,
-                    name: names[district] || district
-                }));
-            }
+            const clouds = document.querySelectorAll('.cloud');
+            const containerWidth = window.innerWidth;
+            const containerHeight = window.innerHeight;
 
-            // Визуальный фидбек
-            const toast = document.createElement('div');
-            toast.textContent = `🏙️ ${names[district] || district}`;
-            toast.style.cssText = `
-                        position: fixed;
-                        bottom: 120px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        background: rgba(0,0,0,0.7);
-                        backdrop-filter: blur(8px);
-                        padding: 12px 28px;
-                        border-radius: 20px;
-                        color: white;
-                        font-size: 16px;
-                        font-weight: 600;
-                        z-index: 1000;
-                        border: 1px solid rgba(255,255,255,0.1);
-                        transition: opacity 0.3s;
-                        opacity: 1;
-                    `;
-            document.body.appendChild(toast);
+            // Случайное расположение облаков
+            clouds.forEach((cloud, i) => {
+                const size = 80 + Math.random() * 120;
+                cloud.style.width = size + 'px';
+                cloud.style.height = (size * 0.5) + 'px';
+                cloud.style.top = (Math.random() * (containerHeight - 100)) + 'px';
+                cloud.style.opacity = '0';
+                cloud.style.transform = 'translateX(-200px)';
+                // Задержка старта
+                const delay = i * 120 + Math.random() * 150;
+                setTimeout(() => {
+                    cloud.style.transition = `all ${1.5 + Math.random() * 1.5}s cubic-bezier(0.2, 0.8, 0.4, 1)`;
+                    cloud.style.opacity = '0.7 + Math.random() * 0.3';
+                    cloud.style.transform = `translateX(${containerWidth + 100}px)`;
+                }, delay);
+            });
 
+            // После анимации открываем игру
             setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 400);
-            }, 2000);
+                overlay.classList.remove('active');
+                // Сброс облаков
+                clouds.forEach(cloud => {
+                    cloud.style.transition = 'none';
+                    cloud.style.opacity = '0';
+                    cloud.style.transform = 'translateX(-200px)';
+                });
+                openGame(district);
+            }, 3500);
         }
 
+        // ============================================================
+        // 4. ОТКРЫТИЕ ИГРЫ
+        // ============================================================
+        function openGame(district) {
+            const data = districtData[district];
+
+            // Скрываем меню
+            document.getElementById('menuContainer').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('menuContainer').style.display = 'none';
+            }, 500);
+
+            // Показываем игру
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.style.display = 'flex';
+            gameContainer.style.opacity = '0';
+            setTimeout(() => {
+                gameContainer.style.opacity = '1';
+            }, 50);
+
+            // Обновляем заголовок
+            document.getElementById('districtName').textContent = data.name;
+            document.getElementById('districtSticker').src = data.sticker;
+
+            // Инициализируем карту
+            initMap();
+        }
+
+        // ============================================================
+        // 5. КАРТА (простая зелёная трава)
+        // ============================================================
+        let mapInitialized = false;
+
+        function initMap() {
+            if (mapInitialized) return;
+            mapInitialized = true;
+
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                drawMap(ctx, canvas.width, canvas.height);
+            }
+
+            function drawMap(ctx, w, h) {
+                // Трава
+                ctx.fillStyle = '#4a8f5c';
+                ctx.fillRect(0, 0, w, h);
+
+                // Текстура травы
+                for (let i = 0; i < 2000; i++) {
+                    const x = Math.random() * w;
+                    const y = Math.random() * h;
+                    ctx.fillStyle = Math.random() > 0.5 ? '#3d7a4e' : '#5a9f6a';
+                    ctx.fillRect(x, y, 2, 2);
+                }
+
+                // Небольшой текст
+                ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('🏙️ ' + currentDistrict, w / 2, h / 2 - 20);
+                ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                ctx.font = '14px Arial';
+                ctx.fillText('Нажмите на участок, чтобы построить', w / 2, h / 2 + 30);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+        }
+
+        // ============================================================
+        // 6. ВОЗВРАТ В МЕНЮ
+        // ============================================================
+        function goBack() {
+            const gameContainer = document.getElementById('gameContainer');
+            gameContainer.style.opacity = '0';
+            setTimeout(() => {
+                gameContainer.style.display = 'none';
+                gameContainer.style.opacity = '1';
+                document.getElementById('menuContainer').style.display = 'flex';
+                setTimeout(() => {
+                    document.getElementById('menuContainer').style.opacity = '1';
+                }, 50);
+            }, 400);
+            mapInitialized = false;
+        }
+
+        // ============================================================
+        // 7. СТРАНИЦЫ
+        // ============================================================
+        function openPage(page) {
+            document.querySelectorAll('.page-overlay').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            const btns = document.querySelectorAll('.footer button');
+            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'quests': 3, 'stats': 4 };
+            if (map[page] !== undefined) btns[map[page]].classList.add('active');
+        }
+
+        function closePage(page) {
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.remove('active');
+        }
+
+        // ============================================================
+        // 8. TOAST
+        // ============================================================
+        let toastTimeout;
+
+        function showToast(text, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = text;
+            toast.className = 'toast ' + type + ' show';
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // 9. ЗАГРУЗКА
+        // ============================================================
         console.log('🏙️ Urbania загружена!');
         console.log('📱 Telegram Mini App:', !!tg);
     </script>
-
 </body>
 </html>
