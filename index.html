@@ -21,7 +21,6 @@
             height: 100vh;
             width: 100vw;
             position: relative;
-            touch-action: none;
             padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
         }
         #mapContainer {
@@ -45,7 +44,6 @@
             background: transparent;
         }
 
-        /* ===== Верхняя панель ===== */
         .top-panel {
             position: fixed;
             top: env(safe-area-inset-top, 12px);
@@ -67,10 +65,8 @@
             font-size: 28px;
             font-weight: 400;
             color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 30px rgba(233, 69, 96, 0.2);
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             padding: 2px 16px 4px;
             border-radius: 40px;
             letter-spacing: 0.5px;
@@ -99,7 +95,6 @@
         .glass-box {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 30px;
             padding: 4px 14px 4px 12px;
@@ -134,42 +129,6 @@
             font-size: 13px;
         }
 
-        .quest-box {
-            position: fixed;
-            bottom: 90px;
-            right: 16px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 30px;
-            padding: 6px 14px 6px 12px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            pointer-events: auto;
-        }
-        .quest-box:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-        .quest-box .icon {
-            font-size: 20px;
-            line-height: 1;
-        }
-        .quest-box .label {
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.8;
-            margin-top: 2px;
-        }
-
         .level-bar-wrapper {
             position: fixed;
             bottom: 68px;
@@ -180,7 +139,6 @@
             max-width: 700px;
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             padding: 6px 16px 8px;
@@ -248,7 +206,6 @@
             margin-top: 2px;
         }
 
-        /* ===== ФУТЕР ===== */
         .footer {
             position: fixed;
             bottom: 0;
@@ -257,7 +214,6 @@
             z-index: 100;
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px 20px 0 0;
             padding: 6px 8px env(safe-area-inset-bottom, 6px) 8px;
@@ -309,117 +265,54 @@
             color: #e94560;
         }
 
-        /* ===== СТРАНИЦЫ ===== */
-        .page-overlay {
+        /* ===== БАНК (ОВЕРЛЕЙ) ===== */
+        .bank-overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
+            background: #ffffff;
             z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .page-overlay.active {
-            display: flex;
-        }
-        .page {
-            background: #1a1a2e;
-            border-radius: 30px;
-            padding: 30px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #fff;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            overflow-y: auto;
         }
-        .page .close-btn {
+        .bank-overlay.active {
+            display: flex;
+        }
+        .bank-overlay .close-btn {
             position: absolute;
             top: 16px;
             right: 20px;
             background: none;
             border: none;
             color: #888;
-            font-size: 24px;
+            font-size: 28px;
             cursor: pointer;
             transition: color 0.2s;
+            z-index: 5;
         }
-        .page .close-btn:hover {
-            color: #fff;
+        .bank-overlay .close-btn:hover {
+            color: #333;
         }
-        .page h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #e94560;
+        .bank-overlay .bank-title {
             text-align: center;
-        }
-        .page .content {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .page .content::-webkit-scrollbar {
-            width: 4px;
-        }
-        .page .content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .page .content::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 4px;
-        }
-        .page .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .page .row .label {
-            color: #aaa;
-        }
-        .page .row .value {
-            font-weight: 600;
-        }
-        .page .action-btn {
-            background: #e94560;
-            border: none;
-            color: #fff;
-            padding: 12px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: 8px;
-        }
-        .page .action-btn:hover {
-            background: #c0392b;
-        }
-        .page .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .page .action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            padding-top: 10px;
         }
 
-        /* ===== БАНК ===== */
         .bank-section {
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid #e0e0e0;
             border-radius: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             overflow: hidden;
             transition: 0.3s;
+            background: #f8f8f8;
         }
         .bank-section.active {
             border-color: #e94560;
@@ -428,17 +321,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
+            padding: 14px 18px;
             cursor: pointer;
             transition: 0.2s;
-            background: rgba(255, 255, 255, 0.02);
+            background: #fff;
         }
         .bank-header:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: #f0f0f0;
         }
         .bank-header .title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 16px;
+            color: #1a1a2e;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -461,11 +355,11 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
-            padding: 0 16px;
+            padding: 0 18px;
         }
         .bank-body.open {
-            max-height: 400px;
-            padding: 12px 16px 16px;
+            max-height: 500px;
+            padding: 12px 18px 18px;
             overflow-y: auto;
         }
         .bank-body::-webkit-scrollbar {
@@ -475,18 +369,19 @@
             background: transparent;
         }
         .bank-body::-webkit-scrollbar-thumb {
-            background: #444;
+            background: #ccc;
             border-radius: 4px;
         }
         .bank-body .item {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #1a1a2e;
         }
         .bank-body .item .name {
-            color: #ccc;
+            color: #666;
         }
         .bank-body .item .value {
             font-weight: 600;
@@ -496,22 +391,38 @@
             border: none;
             color: #1a1a2e;
             font-weight: 700;
-            padding: 10px;
+            padding: 12px;
             border-radius: 12px;
             width: 100%;
             cursor: pointer;
-            font-size: 14px;
-            margin-top: 8px;
+            font-size: 15px;
+            margin-top: 10px;
             transition: 0.2s;
         }
         .bank-body .btn-gold:hover {
             transform: scale(1.02);
         }
         .bank-body .empty-text {
-            color: #888;
+            color: #999;
             font-style: italic;
             text-align: center;
             padding: 12px 0;
+        }
+        .bank-body .crypto-own {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #1a1a2e;
+        }
+        .bank-body .crypto-own .name {
+            color: #333;
+            font-weight: 600;
+        }
+        .bank-body .crypto-own .amount {
+            color: #e94560;
+            font-weight: 700;
         }
 
         /* ===== БИРЖА ===== */
@@ -659,6 +570,7 @@
         .crypto-item .info .name {
             font-weight: 600;
             font-size: 14px;
+            color: #fff;
         }
         .crypto-item .info .symbol {
             font-size: 12px;
@@ -784,7 +696,6 @@
             background: #444;
             border-radius: 4px;
         }
-
         .trade-window .amount-control {
             display: flex;
             align-items: center;
@@ -830,7 +741,6 @@
         .trade-window .amount-control input:focus {
             border-color: #e94560;
         }
-
         .trade-window .price-info {
             text-align: center;
             padding: 8px 0;
@@ -871,6 +781,97 @@
         }
         .trade-window .btn-confirm:hover {
             transform: scale(1.02);
+        }
+
+        /* ===== СТРАНИЦЫ (ЗАГЛУШКИ) ===== */
+        .page-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .page-overlay.active {
+            display: flex;
+        }
+        .page {
+            background: #1a1a2e;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+        .page .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .page .close-btn:hover {
+            color: #fff;
+        }
+        .page h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #e94560;
+            text-align: center;
+        }
+        .page .content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .page .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .page .row .label {
+            color: #aaa;
+        }
+        .page .row .value {
+            font-weight: 600;
+        }
+        .page .action-btn {
+            background: #e94560;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .page .action-btn:hover {
+            background: #c0392b;
+        }
+        .page .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .page .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .toast {
@@ -923,14 +924,6 @@
             .glass-box.gems .amount {
                 font-size: 12px;
             }
-            .quest-box {
-                bottom: 80px;
-                right: 10px;
-                padding: 4px 10px;
-            }
-            .quest-box .icon {
-                font-size: 18px;
-            }
             .level-bar-wrapper {
                 width: calc(100% - 32px);
                 bottom: 60px;
@@ -964,6 +957,9 @@
                 max-width: 100%;
                 max-height: 90vh;
             }
+            .bank-overlay {
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -975,8 +971,8 @@
     <div class="top-panel">
         <div class="game-title">City Magnat</div>
         <div class="right-group">
-            <div class="glass-box coins"><span class="icon">🪙</span><span class="amount" id="coinAmount">12 340</span></div>
-            <div class="glass-box gems"><span class="icon">💎</span><span class="amount" id="gemAmount">85</span></div>
+            <div class="glass-box coins"><span class="icon">🪙</span><span class="amount" id="coinAmount">10 000</span></div>
+            <div class="glass-box gems"><span class="icon">💎</span><span class="amount" id="gemAmount">10</span></div>
         </div>
     </div>
 
@@ -989,95 +985,86 @@
         </div>
     </div>
 
-    <!-- Кнопка Quests -->
-    <div class="quest-box" onclick="openQuests()">
-        <span class="icon">📋</span>
-        <span class="label">Quests</span>
-    </div>
-
     <!-- Футер -->
     <div class="footer" id="footer">
-        <button onclick="openPage('bank')" data-page="bank"><img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'"><span class="label">Bank</span></button>
+        <button onclick="openBank()" data-page="bank"><img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'"><span class="label">Bank</span></button>
         <button onclick="openPage('resources')" data-page="resources"><img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'"><span class="label">Resources</span></button>
         <button onclick="openPage('home')" data-page="home" class="active"><img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'"><span class="label">Home</span></button>
-        <button onclick="openPage('build')" data-page="build"><img src="build_icon.png" alt="Build" class="icon" onerror="this.textContent='🏗️'"><span class="label">Build</span></button>
+        <button onclick="openPage('quests')" data-page="quests"><img src="tasks_icon.png" alt="Quests" class="icon" onerror="this.textContent='📋'"><span class="label">Quests</span></button>
         <button onclick="openPage('stats')" data-page="stats"><img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'"><span class="label">Stats</span></button>
     </div>
 
     <!-- ============================================================ -->
-    <!-- СТРАНИЦА: БАНК -->
+    <!-- БАНК (ОВЕРЛЕЙ) -->
     <!-- ============================================================ -->
-    <div class="page-overlay" id="page-bank">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('bank')">✕</button>
-            <h2>💰 Bank</h2>
-            <div class="content">
+    <div class="bank-overlay" id="bankOverlay">
+        <button class="close-btn" onclick="closeBank()">✕</button>
+        <div class="bank-title">💰 Bank</div>
 
-                <!-- Раздел 1: Мой банк -->
-                <div class="bank-section active" id="bankSection1">
-                    <div class="bank-header" onclick="toggleBankSection('bankSection1')">
-                        <span class="title"><img src="bank_1.png" alt="Bank"> Мой банк</span>
-                        <span class="arrow" id="arrow1">▼</span>
-                    </div>
-                    <div class="bank-body open" id="body1">
-                        <div class="item"><span class="name">💰 Баланс</span><span class="value">12 340 🪙</span></div>
-                        <div class="item"><span class="name">📈 Доходы (сегодня)</span><span class="value">+2 100 🪙</span></div>
-                        <div class="item"><span class="name">📉 Расходы (сегодня)</span><span class="value">-850 🪙</span></div>
-                        <div class="item"><span class="name">🏦 Кредиты</span><span class="value">0 🪙</span></div>
-                        <div class="item"><span class="name">📊 Депозиты</span><span class="value">5 000 🪙</span></div>
-                        <button class="btn-gold" onclick="showToast('💳 Кредит оформлен!', 'success')">Взять кредит</button>
-                        <button class="btn-gold" style="background:rgba(255,255,255,0.08);color:#fff;margin-top:6px;" onclick="showToast('💰 Депозит пополнен!', 'success')">Пополнить депозит</button>
-                    </div>
+        <!-- Раздел 1: Мой банк -->
+        <div class="bank-section active" id="bankSection1">
+            <div class="bank-header" onclick="toggleBankSection('bankSection1')">
+                <span class="title"><img src="bank_1.png" alt="Bank"> Мой банк</span>
+                <span class="arrow" id="arrow1">▼</span>
+            </div>
+            <div class="bank-body open" id="body1">
+                <div class="item"><span class="name">💰 Баланс</span><span class="value" id="bankBalance">10 000 🪙</span></div>
+                <div class="item"><span class="name">💎 Алмазы</span><span class="value" id="bankGems">10 💎</span></div>
+                <div class="item"><span class="name">🏦 Кредиты</span><span class="value">0 🪙</span></div>
+                <div class="item"><span class="name">📊 Депозиты</span><span class="value">0 🪙</span></div>
+                <button class="btn-gold" onclick="showToast('💳 Кредит оформлен!', 'success')">Взять кредит</button>
+                <button class="btn-gold" style="background:rgba(0,0,0,0.05);color:#1a1a2e;margin-top:6px;" onclick="showToast('💰 Депозит пополнен!', 'success')">Пополнить депозит</button>
+            </div>
+        </div>
+
+        <!-- Раздел 2: Кредит -->
+        <div class="bank-section" id="bankSection2">
+            <div class="bank-header" onclick="toggleBankSection('bankSection2')">
+                <span class="title">🏦 Кредит</span>
+                <span class="arrow" id="arrow2">▼</span>
+            </div>
+            <div class="bank-body" id="body2">
+                <div class="item"><span class="name">💳 Текущий кредит</span><span class="value">0 🪙</span></div>
+                <div class="item"><span class="name">📊 Процентная ставка</span><span class="value">5%</span></div>
+                <div class="item"><span class="name">📅 Срок</span><span class="value">30 дней</span></div>
+                <button class="btn-gold" onclick="showToast('📋 Заявка на кредит отправлена', 'info')">Оформить кредит</button>
+            </div>
+        </div>
+
+        <!-- Раздел 3: Доходы и расходы -->
+        <div class="bank-section" id="bankSection3">
+            <div class="bank-header" onclick="toggleBankSection('bankSection3')">
+                <span class="title">📊 Доходы и расходы</span>
+                <span class="arrow" id="arrow3">▼</span>
+            </div>
+            <div class="bank-body" id="body3">
+                <div class="item"><span class="name">📈 Доход за день</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
+                <div class="item"><span class="name">📉 Расход за день</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
+                <div class="item"><span class="name">📈 Доход за неделю</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
+                <div class="item"><span class="name">📉 Расход за неделю</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
+                <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;border:1px dashed #ddd;border-radius:12px;margin-top:8px;">
+                    📊 График будет здесь
                 </div>
+            </div>
+        </div>
 
-                <!-- Раздел 2: Криптовалюта -->
-                <div class="bank-section" id="bankSection2">
-                    <div class="bank-header" onclick="toggleBankSection('bankSection2')">
-                        <span class="title">🪙 Криптовалюта</span>
-                        <span class="arrow" id="arrow2">▼</span>
-                    </div>
-                    <div class="bank-body" id="body2">
-                        <div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>
-                        <button class="btn-gold" onclick="openExchange()">🚀 Биржа</button>
-                    </div>
+        <!-- Раздел 4: Криптовалюта -->
+        <div class="bank-section" id="bankSection4">
+            <div class="bank-header" onclick="toggleBankSection('bankSection4')">
+                <span class="title">🪙 Криптовалюта</span>
+                <span class="arrow" id="arrow4">▼</span>
+            </div>
+            <div class="bank-body" id="body4">
+                <div id="cryptoPortfolio">
+                    <div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>
                 </div>
-
-                <!-- Раздел 3: Биржа -->
-                <div class="bank-section" id="bankSection3">
-                    <div class="bank-header" onclick="toggleBankSection('bankSection3')">
-                        <span class="title">📈 Биржа</span>
-                        <span class="arrow" id="arrow3">▼</span>
-                    </div>
-                    <div class="bank-body" id="body3">
-                        <div style="color:#888;font-size:13px;padding:8px 0;">Торгуйте криптовалютами на бирже</div>
-                        <button class="btn-gold" onclick="openExchange()">🚀 Открыть биржу</button>
-                    </div>
-                </div>
-
-                <!-- Раздел 4: Доходы и расходы -->
-                <div class="bank-section" id="bankSection4">
-                    <div class="bank-header" onclick="toggleBankSection('bankSection4')">
-                        <span class="title">📊 Доходы и расходы</span>
-                        <span class="arrow" id="arrow4">▼</span>
-                    </div>
-                    <div class="bank-body" id="body4">
-                        <div class="item"><span class="name">📈 Доход за день</span><span class="value" style="color:#2ecc71;">+2 100 🪙</span></div>
-                        <div class="item"><span class="name">📉 Расход за день</span><span class="value" style="color:#e74c3c;">-850 🪙</span></div>
-                        <div class="item"><span class="name">📈 Доход за неделю</span><span class="value" style="color:#2ecc71;">+12 450 🪙</span></div>
-                        <div class="item"><span class="name">📉 Расход за неделю</span><span class="value" style="color:#e74c3c;">-5 200 🪙</span></div>
-                        <div class="item"><span class="name">📊 Чистая прибыль</span><span class="value" style="color:#f1c40f;">+7 250 🪙</span></div>
-                        <div style="height:100px;display:flex;align-items:center;justify-content:center;color:#666;font-size:13px;border:1px dashed rgba(255,255,255,0.05);border-radius:12px;margin-top:8px;">
-                            📊 График доходов/расходов (будет позже)
-                        </div>
-                    </div>
-                </div>
-
+                <button class="btn-gold" onclick="openExchange()">🚀 Биржа</button>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- СТРАНИЦЫ: RESOURCES, HOME, BUILD, STATS -->
+    <!-- СТРАНИЦЫ: RESOURCES, HOME, QUESTS, STATS -->
     <!-- ============================================================ -->
     <div class="page-overlay" id="page-resources">
         <div class="page">
@@ -1090,7 +1077,7 @@
                 <div class="row"><span class="label">🥇 Gold</span><span class="value">12</span></div>
                 <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
                 <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
-                <button class="action-btn secondary" onclick="showToast('📊 Торговля ресурсами открыта', 'info')">Торговать</button>
+                <button class="action-btn secondary" onclick="showToast('📊 В разработке', 'info')">Торговать</button>
             </div>
         </div>
     </div>
@@ -1100,7 +1087,7 @@
             <button class="close-btn" onclick="closePage('home')">✕</button>
             <h2>🏠 Home</h2>
             <div class="content">
-                <p style="text-align:center;color:#aaa;">Карта города</p>
+                <p style="text-align:center;color:#aaa;">Выберите район города</p>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 0;">
                     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🏙️ Деловой центр', 'info')">🏙️ Центр</div>
                     <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🏘️ Жилой район', 'info')">🏘️ Жилой</div>
@@ -1114,17 +1101,16 @@
         </div>
     </div>
 
-    <div class="page-overlay" id="page-build">
+    <div class="page-overlay" id="page-quests">
         <div class="page">
-            <button class="close-btn" onclick="closePage('build')">✕</button>
-            <h2>🏗️ Build</h2>
+            <button class="close-btn" onclick="closePage('quests')">✕</button>
+            <h2>📋 Quests</h2>
             <div class="content">
-                <div class="row"><span class="label">🏠 House (2×2)</span><span class="value">500 🪙</span></div>
-                <div class="row"><span class="label">🏢 Apartment (3×3)</span><span class="value">1200 🪙</span></div>
-                <div class="row"><span class="label">🏫 School (3×3)</span><span class="value">700 🪙</span></div>
-                <div class="row"><span class="label">🏥 Hospital (4×4)</span><span class="value">1500 🪙</span></div>
-                <div class="row"><span class="label">🏬 Mall (5×5)</span><span class="value">2000 🪙</span></div>
-                <button class="action-btn" onclick="showToast('🏗️ Выберите участок на карте', 'info')">Выбрать участок</button>
+                <div style="text-align:center;color:#888;padding:20px 0;">
+                    <div style="font-size:48px;margin-bottom:16px;">📋</div>
+                    <p>Здесь будут ваши задания</p>
+                    <p style="font-size:13px;margin-top:8px;">Скоро появятся новые квесты!</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1137,8 +1123,8 @@
                 <div class="row"><span class="label">🏙️ City</span><span class="value">Новый Уренгой</span></div>
                 <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
                 <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
-                <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
-                <div class="row"><span class="label">🏢 Buildings</span><span class="value">8</span></div>
+                <div class="row"><span class="label">📈 Income/day</span><span class="value">+0 🪙</span></div>
+                <div class="row"><span class="label">🏢 Buildings</span><span class="value">0</span></div>
                 <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
                 <button class="action-btn" onclick="showToast('📊 Обновлено', 'success')">Обновить</button>
             </div>
@@ -1146,7 +1132,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- БИРЖА (оверлей) -->
+    <!-- БИРЖА (ОВЕРЛЕЙ) -->
     <!-- ============================================================ -->
     <div class="exchange-overlay" id="exchangeOverlay">
         <div class="exchange-window">
@@ -1205,8 +1191,12 @@
         const user = tg?.initDataUnsafe?.user || { id: 0, username: 'Guest' };
 
         // ============================================================
-        // 2. ДАННЫЕ КРИПТОВАЛЮТ
+        // 2. ДАННЫЕ
         // ============================================================
+        let balance = 10000;
+        let gems = 10;
+        let portfolio = {};
+
         const cryptos = [
             { id: 'bitcoin', name: 'BitCoin', symbol: 'BTC', icon: 'bitcoin.png', price: 45200 },
             { id: 'ethereum', name: 'Etherium', symbol: 'ETH', icon: 'ethereum.png', price: 3200 },
@@ -1223,24 +1213,24 @@
             { id: 'pixeltap', name: 'PixelTap', symbol: 'PIXFI', icon: 'pixeltap.png', price: 0.85 }
         ];
 
-        const exclusiveCryptos = [
-            { id: 'excl1', name: 'GoldCoin', symbol: 'GOLD', icon: 'gold.png', price: 2500 },
-            { id: 'excl2', name: 'Diamond', symbol: 'DIA', icon: 'diamond.png', price: 8500 }
-        ];
-
-        // Игровой портфель
-        let portfolio = {};
-
         // ============================================================
-        // 3. БАНК — РАЗДЕЛЫ СО СТРЕЛКАМИ
+        // 3. БАНК
         // ============================================================
+        function openBank() {
+            document.getElementById('bankOverlay').classList.add('active');
+            updatePortfolioDisplay();
+        }
+
+        function closeBank() {
+            document.getElementById('bankOverlay').classList.remove('active');
+        }
+
         function toggleBankSection(sectionId) {
             const section = document.getElementById(sectionId);
             const body = document.getElementById('body' + sectionId.slice(-1));
             const arrow = document.getElementById('arrow' + sectionId.slice(-1));
             const isOpen = body.classList.contains('open');
 
-            // Закрываем все
             document.querySelectorAll('.bank-body').forEach(b => b.classList.remove('open'));
             document.querySelectorAll('.bank-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.bank-header .arrow').forEach(a => a.classList.remove('open'));
@@ -1252,12 +1242,32 @@
             }
         }
 
-        // По умолчанию открыт первый раздел
+        function updatePortfolioDisplay() {
+            const container = document.getElementById('cryptoPortfolio');
+            const keys = Object.keys(portfolio);
+            if (keys.length === 0) {
+                container.innerHTML = `<div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>`;
+                return;
+            }
+            let html = '';
+            keys.forEach(key => {
+                const crypto = cryptos.find(c => c.id === key);
+                if (crypto) {
+                    html += `
+                        <div class="crypto-own">
+                            <span class="name">${crypto.name} (${crypto.symbol})</span>
+                            <span class="amount">${portfolio[key]} шт.</span>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html;
+        }
+
+        // Открыт первый раздел по умолчанию
         document.addEventListener('DOMContentLoaded', function() {
-            const firstBody = document.getElementById('body1');
-            const firstArrow = document.getElementById('arrow1');
-            if (firstBody) firstBody.classList.add('open');
-            if (firstArrow) firstArrow.classList.add('open');
+            document.getElementById('body1').classList.add('open');
+            document.getElementById('arrow1').classList.add('open');
         });
 
         // ============================================================
@@ -1270,7 +1280,7 @@
 
             document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.footer button');
-            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'build': 3, 'stats': 4 };
+            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'quests': 3, 'stats': 4 };
             if (map[page] !== undefined) btns[map[page]].classList.add('active');
 
             if (page === 'home') {
@@ -1314,15 +1324,19 @@
             if (tab === 'main') {
                 items = cryptos;
             } else if (tab === 'exclusive') {
-                items = exclusiveCryptos;
+                items = [];
             } else if (tab === 'sell') {
-                // Показываем только те, что есть в портфеле
                 const owned = Object.keys(portfolio);
                 items = cryptos.filter(c => owned.includes(c.id));
                 if (items.length === 0) {
                     list.innerHTML = `<div class="empty-text">У вас нет криптовалют для продажи</div>`;
                     return;
                 }
+            }
+
+            if (items.length === 0 && tab === 'exclusive') {
+                list.innerHTML = `<div class="empty-text">🌟 Эксклюзивные криптовалюты появятся позже</div>`;
+                return;
             }
 
             const filtered = items.filter(c =>
@@ -1363,10 +1377,10 @@
         }
 
         // ============================================================
-        // 6. ОКНО ПОКУПКИ/ПРОДАЖИ
+        // 6. ПОКУПКА / ПРОДАЖА
         // ============================================================
         function openTrade(cryptoId, mode) {
-            const crypto = [...cryptos, ...exclusiveCryptos].find(c => c.id === cryptoId);
+            const crypto = cryptos.find(c => c.id === cryptoId);
             if (!crypto) return;
 
             currentTradeCrypto = crypto;
@@ -1427,38 +1441,42 @@
             const totalWithFee = total + fee;
 
             if (isBuyMode) {
-                // Проверяем баланс
-                const balance = 12340; // заглушка
                 if (totalWithFee > balance) {
                     showToast('❌ Недостаточно средств!', 'error');
                     return;
                 }
-                // Добавляем в портфель
+                balance -= totalWithFee;
                 if (!portfolio[currentTradeCrypto.id]) portfolio[currentTradeCrypto.id] = 0;
                 portfolio[currentTradeCrypto.id] += amount;
                 showToast(`✅ Куплено ${amount} ${currentTradeCrypto.symbol}`, 'success');
             } else {
-                // Продажа
                 if (!portfolio[currentTradeCrypto.id] || portfolio[currentTradeCrypto.id] < amount) {
                     showToast('❌ У вас нет столько криптовалюты!', 'error');
                     return;
                 }
                 portfolio[currentTradeCrypto.id] -= amount;
+                const sellAmount = amount * currentTradeCrypto.price * 0.97;
+                balance += sellAmount;
                 if (portfolio[currentTradeCrypto.id] <= 0) delete portfolio[currentTradeCrypto.id];
-                showToast(`✅ Продано ${amount} ${currentTradeCrypto.symbol}`, 'success');
+                showToast(`✅ Продано ${amount} ${currentTradeCrypto.symbol} за ${Math.round(sellAmount).toLocaleString()} 🪙`, 'success');
             }
 
+            updateBalances();
+            updatePortfolioDisplay();
             closeTrade();
             renderCryptoList(currentTab);
         }
 
-        // ============================================================
-        // 7. QUESTS / TOAST
-        // ============================================================
-        function openQuests() {
-            showToast('📋 Quests coming soon!', 'info');
+        function updateBalances() {
+            document.getElementById('coinAmount').textContent = Math.round(balance).toLocaleString();
+            document.getElementById('gemAmount').textContent = gems;
+            document.getElementById('bankBalance').textContent = Math.round(balance).toLocaleString() + ' 🪙';
+            document.getElementById('bankGems').textContent = gems + ' 💎';
         }
 
+        // ============================================================
+        // 7. TOAST
+        // ============================================================
         let toastTimeout;
 
         function showToast(text, type = 'info') {
@@ -1485,7 +1503,6 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Изображения для карты
         const squareImg = new Image();
         squareImg.src = 'garden.png';
         const hallImg = new Image();
@@ -1493,7 +1510,6 @@
         const lampImg = new Image();
         lampImg.src = 'street_lamp.png';
 
-        // Состояние светофоров
         let trafficLights = [];
         let lightTimer = 0;
 
@@ -1521,7 +1537,6 @@
         function drawMap() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Масштабируем карту под экран
             const scaleX = canvas.width / MAP_W;
             const scaleY = canvas.height / MAP_H;
             const scale = Math.min(scaleX, scaleY) * 0.85;
@@ -1531,11 +1546,9 @@
             ctx.scale(scale, scale);
             ctx.translate(-MAP_W / 2, -MAP_H / 2);
 
-            // Трава
             ctx.fillStyle = '#4a8f5c';
             ctx.fillRect(0, 0, MAP_W, MAP_H);
 
-            // Дороги (симметричная сетка)
             const step = 200;
             const roadWidth = 20;
             ctx.strokeStyle = '#4a4a4a';
@@ -1547,7 +1560,6 @@
                 ctx.moveTo(0, y);
                 ctx.lineTo(MAP_W, y);
                 ctx.stroke();
-                // Разметка
                 ctx.strokeStyle = 'rgba(255,255,255,0.4)';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([6, 8]);
@@ -1578,7 +1590,6 @@
                 ctx.lineWidth = roadWidth;
             }
 
-            // Тротуары (вокруг дорог)
             ctx.fillStyle = '#9a9a9a';
             const trottoirW = 10;
             for (let r = 0; r <= Math.floor(MAP_H / step); r++) {
@@ -1592,7 +1603,6 @@
                 ctx.fillRect(x + roadWidth / 2, 0, trottoirW, MAP_H);
             }
 
-            // Пешеходные переходы (перед перекрёстками)
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
             for (let r = 0; r <= Math.floor(MAP_H / step); r++) {
                 for (let c = 0; c <= Math.floor(MAP_W / step); c++) {
@@ -1609,13 +1619,11 @@
                 }
             }
 
-            // Фонари (на тротуарах)
             if (lampImg.complete && lampImg.naturalWidth) {
                 for (let r = 0; r <= Math.floor(MAP_H / step); r++) {
                     for (let c = 0; c <= Math.floor(MAP_W / step); c++) {
                         const cx = c * step;
                         const cy = r * step;
-                        // По углам тротуаров
                         const off = roadWidth / 2 + trottoirW / 2;
                         const positions = [
                             { x: cx - off, y: cy - off },
@@ -1632,7 +1640,6 @@
                 }
             }
 
-            // Светофоры
             trafficLights.forEach(tl => {
                 const color = tl.state === 'green' ? '#2ecc71' : '#e74c3c';
                 ctx.fillStyle = '#333';
@@ -1643,7 +1650,6 @@
                 ctx.fill();
             });
 
-            // Центр — сквер и мэрия
             const cx = MAP_W / 2;
             const cy = MAP_H / 2;
             const sqSize = 160;
@@ -1655,7 +1661,6 @@
                 ctx.drawImage(hallImg, cx + sqSize / 2 + 20, cy - sqSize / 2, sqSize * 0.7, sqSize * 0.7);
             }
 
-            // Подписи районов
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
@@ -1668,7 +1673,6 @@
             ctx.restore();
         }
 
-        // Обновление светофоров
         function updateTrafficLights() {
             lightTimer++;
             if (lightTimer > 60) {
@@ -1689,7 +1693,6 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Загрузка и запуск
         let loaded = 0;
         const total = 3;
 
@@ -1714,9 +1717,9 @@
 
         console.log('🏙️ City Magnat загружен');
         console.log('💰 Банк с 4 разделами');
-        console.log('🪙 Криптовалюты: 14 основных, 2 эксклюзивных');
-        console.log('📈 Биржа с тремя вкладками');
-        console.log('🗺️ Карта с симметричными дорогами, тротуарами, фонарями и светофорами');
+        console.log('🪙 13 криптовалют');
+        console.log('📈 Биржа с покупкой и продажей');
+        console.log('🗺️ Карта с дорогами, тротуарами, фонарями и светофорами');
     </script>
 
 </body>
