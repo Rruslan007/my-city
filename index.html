@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>URBANIA</title>
+    <title>NEXUS</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,7 +24,7 @@
             padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
         }
 
-        /* ===== КОНТЕЙНЕРЫ ===== */
+        /* ===== МЕНЮ ===== */
         #menuContainer {
             position: fixed;
             top: 0;
@@ -39,30 +38,9 @@
             justify-content: center;
             align-items: center;
             background: #0d0d1a;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.4s ease;
         }
 
-        #gameContainer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            overflow: hidden;
-            display: none;
-            flex-direction: column;
-            background: #4a8f5c;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        #gameContainer.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        /* ===== ФОН МЕНЮ ===== */
         #bgImage {
             position: absolute;
             top: 0;
@@ -70,7 +48,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: blur(4px);
+            filter: blur(3px);
             transform: scale(1.02);
             z-index: 0;
         }
@@ -81,75 +59,54 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
 
-        /* ===== НАЗВАНИЕ ===== */
         .game-title {
             position: absolute;
             top: 8%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 2;
-            font-family: 'Pacifico', cursive;
-            font-size: clamp(32px, 7vw, 52px);
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: clamp(40px, 9vw, 60px);
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.85);
-            text-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
-            letter-spacing: 2px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 4px 28px 8px;
-            border-radius: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-            opacity: 0.7;
-            animation: glassPulse 4s ease-in-out infinite;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 4px;
+            background: transparent;
+            padding: 0;
+            border: none;
             white-space: nowrap;
             text-align: center;
         }
 
-        @keyframes glassPulse {
-            0%,
-            100% {
-                background: rgba(255, 255, 255, 0.06);
-                backdrop-filter: blur(16px);
-            }
-            50% {
-                background: rgba(255, 255, 255, 0.12);
-                backdrop-filter: blur(24px);
-            }
-        }
-
-        /* ===== КНОПКИ МЕНЮ ===== */
         .menu-buttons {
             position: relative;
             z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             width: 88%;
-            max-width: 480px;
-            margin-top: 10%;
+            max-width: 460px;
+            margin-top: 12%;
         }
 
         .menu-btn {
             width: 100%;
-            height: 72px;
+            height: 64px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             cursor: pointer;
             overflow: hidden;
             position: relative;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.2s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             padding: 0;
             display: flex;
             align-items: center;
@@ -167,23 +124,49 @@
             display: block;
         }
 
-        .btn-label {
+        .menu-btn .fallback-text {
             position: absolute;
-            bottom: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+            font-family: 'Georgia', serif;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
             letter-spacing: 1px;
-            text-transform: uppercase;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            padding: 2px 12px;
-            border-radius: 12px;
-            white-space: nowrap;
+            display: none;
+            pointer-events: none;
+        }
+
+        .menu-btn img.onerror + .fallback-text,
+        .menu-btn img:not([src]) + .fallback-text {
+            display: block;
+        }
+
+        /* ===== ИГРА ===== */
+        #gameContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            background: #4a8f5c;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #gameContainer.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #4a8f5c;
+            image-rendering: auto;
         }
 
         /* ===== ОБЛАКА ДЛЯ АНИМАЦИИ ===== */
@@ -206,15 +189,47 @@
 
         .cloud {
             position: absolute;
-            width: 120px;
-            height: 60px;
-            object-fit: contain;
+            width: 100px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
             opacity: 0;
             transform: translateX(-200px);
             transition: none;
+            filter: blur(1px);
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ИГРЫ ===== */
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+        }
+
+        .cloud::before {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 8px;
+        }
+
+        .cloud::after {
+            width: 75px;
+            height: 65px;
+            top: -32px;
+            left: 32px;
+        }
+
+        .cloud.dark {
+            background: rgba(200, 210, 230, 0.6);
+        }
+        .cloud.dark::before,
+        .cloud.dark::after {
+            background: rgba(200, 210, 230, 0.6);
+        }
+
+        /* ===== ИНТЕРФЕЙС ===== */
         .game-top-panel {
             position: fixed;
             top: env(safe-area-inset-top, 12px);
@@ -233,11 +248,10 @@
 
         .back-btn {
             background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 30px;
-            padding: 6px 12px;
+            padding: 5px 12px;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
@@ -252,8 +266,8 @@
         }
 
         .back-btn img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             object-fit: contain;
         }
 
@@ -266,27 +280,26 @@
 
         .glass-box {
             background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 30px;
-            padding: 4px 14px 4px 12px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            padding: 3px 12px 3px 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             font-weight: 700;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             white-space: nowrap;
         }
 
         .glass-box .icon {
-            font-size: 16px;
+            font-size: 14px;
             line-height: 1;
         }
         .glass-box .amount {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
         }
         .glass-box.coins .amount {
@@ -296,58 +309,56 @@
             color: #5dade2;
         }
         .glass-box.gems {
-            font-size: 12px;
-            padding: 2px 10px;
+            font-size: 11px;
+            padding: 2px 8px;
         }
         .glass-box.gems .amount {
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        /* ===== ЗАГОЛОВОК РАЙОНА ===== */
         .district-header {
             position: fixed;
-            top: 70px;
+            top: 68px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            font-family: 'Pacifico', cursive;
-            font-size: clamp(22px, 5vw, 36px);
-            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: clamp(20px, 4.5vw, 32px);
+            color: rgba(255, 255, 255, 0.85);
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(8px);
-            padding: 6px 20px 6px 16px;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(6px);
+            padding: 4px 16px 4px 12px;
             border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             white-space: nowrap;
         }
 
         .district-header .sticker {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
-        /* ===== ПОЛОСА ОПЫТА ===== */
         .level-bar-wrapper {
             position: fixed;
-            bottom: 74px;
+            bottom: 68px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
             width: calc(100% - 40px);
-            max-width: 700px;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 6px 16px 8px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            max-width: 680px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 5px 14px 6px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
             pointer-events: none;
         }
 
@@ -362,22 +373,22 @@
             justify-content: space-between;
             font-weight: 700;
             color: #fff;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.5px;
         }
         .level-top .lvl {
-            font-size: 13px;
+            font-size: 12px;
             color: #e94560;
         }
         .level-top .xp {
             font-size: 10px;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
         .level-progress {
             width: 100%;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.08);
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 10px;
             overflow: hidden;
             position: relative;
@@ -407,52 +418,50 @@
             display: block;
             width: 2px;
             height: 100%;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .level-bottom {
             display: flex;
             justify-content: space-between;
             font-size: 7px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 2px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 1px;
         }
 
-        /* ===== ФУТЕР ===== */
         .footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px 20px 0 0;
-            padding: 6px 8px env(safe-area-inset-bottom, 6px) 8px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px 18px 0 0;
+            padding: 5px 6px env(safe-area-inset-bottom, 5px) 6px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            min-height: 56px;
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.2);
+            min-height: 50px;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
         }
 
         .footer button {
             background: none;
             border: none;
-            color: #aaa;
+            color: #888;
             font-size: 7px;
             text-align: center;
             padding: 2px 4px;
             cursor: pointer;
             border-radius: 16px;
             transition: 0.2s;
-            min-width: 40px;
+            min-width: 36px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 1px;
             font-weight: 500;
             outline: none;
         }
@@ -462,8 +471,8 @@
         }
 
         .footer button .icon {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             object-fit: contain;
             display: block;
         }
@@ -472,7 +481,7 @@
             font-size: 7px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
         .footer button.active {
@@ -482,7 +491,7 @@
             opacity: 1;
         }
 
-        /* ===== СТРАНИЦЫ (модалки) ===== */
+        /* ===== СТРАНИЦЫ ===== */
         .page-overlay {
             display: none;
             position: fixed;
@@ -491,7 +500,7 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
             z-index: 100;
             justify-content: center;
             align-items: center;
@@ -504,26 +513,26 @@
 
         .page {
             background: #1a1a2e;
-            border-radius: 30px;
-            padding: 30px;
-            max-width: 480px;
+            border-radius: 28px;
+            padding: 28px;
+            max-width: 460px;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             color: #fff;
             position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
 
         .page .close-btn {
             position: absolute;
-            top: 16px;
-            right: 20px;
+            top: 14px;
+            right: 18px;
             background: none;
             border: none;
-            color: #888;
-            font-size: 24px;
+            color: #666;
+            font-size: 22px;
             cursor: pointer;
             transition: color 0.2s;
         }
@@ -533,8 +542,8 @@
         }
 
         .page h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
+            font-size: 20px;
+            margin-bottom: 18px;
             color: #e94560;
             text-align: center;
         }
@@ -542,18 +551,18 @@
         .page .content {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .page .row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .page .row .label {
-            color: #aaa;
+            color: #888;
         }
         .page .row .value {
             font-weight: 600;
@@ -563,14 +572,14 @@
             background: #e94560;
             border: none;
             color: #fff;
-            padding: 12px;
-            border-radius: 16px;
-            font-size: 16px;
+            padding: 10px;
+            border-radius: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
             width: 100%;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .page .action-btn:hover {
@@ -578,29 +587,28 @@
         }
 
         .page .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .page .action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 120px;
+            bottom: 110px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            padding: 10px 20px;
-            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            padding: 8px 18px;
+            border-radius: 14px;
             font-size: 13px;
             z-index: 200;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             color: #fff;
             white-space: nowrap;
         }
@@ -608,117 +616,90 @@
         .toast.show {
             opacity: 1;
         }
-        .toast.success {
-            border-color: #2ecc71;
-        }
-        .toast.error {
-            border-color: #e74c3c;
-        }
-        .toast.info {
-            border-color: #3498db;
-        }
-
-        /* ===== КАНВАС ДЛЯ КАРТЫ ===== */
-        #gameCanvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #4a8f5c;
-        }
 
         /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 480px) {
             .menu-buttons {
                 gap: 10px;
                 width: 92%;
-                margin-top: 12%;
+                margin-top: 14%;
             }
             .menu-btn {
-                height: 60px;
+                height: 56px;
                 border-radius: 16px;
             }
             .game-title {
                 top: 6%;
-                font-size: clamp(26px, 6vw, 36px);
-                padding: 2px 20px 6px;
-            }
-            .btn-label {
-                font-size: 9px;
-                padding: 1px 10px;
-                bottom: 5px;
+                font-size: clamp(32px, 8vw, 40px);
             }
             .district-header {
-                top: 60px;
-                font-size: clamp(18px, 4vw, 26px);
-                padding: 4px 14px 4px 10px;
+                top: 58px;
+                font-size: clamp(16px, 4vw, 22px);
+                padding: 3px 12px 3px 8px;
             }
             .district-header .sticker {
-                width: 24px;
-                height: 24px;
+                width: 22px;
+                height: 22px;
             }
             .level-bar-wrapper {
-                bottom: 64px;
+                bottom: 58px;
                 width: calc(100% - 32px);
-                padding: 4px 12px 6px;
+                padding: 4px 10px 5px;
             }
             .level-top {
-                font-size: 11px;
+                font-size: 10px;
             }
             .level-top .lvl {
-                font-size: 12px;
-            }
-            .level-top .xp {
-                font-size: 10px;
+                font-size: 11px;
             }
             .footer {
                 padding: 4px 4px env(safe-area-inset-bottom, 4px) 4px;
-                min-height: 48px;
+                min-height: 44px;
             }
             .footer button {
-                min-width: 32px;
+                min-width: 30px;
             }
             .footer button .icon {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
             }
             .footer button .label {
                 font-size: 6px;
             }
             .glass-box {
-                font-size: 12px;
-                padding: 3px 10px;
-            }
-            .glass-box .amount {
-                font-size: 13px;
-            }
-            .glass-box.gems {
                 font-size: 11px;
                 padding: 2px 8px;
             }
-            .glass-box.gems .amount {
+            .glass-box .amount {
                 font-size: 12px;
+            }
+            .glass-box.gems {
+                font-size: 10px;
+                padding: 1px 6px;
+            }
+            .glass-box.gems .amount {
+                font-size: 11px;
             }
             .back-btn {
                 padding: 4px 10px;
                 font-size: 10px;
             }
             .back-btn img {
-                width: 16px;
-                height: 16px;
+                width: 14px;
+                height: 14px;
             }
         }
 
         @media (max-width: 380px) {
             .menu-btn {
-                height: 50px;
-                border-radius: 12px;
+                height: 48px;
+                border-radius: 14px;
             }
             .menu-buttons {
                 gap: 8px;
             }
             .game-title {
-                font-size: clamp(22px, 5vw, 28px);
-                padding: 2px 14px 4px;
+                font-size: clamp(26px, 6vw, 32px);
             }
         }
     </style>
@@ -727,38 +708,37 @@
 
     <!-- ===== МЕНЮ ===== -->
     <div id="menuContainer">
-        <img id="bgImage" src="menu.PNG" alt="Urbania" onerror="this.style.display='none'">
+        <img id="bgImage" src="menu.png" alt="NEXUS" onerror="this.style.display='none'">
         <div class="overlay"></div>
-        <div class="game-title">Urbania</div>
+        <div class="game-title">NEXUS</div>
         <div class="menu-buttons">
             <button class="menu-btn" onclick="selectDistrict('centre')">
-                <img src="centre.png" alt="Centre" onerror="this.style.display='none'">
-                <span class="btn-label">Centre</span>
+                <img src="centre.png" alt="Centre" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <span class="fallback-text">🏙️ Centre</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('suburbs')">
-                <img src="suburbs.png" alt="Suburbs" onerror="this.style.display='none'">
-                <span class="btn-label">Suburbs</span>
+                <img src="suburbs.png" alt="Suburbs" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <span class="fallback-text">🌳 Suburbs</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('park')">
-                <img src="park.png" alt="Park" onerror="this.style.display='none'">
-                <span class="btn-label">Park</span>
+                <img src="park.png" alt="Park" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <span class="fallback-text">🌿 Park</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('residential')">
-                <img src="residential.png" alt="Residential" onerror="this.style.display='none'">
-                <span class="btn-label">Residential</span>
+                <img src="residential.png" alt="Residential" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <span class="fallback-text">🏘️ Residential</span>
             </button>
             <button class="menu-btn" onclick="selectDistrict('industrial')">
-                <img src="industrial.png" alt="Industrial" onerror="this.style.display='none'">
-                <span class="btn-label">Industrial</span>
+                <img src="industrial.png" alt="Industrial" onerror="this.parentElement.querySelector('.fallback-text').style.display='block'">
+                <span class="fallback-text">🏭 Industrial</span>
             </button>
         </div>
     </div>
 
-    <!-- ===== ИГРОВОЙ КОНТЕЙНЕР ===== -->
+    <!-- ===== ИГРА ===== -->
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
 
-        <!-- Верхняя панель -->
         <div class="game-top-panel">
             <button class="back-btn" onclick="goBack()">
                 <img src="back.png" alt="Back" onerror="this.textContent='←'">
@@ -776,13 +756,11 @@
             </div>
         </div>
 
-        <!-- Заголовок района -->
         <div class="district-header" id="districtHeader">
             <img class="sticker" id="districtSticker" src="centre.png" alt="">
             <span id="districtName">Centre</span>
         </div>
 
-        <!-- Полоса опыта -->
         <div class="level-bar-wrapper">
             <div class="level-bar-inner">
                 <div class="level-top">
@@ -801,7 +779,6 @@
             </div>
         </div>
 
-        <!-- Футер -->
         <div class="footer" id="footer">
             <button onclick="openPage('bank')">
                 <img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'">
@@ -876,7 +853,7 @@
             <button class="close-btn" onclick="closePage('stats')">✕</button>
             <h2>📊 Stats</h2>
             <div class="content">
-                <div class="row"><span class="label">🏙️ City</span><span class="value">Urbania</span></div>
+                <div class="row"><span class="label">🏙️ City</span><span class="value">NEXUS</span></div>
                 <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
                 <div class="row"><span class="label">😊 Happiness</span><span class="value">78%</span></div>
                 <div class="row"><span class="label">📈 Income/day</span><span class="value">+2 100 🪙</span></div>
@@ -891,7 +868,7 @@
             <button class="close-btn" onclick="closePage('home')">✕</button>
             <h2>🏠 Home</h2>
             <div class="content">
-                <p style="text-align:center;color:#aaa;">Карта центрирована</p>
+                <p style="text-align:center;color:#888;">Карта центрирована</p>
                 <button class="action-btn" onclick="closePage('home')">OK</button>
             </div>
         </div>
@@ -899,16 +876,16 @@
 
     <div class="toast" id="toast"></div>
 
-    <!-- ===== ОБЛАКА ДЛЯ АНИМАЦИИ ===== -->
+    <!-- ===== ОБЛАКА ===== -->
     <div class="clouds-overlay" id="cloudsOverlay">
-        <img class="cloud" id="cloud1" src="cloud.png" alt="">
-        <img class="cloud" id="cloud2" src="cloud_2.png" alt="">
-        <img class="cloud" id="cloud3" src="cloud.png" alt="">
-        <img class="cloud" id="cloud4" src="cloud_2.png" alt="">
-        <img class="cloud" id="cloud5" src="cloud.png" alt="">
-        <img class="cloud" id="cloud6" src="cloud_2.png" alt="">
-        <img class="cloud" id="cloud7" src="cloud.png" alt="">
-        <img class="cloud" id="cloud8" src="cloud_2.png" alt="">
+        <div class="cloud" id="cloud1"></div>
+        <div class="cloud dark" id="cloud2"></div>
+        <div class="cloud" id="cloud3"></div>
+        <div class="cloud dark" id="cloud4"></div>
+        <div class="cloud" id="cloud5"></div>
+        <div class="cloud dark" id="cloud6"></div>
+        <div class="cloud" id="cloud7"></div>
+        <div class="cloud dark" id="cloud8"></div>
     </div>
 
     <script>
@@ -918,12 +895,10 @@
         const tg = window.Telegram?.WebApp;
         if (tg) { tg.ready();
             tg.expand(); }
-        const user = tg?.initDataUnsafe?.user || { id: 0, username: 'Guest' };
 
         // ============================================================
-        // 2. ПЕРЕМЕННЫЕ
+        // 2. ДАННЫЕ
         // ============================================================
-        let currentDistrict = null;
         const districtData = {
             centre: { name: 'Centre', sticker: 'centre.png' },
             suburbs: { name: 'Suburbs', sticker: 'suburbs.png' },
@@ -932,49 +907,56 @@
             industrial: { name: 'Industrial', sticker: 'industrial.png' }
         };
 
+        let currentDistrict = null;
+        let mapInitialized = false;
+        let animationRunning = false;
+
         // ============================================================
-        // 3. ВЫБОР РАЙОНА С АНИМАЦИЕЙ ОБЛАКОВ
+        // 3. ВЫБОР РАЙОНА (АНИМАЦИЯ)
         // ============================================================
         function selectDistrict(district) {
-            currentDistrict = district;
-            const data = districtData[district];
+            if (animationRunning) return;
+            animationRunning = true;
 
-            // Показываем облака
+            currentDistrict = district;
+
             const overlay = document.getElementById('cloudsOverlay');
             overlay.classList.add('active');
 
             const clouds = document.querySelectorAll('.cloud');
             const containerWidth = window.innerWidth;
-            const containerHeight = window.innerHeight;
 
-            // Случайное расположение облаков
             clouds.forEach((cloud, i) => {
                 const size = 80 + Math.random() * 120;
+                const top = 10 + Math.random() * (window.innerHeight - 160);
                 cloud.style.width = size + 'px';
                 cloud.style.height = (size * 0.5) + 'px';
-                cloud.style.top = (Math.random() * (containerHeight - 100)) + 'px';
+                cloud.style.top = top + 'px';
                 cloud.style.opacity = '0';
                 cloud.style.transform = 'translateX(-200px)';
-                // Задержка старта
-                const delay = i * 120 + Math.random() * 150;
+                cloud.style.transition = 'none';
+            });
+
+            clouds.forEach((cloud, i) => {
+                const delay = 100 + i * 100 + Math.random() * 150;
                 setTimeout(() => {
-                    cloud.style.transition = `all ${1.5 + Math.random() * 1.5}s cubic-bezier(0.2, 0.8, 0.4, 1)`;
-                    cloud.style.opacity = '0.7 + Math.random() * 0.3';
-                    cloud.style.transform = `translateX(${containerWidth + 100}px)`;
+                    cloud.style.transition =
+                        `all ${1.5 + Math.random() * 1.2}s cubic-bezier(0.2, 0.85, 0.4, 1)`;
+                    cloud.style.opacity = 0.5 + Math.random() * 0.4;
+                    cloud.style.transform = `translateX(${containerWidth + 150}px)`;
                 }, delay);
             });
 
-            // После анимации открываем игру
             setTimeout(() => {
                 overlay.classList.remove('active');
-                // Сброс облаков
-                clouds.forEach(cloud => {
-                    cloud.style.transition = 'none';
-                    cloud.style.opacity = '0';
-                    cloud.style.transform = 'translateX(-200px)';
+                clouds.forEach(c => {
+                    c.style.transition = 'none';
+                    c.style.opacity = '0';
+                    c.style.transform = 'translateX(-200px)';
                 });
                 openGame(district);
-            }, 3500);
+                animationRunning = false;
+            }, 3800);
         }
 
         // ============================================================
@@ -983,33 +965,23 @@
         function openGame(district) {
             const data = districtData[district];
 
-            // Скрываем меню
             document.getElementById('menuContainer').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('menuContainer').style.display = 'none';
-            }, 500);
+            }, 400);
 
-            // Показываем игру
             const gameContainer = document.getElementById('gameContainer');
-            gameContainer.style.display = 'flex';
-            gameContainer.style.opacity = '0';
-            setTimeout(() => {
-                gameContainer.style.opacity = '1';
-            }, 50);
+            gameContainer.classList.add('active');
 
-            // Обновляем заголовок
             document.getElementById('districtName').textContent = data.name;
             document.getElementById('districtSticker').src = data.sticker;
 
-            // Инициализируем карту
             initMap();
         }
 
         // ============================================================
-        // 5. КАРТА (простая зелёная трава)
+        // 5. КАРТА (ОПТИМИЗИРОВАННАЯ)
         // ============================================================
-        let mapInitialized = false;
-
         function initMap() {
             if (mapInitialized) return;
             mapInitialized = true;
@@ -1017,33 +989,36 @@
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
 
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+
             function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                drawMap(ctx, canvas.width, canvas.height);
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                drawMap();
             }
 
-            function drawMap(ctx, w, h) {
-                // Трава
+            function drawMap() {
                 ctx.fillStyle = '#4a8f5c';
-                ctx.fillRect(0, 0, w, h);
+                ctx.fillRect(0, 0, width, height);
 
-                // Текстура травы
-                for (let i = 0; i < 2000; i++) {
-                    const x = Math.random() * w;
-                    const y = Math.random() * h;
+                // Текстура травы — меньше точек для производительности
+                for (let i = 0; i < 600; i++) {
+                    const x = Math.random() * width;
+                    const y = Math.random() * height;
                     ctx.fillStyle = Math.random() > 0.5 ? '#3d7a4e' : '#5a9f6a';
                     ctx.fillRect(x, y, 2, 2);
                 }
 
-                // Небольшой текст
-                ctx.fillStyle = 'rgba(255,255,255,0.15)';
-                ctx.font = '20px Arial';
+                ctx.fillStyle = 'rgba(255,255,255,0.12)';
+                ctx.font = '18px Georgia, serif';
                 ctx.textAlign = 'center';
-                ctx.fillText('🏙️ ' + currentDistrict, w / 2, h / 2 - 20);
-                ctx.fillStyle = 'rgba(255,255,255,0.08)';
-                ctx.font = '14px Arial';
-                ctx.fillText('Нажмите на участок, чтобы построить', w / 2, h / 2 + 30);
+                ctx.fillText('🏙️ ' + (currentDistrict || 'NEXUS'), width / 2, height / 2 - 20);
+                ctx.fillStyle = 'rgba(255,255,255,0.06)';
+                ctx.font = '12px Georgia, serif';
+                ctx.fillText('Нажми на участок, чтобы построить', width / 2, height / 2 + 28);
             }
 
             window.addEventListener('resize', resizeCanvas);
@@ -1051,14 +1026,13 @@
         }
 
         // ============================================================
-        // 6. ВОЗВРАТ В МЕНЮ
+        // 6. ВОЗВРАТ
         // ============================================================
         function goBack() {
             const gameContainer = document.getElementById('gameContainer');
-            gameContainer.style.opacity = '0';
+            gameContainer.classList.remove('active');
             setTimeout(() => {
                 gameContainer.style.display = 'none';
-                gameContainer.style.opacity = '1';
                 document.getElementById('menuContainer').style.display = 'flex';
                 setTimeout(() => {
                     document.getElementById('menuContainer').style.opacity = '1';
@@ -1093,16 +1067,12 @@
         function showToast(text, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = text;
-            toast.className = 'toast ' + type + ' show';
+            toast.className = 'toast show';
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ============================================================
-        // 9. ЗАГРУЗКА
-        // ============================================================
-        console.log('🏙️ Urbania загружена!');
-        console.log('📱 Telegram Mini App:', !!tg);
+        console.log('🏙️ NEXUS загружена!');
     </script>
 </body>
 </html>
