@@ -44,6 +44,7 @@
             background: transparent;
         }
 
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .top-panel {
             position: fixed;
             top: env(safe-area-inset-top, 12px);
@@ -129,9 +130,10 @@
             font-size: 13px;
         }
 
+        /* ===== ПОЛОСА ОПЫТА ===== */
         .level-bar-wrapper {
             position: fixed;
-            bottom: 68px;
+            bottom: 72px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 100;
@@ -206,6 +208,7 @@
             margin-top: 2px;
         }
 
+        /* ===== ФУТЕР ===== */
         .footer {
             position: fixed;
             bottom: 0;
@@ -265,7 +268,98 @@
             color: #e94560;
         }
 
-        /* ===== БАНК (ОВЕРЛЕЙ) ===== */
+        /* ===== СТРАНИЦЫ (ОВЕРЛЕЙ) ===== */
+        .page-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .page-overlay.active {
+            display: flex;
+        }
+        .page {
+            background: #1a1a2e;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+        .page .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .page .close-btn:hover {
+            color: #fff;
+        }
+        .page h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #e94560;
+            text-align: center;
+        }
+        .page .content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .page .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .page .row .label {
+            color: #aaa;
+        }
+        .page .row .value {
+            font-weight: 600;
+        }
+        .page .action-btn {
+            background: #e94560;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .page .action-btn:hover {
+            background: #c0392b;
+        }
+        .page .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .page .action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== БАНК ===== */
         .bank-overlay {
             display: none;
             position: fixed;
@@ -783,97 +877,6 @@
             transform: scale(1.02);
         }
 
-        /* ===== СТРАНИЦЫ ===== */
-        .page-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .page-overlay.active {
-            display: flex;
-        }
-        .page {
-            background: #1a1a2e;
-            border-radius: 30px;
-            padding: 30px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #fff;
-            position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-        .page .close-btn {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 24px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .page .close-btn:hover {
-            color: #fff;
-        }
-        .page h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #e94560;
-            text-align: center;
-        }
-        .page .content {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .page .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .page .row .label {
-            color: #aaa;
-        }
-        .page .row .value {
-            font-weight: 600;
-        }
-        .page .action-btn {
-            background: #e94560;
-            border: none;
-            color: #fff;
-            padding: 12px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: 8px;
-        }
-        .page .action-btn:hover {
-            background: #c0392b;
-        }
-        .page .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .page .action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
         .toast {
             position: fixed;
             bottom: 120px;
@@ -989,76 +992,13 @@
     <div class="footer" id="footer">
         <button onclick="openBank()" data-page="bank"><img src="bank_icon.png" alt="Bank" class="icon" onerror="this.textContent='💰'"><span class="label">Bank</span></button>
         <button onclick="openPage('resources')" data-page="resources"><img src="resources_icon.png" alt="Resources" class="icon" onerror="this.textContent='📦'"><span class="label">Resources</span></button>
-        <button onclick="openPage('home')" data-page="home" class="active"><img src="home_icon.png" alt="Home" class="icon" onerror="this.textContent='🏠'"><span class="label">Home</span></button>
+        <button onclick="openMenu()" data-page="menu" class="active"><img src="home_icon.png" alt="Menu" class="icon" onerror="this.textContent='🏠'"><span class="label">Menu</span></button>
         <button onclick="openPage('quests')" data-page="quests"><img src="tasks_icon.png" alt="Quests" class="icon" onerror="this.textContent='📋'"><span class="label">Quests</span></button>
-        <button onclick="openPage('stats')" data-page="stats"><img src="statistic_icon.png" alt="Stats" class="icon" onerror="this.textContent='📊'"><span class="label">Stats</span></button>
+        <button onclick="openPage('stats')" data-page="stats"><img src="statistic_icon.png" alt="Profile" class="icon" onerror="this.textContent='📊'"><span class="label">Profile</span></button>
     </div>
 
     <!-- ============================================================ -->
-    <!-- БАНК -->
-    <!-- ============================================================ -->
-    <div class="bank-overlay" id="bankOverlay">
-        <button class="close-btn" onclick="closeBank()">✕</button>
-        <div class="bank-title">💰 Bank</div>
-
-        <div class="bank-section active" id="bankSection1">
-            <div class="bank-header" onclick="toggleBankSection('bankSection1')">
-                <span class="title"><img src="bank_1.png" alt="Bank"> Мой банк</span>
-                <span class="arrow" id="arrow1">▼</span>
-            </div>
-            <div class="bank-body open" id="body1">
-                <div class="item"><span class="name">💰 Баланс</span><span class="value" id="bankBalance">10 000 🪙</span></div>
-                <div class="item"><span class="name">💎 Алмазы</span><span class="value" id="bankGems">10 💎</span></div>
-                <div class="item"><span class="name">🏦 Кредиты</span><span class="value">0 🪙</span></div>
-                <div class="item"><span class="name">📊 Депозиты</span><span class="value">0 🪙</span></div>
-                <button class="btn-gold" onclick="showToast('💳 Кредит оформлен!', 'success')">Взять кредит</button>
-                <button class="btn-gold" style="background:rgba(0,0,0,0.05);color:#1a1a2e;margin-top:6px;" onclick="showToast('💰 Депозит пополнен!', 'success')">Пополнить депозит</button>
-            </div>
-        </div>
-
-        <div class="bank-section" id="bankSection2">
-            <div class="bank-header" onclick="toggleBankSection('bankSection2')">
-                <span class="title">🏦 Кредит</span>
-                <span class="arrow" id="arrow2">▼</span>
-            </div>
-            <div class="bank-body" id="body2">
-                <div class="item"><span class="name">💳 Текущий кредит</span><span class="value">0 🪙</span></div>
-                <div class="item"><span class="name">📊 Процентная ставка</span><span class="value">5%</span></div>
-                <div class="item"><span class="name">📅 Срок</span><span class="value">30 дней</span></div>
-                <button class="btn-gold" onclick="showToast('📋 Заявка на кредит отправлена', 'info')">Оформить кредит</button>
-            </div>
-        </div>
-
-        <div class="bank-section" id="bankSection3">
-            <div class="bank-header" onclick="toggleBankSection('bankSection3')">
-                <span class="title">📊 Доходы и расходы</span>
-                <span class="arrow" id="arrow3">▼</span>
-            </div>
-            <div class="bank-body" id="body3">
-                <div class="item"><span class="name">📈 Доход за день</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
-                <div class="item"><span class="name">📉 Расход за день</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
-                <div class="item"><span class="name">📈 Доход за неделю</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
-                <div class="item"><span class="name">📉 Расход за неделю</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
-                <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;border:1px dashed #ddd;border-radius:12px;margin-top:8px;">📊 График будет здесь</div>
-            </div>
-        </div>
-
-        <div class="bank-section" id="bankSection4">
-            <div class="bank-header" onclick="toggleBankSection('bankSection4')">
-                <span class="title">🪙 Криптовалюта</span>
-                <span class="arrow" id="arrow4">▼</span>
-            </div>
-            <div class="bank-body" id="body4">
-                <div id="cryptoPortfolio">
-                    <div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>
-                </div>
-                <button class="btn-gold" onclick="openExchange()">🚀 Биржа</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- СТРАНИЦЫ -->
+    <!-- СТРАНИЦЫ: RESOURCES, QUESTS, PROFILE -->
     <!-- ============================================================ -->
     <div class="page-overlay" id="page-resources">
         <div class="page">
@@ -1072,42 +1012,6 @@
                 <div class="row"><span class="label">🌾 Food</span><span class="value">56</span></div>
                 <div class="row"><span class="label">💧 Water</span><span class="value">42</span></div>
                 <button class="action-btn secondary" onclick="showToast('📊 В разработке', 'info')">Торговать</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-overlay" id="page-home">
-        <div class="page">
-            <button class="close-btn" onclick="closePage('home')">✕</button>
-            <h2>🏠 Home</h2>
-            <div class="content">
-                <p style="text-align:center;color:#aaa;margin-bottom:12px;">Выберите район города</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 0;">
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('center')">
-                        <img src="icon_centre.jpg" alt="Центр" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏙️'">
-                        <span style="font-size:12px;">Деловой центр</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('residential')">
-                        <img src="icon_residential.jpg" alt="Жилой" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏘️'">
-                        <span style="font-size:12px;">Жилой район</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('suburbs')">
-                        <img src="icon_suburbs.jpg" alt="Пригород" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🌳'">
-                        <span style="font-size:12px;">Пригород</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('industrial')">
-                        <img src="icon_industrial.jpg" alt="Промзона" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🏭'">
-                        <span style="font-size:12px;">Промзона</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="openDistrict('park')">
-                        <img src="icon_park.jpg" alt="Парк" style="width:40px;height:40px;border-radius:8px;object-fit:cover;display:block;margin:0 auto 4px;" onerror="this.textContent='🌿'">
-                        <span style="font-size:12px;">Парк</span>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.04);padding:12px;border-radius:12px;text-align:center;cursor:pointer;" onclick="showToast('🗺️ Карта города', 'info')">
-                        <span style="font-size:32px;display:block;">🗺️</span>
-                        <span style="font-size:12px;">Карта</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -1129,7 +1033,7 @@
     <div class="page-overlay" id="page-stats">
         <div class="page">
             <button class="close-btn" onclick="closePage('stats')">✕</button>
-            <h2>📊 Stats</h2>
+            <h2>📊 Profile</h2>
             <div class="content">
                 <div class="row"><span class="label">🏙️ City</span><span class="value">Новый Уренгой</span></div>
                 <div class="row"><span class="label">👥 Population</span><span class="value">1 240</span></div>
@@ -1138,6 +1042,143 @@
                 <div class="row"><span class="label">🏢 Buildings</span><span class="value">0</span></div>
                 <div class="row"><span class="label">📊 Level</span><span class="value">1</span></div>
                 <button class="action-btn" onclick="showToast('📊 Обновлено', 'success')">Обновить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- МЕНЮ (ГЛАВНОЕ МЕНЮ С РАЙОНАМИ) -->
+    <!-- ============================================================ -->
+    <div class="menu-overlay" id="menuOverlay">
+        <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:url('menu.PNG') center/cover no-repeat;z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;">
+            <div style="font-family:'Pacifico',cursive;font-size:36px;color:rgba(255,255,255,0.9);text-shadow:0 0 40px rgba(233,69,96,0.3);margin-bottom:30px;text-align:center;background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);padding:10px 30px;border-radius:40px;letter-spacing:2px;">
+                🌃 City Magnat 💵
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:280px;">
+                <div onclick="openDistrict('center')" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border-radius:30px;padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:0.2s;border:1px solid rgba(255,255,255,0.05);">
+                    <img src="icon_centre.jpg" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.textContent='🏙️'">
+                    <span style="color:#fff;font-weight:600;font-size:16px;">Деловой центр</span>
+                </div>
+                <div onclick="openDistrict('residential')" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border-radius:30px;padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:0.2s;border:1px solid rgba(255,255,255,0.05);">
+                    <img src="icon_residential.jpg" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.textContent='🏘️'">
+                    <span style="color:#fff;font-weight:600;font-size:16px;">Жилой район</span>
+                </div>
+                <div onclick="openDistrict('suburbs')" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border-radius:30px;padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:0.2s;border:1px solid rgba(255,255,255,0.05);">
+                    <img src="icon_suburbs.jpg" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.textContent='🌳'">
+                    <span style="color:#fff;font-weight:600;font-size:16px;">Пригород</span>
+                </div>
+                <div onclick="openDistrict('industrial')" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border-radius:30px;padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:0.2s;border:1px solid rgba(255,255,255,0.05);">
+                    <img src="icon_industrial.jpg" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.textContent='🏭'">
+                    <span style="color:#fff;font-weight:600;font-size:16px;">Промзона</span>
+                </div>
+                <div onclick="openDistrict('park')" style="background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);border-radius:30px;padding:16px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:0.2s;border:1px solid rgba(255,255,255,0.05);">
+                    <img src="icon_park.jpg" style="width:40px;height:40px;border-radius:12px;object-fit:cover;" onerror="this.textContent='🌿'">
+                    <span style="color:#fff;font-weight:600;font-size:16px;">Парк</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БАНК -->
+    <!-- ============================================================ -->
+    <div class="bank-overlay" id="bankOverlay">
+        <button class="close-btn" onclick="closeBank()">✕</button>
+        <div class="bank-title">💰 Bank</div>
+
+        <div class="bank-section active" id="bankSection1">
+            <div class="bank-header" onclick="toggleBankSection('bankSection1')">
+                <span class="title"><img src="bank_1.png" alt="Bank"> Мой банк</span>
+                <span class="arrow" id="arrow1">▼</span>
+            </div>
+            <div class="bank-body open" id="body1">
+                <div style="font-weight:600;font-size:15px;color:#1a1a2e;margin-bottom:6px;">Мой банк</div>
+                <div style="font-weight:500;font-size:13px;color:#666;margin-bottom:8px;">Деньги</div>
+                <div class="item"><span class="name">🪙 Баланс</span><span class="value" id="bankBalance">10 000</span></div>
+                <div class="item"><span class="name">💎 Алмазы</span><span class="value" id="bankGems">10</span></div>
+                <div style="font-weight:500;font-size:13px;color:#666;margin:12px 0 8px;">Пополнение</div>
+                <button class="btn-gold" onclick="showToast('💰 Пополнение в разработке', 'info')">Пополнить</button>
+            </div>
+        </div>
+
+        <div class="bank-section" id="bankSection2">
+            <div class="bank-header" onclick="toggleBankSection('bankSection2')">
+                <span class="title">🏦 Кредит</span>
+                <span class="arrow" id="arrow2">▼</span>
+            </div>
+            <div class="bank-body" id="body2">
+                <div style="font-weight:600;font-size:15px;color:#1a1a2e;margin-bottom:6px;">Кредит</div>
+                <div style="font-weight:500;font-size:13px;color:#666;margin-bottom:8px;">Мой кредит</div>
+                <div class="empty-text" id="noCreditText">У вас нет активных кредитов</div>
+                <div id="creditInfo" style="display:none;">
+                    <div style="border:1px solid #ddd;border-radius:12px;padding:12px;margin-bottom:10px;">
+                        <div class="item"><span class="name">💰 Сумма</span><span class="value" id="creditAmount">0</span></div>
+                        <div class="item"><span class="name">📊 Процент</span><span class="value" id="creditPercent">0%</span></div>
+                        <div class="item"><span class="name">✅ Выплачено</span><span class="value" id="creditPaid">0</span></div>
+                        <button class="btn-gold" style="margin-top:6px;" onclick="openRepayWindow()">Выплатить</button>
+                    </div>
+                </div>
+                <div style="font-weight:500;font-size:13px;color:#666;margin:12px 0 8px;">Взять кредит</div>
+                <div style="border:1px solid #ddd;border-radius:12px;padding:12px;">
+                    <div style="margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;font-size:13px;">
+                            <span>💰 Сумма: <span id="loanAmountDisplay">0</span></span>
+                            <span>📅 Срок: <span id="loanTermDisplay">0</span> дн.</span>
+                            <span>📊 Ставка: <span id="loanRateDisplay">0%</span></span>
+                        </div>
+                        <input type="range" id="loanAmountSlider" min="0" max="10000" value="0" step="100" style="width:100%;margin:4px 0;" oninput="updateLoanPreview()">
+                        <div style="display:flex;gap:4px;align-items:center;">
+                            <button onclick="adjustLoanAmount(-100)" style="background:#2ecc71;border:none;border-radius:50%;width:24px;height:24px;color:#f1c40f;font-weight:700;cursor:pointer;">−</button>
+                            <input type="number" id="loanAmountInput" value="0" style="flex:1;padding:4px;border-radius:8px;border:1px solid #ddd;text-align:center;font-size:14px;" oninput="updateLoanPreview()">
+                            <button onclick="adjustLoanAmount(100)" style="background:#2ecc71;border:none;border-radius:50%;width:24px;height:24px;color:#f1c40f;font-weight:700;cursor:pointer;">+</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <span style="font-size:13px;">📅 Срок: <span id="loanTermDisplay2">0</span> дн.</span>
+                        <input type="range" id="loanTermSlider" min="0" max="30" value="0" step="1" style="width:100%;margin:4px 0;" oninput="updateLoanPreview()">
+                        <div style="display:flex;gap:4px;align-items:center;">
+                            <button onclick="adjustLoanTerm(-1)" style="background:#f1c40f;border:none;border-radius:50%;width:24px;height:24px;color:#2ecc71;font-weight:700;cursor:pointer;">−</button>
+                            <input type="number" id="loanTermInput" value="0" style="flex:1;padding:4px;border-radius:8px;border:1px solid #ddd;text-align:center;font-size:14px;" oninput="updateLoanPreview()">
+                            <button onclick="adjustLoanTerm(1)" style="background:#f1c40f;border:none;border-radius:50%;width:24px;height:24px;color:#2ecc71;font-weight:700;cursor:pointer;">+</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <span style="font-size:13px;">📊 Ставка: <span id="loanRateDisplay2">0%</span></span>
+                        <input type="range" id="loanRateSlider" min="0" max="30" value="0" step="1" style="width:100%;margin:4px 0;" oninput="updateLoanPreview()">
+                        <div style="display:flex;gap:4px;align-items:center;">
+                            <button onclick="adjustLoanRate(-1)" style="background:#3498db;border:none;border-radius:50%;width:24px;height:24px;color:#f1c40f;font-weight:700;cursor:pointer;">−</button>
+                            <input type="number" id="loanRateInput" value="0" style="flex:1;padding:4px;border-radius:8px;border:1px solid #ddd;text-align:center;font-size:14px;" oninput="updateLoanPreview()">
+                            <button onclick="adjustLoanRate(1)" style="background:#3498db;border:none;border-radius:50%;width:24px;height:24px;color:#f1c40f;font-weight:700;cursor:pointer;">+</button>
+                        </div>
+                    </div>
+                    <button class="btn-gold" id="takeLoanBtn" onclick="takeLoan()" style="margin-top:4px;">Взять кредит</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bank-section" id="bankSection3">
+            <div class="bank-header" onclick="toggleBankSection('bankSection3')">
+                <span class="title">🪙 Криптовалюта</span>
+                <span class="arrow" id="arrow3">▼</span>
+            </div>
+            <div class="bank-body" id="body3">
+                <div id="cryptoPortfolio">
+                    <div class="empty-text">У вас пока нет криптовалют. Перейдите в биржу, чтобы купить.</div>
+                </div>
+                <button class="btn-gold" onclick="openExchange()">🚀 Биржа</button>
+            </div>
+        </div>
+
+        <div class="bank-section" id="bankSection4">
+            <div class="bank-header" onclick="toggleBankSection('bankSection4')">
+                <span class="title">📊 Доходы и расходы</span>
+                <span class="arrow" id="arrow4">▼</span>
+            </div>
+            <div class="bank-body" id="body4">
+                <div style="font-weight:600;font-size:15px;color:#1a1a2e;margin-bottom:6px;">Доходы и расходы</div>
+                <div class="item"><span class="name">📈 Доходы</span><span class="value" style="color:#2ecc71;">+0 🪙</span></div>
+                <div class="item"><span class="name">📉 Расходы</span><span class="value" style="color:#e74c3c;">-0 🪙</span></div>
+                <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#999;font-size:13px;border:1px dashed #ddd;border-radius:12px;margin-top:8px;">📊 График будет здесь</div>
             </div>
         </div>
     </div>
@@ -1185,6 +1226,33 @@
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- ОКНО ВЫПЛАТЫ КРЕДИТА -->
+    <!-- ============================================================ -->
+    <div class="repay-overlay" id="repayOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:500;justify-content:center;align-items:center;padding:20px;">
+        <div style="background:#1a1a2e;border-radius:24px;max-width:420px;width:100%;padding:20px;position:relative;border:1px solid rgba(255,255,255,0.06);">
+            <button onclick="closeRepayWindow()" style="position:absolute;top:12px;right:16px;background:#e74c3c;border:none;color:#fff;font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;">✕</button>
+            <div style="text-align:center;font-size:20px;font-weight:700;color:#e94560;margin-bottom:16px;">Выплата</div>
+            <div style="text-align:center;margin-bottom:12px;color:#888;font-size:14px;">Выберите сумму для погашения</div>
+            <div style="display:flex;justify-content:center;margin-bottom:16px;">
+                <input type="number" id="repayAmount" value="0" min="0" style="padding:8px 16px;border-radius:12px;border:2px solid #f1c40f;background:rgba(255,255,255,0.04);color:#fff;font-size:20px;font-weight:700;text-align:center;width:180px;" oninput="updateRepayPreview()">
+                <span style="font-size:20px;margin-left:8px;">🪙</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <button onclick="adjustRepayAmount(-10)" style="background:#2ecc71;border:none;border-radius:50%;width:28px;height:28px;color:#f1c40f;font-weight:700;cursor:pointer;font-size:14px;">−</button>
+                <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:10px;position:relative;overflow:hidden;">
+                    <div id="repayProgress" style="height:100%;width:0%;background:linear-gradient(90deg,#2ecc71,#f1c40f);border-radius:10px;transition:width 0.3s;"></div>
+                </div>
+                <button onclick="adjustRepayAmount(10)" style="background:#2ecc71;border:none;border-radius:50%;width:28px;height:28px;color:#f1c40f;font-weight:700;cursor:pointer;font-size:14px;">+</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:16px;">
+                <span>Баланс: <span id="repayBalanceDisplay">10 000</span></span>
+                <span>Остаток: <span id="repayRemainingDisplay">0</span></span>
+            </div>
+            <button id="repayConfirmBtn" onclick="confirmRepay()" style="width:100%;padding:14px;border:none;border-radius:16px;font-size:18px;font-weight:700;cursor:pointer;background:#888;color:#666;transition:0.2s;">Выплатить</button>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -1202,6 +1270,9 @@
         let balance = 10000;
         let gems = 10;
         let portfolio = {};
+        let activeLoan = null;
+        let repayAmount = 0;
+        let maxRepay = 0;
 
         const cryptos = [
             { id: 'bitcoin', name: 'BitCoin', symbol: 'BTC', icon: 'bitcoin.png', price: 45200 },
@@ -1219,16 +1290,53 @@
             { id: 'pixeltap', name: 'PixelTap', symbol: 'PIXFI', icon: 'pixeltap.png', price: 0.85 }
         ];
 
+        let loanData = {
+            amount: 0,
+            term: 0,
+            rate: 0,
+            paid: 0
+        };
+        let isLoanLocked = false;
+
         // ============================================================
-        // 3. БАНК
+        // 3. МЕНЮ
+        // ============================================================
+        function openMenu() {
+            document.getElementById('menuOverlay').style.display = 'flex';
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.footer button[data-page="menu"]').classList.add('active');
+        }
+
+        function closeMenu() {
+            document.getElementById('menuOverlay').style.display = 'none';
+        }
+
+        function openDistrict(district) {
+            const names = {
+                center: 'Деловой центр',
+                residential: 'Жилой район',
+                suburbs: 'Пригород',
+                industrial: 'Промзона',
+                park: 'Парк'
+            };
+            closeMenu();
+            showToast(`🏙️ ${names[district] || district}`, 'info');
+        }
+
+        // ============================================================
+        // 4. БАНК
         // ============================================================
         function openBank() {
             document.getElementById('bankOverlay').classList.add('active');
             updatePortfolioDisplay();
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.footer button[data-page="bank"]').classList.add('active');
         }
 
         function closeBank() {
             document.getElementById('bankOverlay').classList.remove('active');
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            document.querySelector('.footer button[data-page="menu"]').classList.add('active');
         }
 
         function toggleBankSection(sectionId) {
@@ -1272,7 +1380,168 @@
         }
 
         // ============================================================
-        // 4. СТРАНИЦЫ
+        // 5. КРЕДИТ
+        // ============================================================
+        function updateLoanPreview() {
+            const amount = parseInt(document.getElementById('loanAmountInput').value) || 0;
+            const term = parseInt(document.getElementById('loanTermInput').value) || 0;
+            const rate = parseInt(document.getElementById('loanRateInput').value) || 0;
+
+            document.getElementById('loanAmountDisplay').textContent = amount;
+            document.getElementById('loanTermDisplay').textContent = term;
+            document.getElementById('loanRateDisplay').textContent = rate + '%';
+            document.getElementById('loanTermDisplay2').textContent = term;
+            document.getElementById('loanRateDisplay2').textContent = rate + '%';
+
+            document.getElementById('loanAmountSlider').value = Math.min(amount, 10000);
+            document.getElementById('loanTermSlider').value = Math.min(term, 30);
+            document.getElementById('loanRateSlider').value = Math.min(rate, 30);
+        }
+
+        function adjustLoanAmount(delta) {
+            const input = document.getElementById('loanAmountInput');
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, Math.min(10000, val + delta));
+            input.value = val;
+            document.getElementById('loanAmountSlider').value = val;
+            updateLoanPreview();
+        }
+
+        function adjustLoanTerm(delta) {
+            const input = document.getElementById('loanTermInput');
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, Math.min(30, val + delta));
+            input.value = val;
+            document.getElementById('loanTermSlider').value = val;
+            updateLoanPreview();
+        }
+
+        function adjustLoanRate(delta) {
+            const input = document.getElementById('loanRateInput');
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, Math.min(30, val + delta));
+            input.value = val;
+            document.getElementById('loanRateSlider').value = val;
+            updateLoanPreview();
+        }
+
+        function takeLoan() {
+            if (isLoanLocked || activeLoan) {
+                showToast('❌ У вас уже есть активный кредит!', 'error');
+                return;
+            }
+            const amount = parseInt(document.getElementById('loanAmountInput').value) || 0;
+            const term = parseInt(document.getElementById('loanTermInput').value) || 0;
+            const rate = parseInt(document.getElementById('loanRateInput').value) || 0;
+
+            if (amount <= 0 || term <= 0 || rate <= 0) {
+                showToast('❌ Заполните все поля кредита!', 'error');
+                return;
+            }
+
+            activeLoan = { amount, term, rate, paid: 0 };
+            balance += amount;
+            updateBalances();
+            isLoanLocked = true;
+            document.getElementById('noCreditText').style.display = 'none';
+            document.getElementById('creditInfo').style.display = 'block';
+            document.getElementById('creditAmount').textContent = amount + ' 🪙';
+            document.getElementById('creditPercent').textContent = rate + '%';
+            document.getElementById('creditPaid').textContent = '0 🪙';
+            showToast(`✅ Кредит ${amount} 🪙 оформлен!`, 'success');
+            updateCreditUI();
+        }
+
+        function updateCreditUI() {
+            if (activeLoan) {
+                document.getElementById('noCreditText').style.display = 'none';
+                document.getElementById('creditInfo').style.display = 'block';
+                document.getElementById('creditAmount').textContent = activeLoan.amount + ' 🪙';
+                document.getElementById('creditPercent').textContent = activeLoan.rate + '%';
+                document.getElementById('creditPaid').textContent = activeLoan.paid + ' 🪙';
+            } else {
+                document.getElementById('noCreditText').style.display = 'block';
+                document.getElementById('creditInfo').style.display = 'none';
+            }
+        }
+
+        function openRepayWindow() {
+            if (!activeLoan) return;
+            maxRepay = Math.min(activeLoan.amount - activeLoan.paid, balance);
+            document.getElementById('repayAmount').value = 0;
+            document.getElementById('repayBalanceDisplay').textContent = Math.round(balance);
+            document.getElementById('repayRemainingDisplay').textContent = Math.round(activeLoan.amount - activeLoan.paid);
+            document.getElementById('repayProgress').style.width = '0%';
+            document.getElementById('repayConfirmBtn').style.background = '#888';
+            document.getElementById('repayConfirmBtn').style.color = '#666';
+            document.getElementById('repayOverlay').style.display = 'flex';
+            updateRepayPreview();
+        }
+
+        function closeRepayWindow() {
+            document.getElementById('repayOverlay').style.display = 'none';
+        }
+
+        function updateRepayPreview() {
+            const val = parseInt(document.getElementById('repayAmount').value) || 0;
+            repayAmount = Math.min(Math.max(0, val), maxRepay);
+            document.getElementById('repayAmount').value = repayAmount;
+            const progress = maxRepay > 0 ? (repayAmount / maxRepay) * 100 : 0;
+            document.getElementById('repayProgress').style.width = Math.min(100, progress) + '%';
+            const btn = document.getElementById('repayConfirmBtn');
+            if (repayAmount > 0) {
+                btn.style.background = 'linear-gradient(135deg, #f1c40f, #f39c12)';
+                btn.style.color = '#1a1a2e';
+                btn.textContent = 'Выплатить ' + repayAmount + ' 🪙';
+            } else {
+                btn.style.background = '#888';
+                btn.style.color = '#666';
+                btn.textContent = 'Выплатить';
+            }
+        }
+
+        function adjustRepayAmount(delta) {
+            const input = document.getElementById('repayAmount');
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, Math.min(maxRepay, val + delta));
+            input.value = val;
+            updateRepayPreview();
+        }
+
+        function confirmRepay() {
+            if (repayAmount <= 0) {
+                showToast('❌ Введите сумму для выплаты', 'error');
+                return;
+            }
+            if (repayAmount > balance) {
+                showToast('❌ Недостаточно средств!', 'error');
+                return;
+            }
+            if (repayAmount > (activeLoan.amount - activeLoan.paid)) {
+                showToast('❌ Сумма превышает остаток кредита!', 'error');
+                return;
+            }
+
+            balance -= repayAmount;
+            activeLoan.paid += repayAmount;
+            updateBalances();
+
+            if (activeLoan.paid >= activeLoan.amount) {
+                activeLoan = null;
+                isLoanLocked = false;
+                document.getElementById('noCreditText').style.display = 'block';
+                document.getElementById('creditInfo').style.display = 'none';
+                showToast('🎉 Кредит полностью погашен!', 'success');
+            } else {
+                showToast(`✅ Выплачено ${repayAmount} 🪙`, 'success');
+            }
+
+            closeRepayWindow();
+            updateCreditUI();
+        }
+
+        // ============================================================
+        // 6. СТРАНИЦЫ
         // ============================================================
         function openPage(page) {
             document.querySelectorAll('.page-overlay').forEach(el => el.classList.remove('active'));
@@ -1281,12 +1550,8 @@
 
             document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
             const btns = document.querySelectorAll('.footer button');
-            const map = { 'bank': 0, 'resources': 1, 'home': 2, 'quests': 3, 'stats': 4 };
+            const map = { 'bank': 0, 'resources': 1, 'menu': 2, 'quests': 3, 'stats': 4 };
             if (map[page] !== undefined) btns[map[page]].classList.add('active');
-
-            if (page === 'home') {
-                setTimeout(() => closePage('home'), 200);
-            }
         }
 
         function closePage(page) {
@@ -1294,20 +1559,8 @@
             if (target) target.classList.remove('active');
         }
 
-        function openDistrict(district) {
-            const names = {
-                center: 'Деловой центр',
-                residential: 'Жилой район',
-                suburbs: 'Пригород',
-                industrial: 'Промзона',
-                park: 'Парк'
-            };
-            showToast(`🏙️ ${names[district] || district}`, 'info');
-            closePage('home');
-        }
-
         // ============================================================
-        // 5. БИРЖА
+        // 7. БИРЖА
         // ============================================================
         let currentTab = 'main';
         let currentTradeCrypto = null;
@@ -1390,7 +1643,7 @@
         }
 
         // ============================================================
-        // 6. ПОКУПКА / ПРОДАЖА
+        // 8. ПОКУПКА / ПРОДАЖА
         // ============================================================
         function openTrade(cryptoId, mode) {
             const crypto = cryptos.find(c => c.id === cryptoId);
@@ -1483,12 +1736,12 @@
         function updateBalances() {
             document.getElementById('coinAmount').textContent = Math.round(balance).toLocaleString();
             document.getElementById('gemAmount').textContent = gems;
-            document.getElementById('bankBalance').textContent = Math.round(balance).toLocaleString() + ' 🪙';
-            document.getElementById('bankGems').textContent = gems + ' 💎';
+            document.getElementById('bankBalance').textContent = Math.round(balance).toLocaleString();
+            document.getElementById('bankGems').textContent = gems;
         }
 
         // ============================================================
-        // 7. TOAST
+        // 9. TOAST
         // ============================================================
         let toastTimeout;
 
@@ -1501,7 +1754,7 @@
         }
 
         // ============================================================
-        // 8. КАРТА
+        // 10. КАРТА
         // ============================================================
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -1734,6 +1987,5 @@
         console.log('📈 Биржа с покупкой и продажей');
         console.log('🗺️ Карта с дорогами, тротуарами, фонарями и светофорами');
     </script>
-
 </body>
 </html>
