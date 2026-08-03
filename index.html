@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Magnat City</title>
+    <title>Novara City</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           CSS ПЕРЕМЕННЫЕ
-           ============================================================ */
         :root {
             --bg-primary: #0a0e1a;
             --bg-secondary: #1a1f2f;
@@ -25,9 +22,6 @@
             --transition: 0.3s ease;
         }
 
-        /* ============================================================
-           ГЛОБАЛЬНЫЕ СТИЛИ
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -46,9 +40,6 @@
             padding-bottom: 70px;
         }
 
-        /* ============================================================
-           СТЕКЛЯННЫЕ ПАНЕЛИ
-           ============================================================ */
         .glass {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -66,9 +57,6 @@
             border-radius: 12px;
         }
 
-        /* ============================================================
-           КНОПКИ
-           ============================================================ */
         .btn-gold {
             background: var(--gold-gradient);
             border: none;
@@ -128,9 +116,6 @@
             box-shadow: 0 0 20px rgba(213, 0, 0, 0.3);
         }
 
-        /* ============================================================
-           ВЕРХНЯЯ ПАНЕЛЬ
-           ============================================================ */
         .top-bar {
             position: fixed;
             top: 0;
@@ -175,9 +160,6 @@
             color: var(--gold);
         }
 
-        /* ============================================================
-           ФУТЕР (6 КНОПОК)
-           ============================================================ */
         .footer {
             position: fixed;
             bottom: 0;
@@ -238,9 +220,6 @@
             opacity: 1;
         }
 
-        /* ============================================================
-           ЭКРАНЫ (ПАНЕЛИ)
-           ============================================================ */
         .screen {
             display: none;
             position: fixed;
@@ -270,9 +249,6 @@
             border-radius: 4px;
         }
 
-        /* ============================================================
-           ЯЗЫКОВАЯ МОДАЛКА
-           ============================================================ */
         .lang-modal {
             display: none;
             position: fixed;
@@ -328,11 +304,8 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        /* ============================================================
-           МЕНЮ (ГЛАВНЫЙ ЭКРАН)
-           ============================================================ */
         #menu-screen {
-            background: url('https://ibb.co/svJKNMLh') center/cover no-repeat;
+            background: url('https://i.ibb.co/svJKNMLh/menu-bg.png') center/cover no-repeat;
             padding: 0;
             top: 56px;
             bottom: 64px;
@@ -378,12 +351,14 @@
             width: 80px;
             left: -80px;
             animation-delay: 0s;
+            content: url('https://i.ibb.co/Hffz3SPK/cloud1.png');
         }
 
         #menu-screen .clouds img:last-child {
             width: 100px;
             left: -100px;
             animation-delay: 7s;
+            content: url('https://i.ibb.co/hFq9h0XM/cloud2.png');
         }
 
         @keyframes cloudFloat {
@@ -391,7 +366,6 @@
             100% { transform: translateX(calc(100vw + 100px)); }
         }
 
-        /* Змейка районов */
         .district-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -436,9 +410,6 @@
             line-height: 1.2;
         }
 
-        /* ============================================================
-           КАРТА
-           ============================================================ */
         #map-screen .map-header {
             display: flex;
             justify-content: space-between;
@@ -460,6 +431,7 @@
         #map-screen .map-header .back-btn img {
             width: 24px;
             height: 24px;
+            content: url('https://i.ibb.co/cXFqdKnL/back-button.png');
         }
 
         #map-screen .map-header .district-title {
@@ -482,7 +454,6 @@
             text-align: center;
         }
 
-        /* Кварталы */
         .city-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -518,9 +489,6 @@
             font-weight: 600;
         }
 
-        /* ============================================================
-           БАНК (АККОРДЕОН)
-           ============================================================ */
         .accordion {
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
@@ -589,9 +557,6 @@
             border-radius: 4px;
         }
 
-        /* ============================================================
-           РЕСУРСЫ
-           ============================================================ */
         .resource-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -624,9 +589,6 @@
             color: var(--gold);
         }
 
-        /* ============================================================
-           СТРОИТЕЛЬСТВО
-           ============================================================ */
         .building-list {
             display: flex;
             flex-direction: column;
@@ -670,9 +632,6 @@
             font-size: 12px;
         }
 
-        /* ============================================================
-           КВЕСТЫ
-           ============================================================ */
         .quest-item {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
@@ -718,9 +677,6 @@
             margin-top: 4px;
         }
 
-        /* ============================================================
-           ПРОФИЛЬ
-           ============================================================ */
         .profile-avatar {
             width: 80px;
             height: 80px;
@@ -758,9 +714,6 @@
             color: var(--gold);
         }
 
-        /* ============================================================
-           МОДАЛКИ (ОБЩИЕ)
-           ============================================================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -806,9 +759,6 @@
             color: var(--gold);
         }
 
-        /* ============================================================
-           АДАПТИВНОСТЬ
-           ============================================================ */
         @media (min-width: 480px) {
             .district-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -866,9 +816,6 @@
             }
         }
 
-        /* ============================================================
-           ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
-           ============================================================ */
         .text-gold {
             color: var(--gold);
         }
@@ -905,7 +852,6 @@
             gap: 4px;
         }
 
-        /* XP Шкала */
         .xp-bar {
             width: 100%;
             height: 6px;
@@ -937,9 +883,7 @@
 </head>
 <body>
 
-    <!-- ============================================================
-    ЯЗЫКОВАЯ МОДАЛКА
-    ============================================================ -->
+    <!-- ===== ЯЗЫКОВАЯ МОДАЛКА ===== -->
     <div class="lang-modal" id="langModal">
         <div class="box">
             <h2 id="langTitle">Choose Language / Выберите язык</h2>
@@ -948,11 +892,9 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ВЕРХНЯЯ ПАНЕЛЬ
-    ============================================================ -->
+    <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
     <div class="top-bar" id="topBar">
-        <div class="title" id="appTitle">Magnat City</div>
+        <div class="title" id="appTitle">Novara City</div>
         <div class="balance-group">
             <span>💰 <span id="topBalance">1000</span></span>
             <span>🪙 <span id="topCoins">500</span></span>
@@ -960,22 +902,15 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: МЕНЮ
-    ============================================================ -->
+    <!-- ===== МЕНЮ ===== -->
     <div class="screen active" id="menu-screen">
         <div class="overlay">
-            <div class="logo" id="menuLogo">Magnat City</div>
+            <div class="logo" id="menuLogo">Novara City</div>
             <div class="clouds">
-                <img src="https://ibb.co/Hffz3SPK" alt="cloud" onerror="this.style.display='none'">
-                <img src="https://ibb.co/hFq9h0XM" alt="cloud" onerror="this.style.display='none'">
+                <img src="https://i.ibb.co/Hffz3SPK/cloud1.png" alt="cloud" onerror="this.style.display='none'">
+                <img src="https://i.ibb.co/hFq9h0XM/cloud2.png" alt="cloud" onerror="this.style.display='none'">
             </div>
-
-            <div class="district-grid" id="districtGrid">
-                <!-- Районы генерируются JS -->
-            </div>
-
-            <!-- XP блок -->
+            <div class="district-grid" id="districtGrid"></div>
             <div style="width:100%;max-width:420px;margin-top:4px;">
                 <div class="flex-between">
                     <span class="lvl" id="menuLvl">⭐ LVL 1</span>
@@ -987,13 +922,12 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: КАРТА
-    ============================================================ -->
+    <!-- ===== КАРТА ===== -->
     <div class="screen" id="map-screen">
         <div class="map-header">
             <button class="back-btn" onclick="showScreen('menu-screen')">
-                <img src="https://ibb.co/cXFqdKnL" alt="back" onerror="this.textContent='←'"> <span id="mapBack">Назад</span>
+                <img src="https://i.ibb.co/cXFqdKnL/back-button.png" alt="back" onerror="this.textContent='←'">
+                <span id="mapBack">Назад</span>
             </button>
             <span class="district-title" id="mapTitle">Район</span>
         </div>
@@ -1001,9 +935,7 @@
             <div class="glass-light">💰 <span id="mapBalance">1000</span>$</div>
             <div class="glass-light">🪙 <span id="mapCoins">500</span></div>
         </div>
-        <div class="city-grid" id="cityGrid">
-            <!-- Кварталы генерируются JS -->
-        </div>
+        <div class="city-grid" id="cityGrid"></div>
         <div style="margin-top:8px;">
             <div class="flex-between">
                 <span class="lvl" id="mapLvl">⭐ LVL 1</span>
@@ -1013,16 +945,13 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: БАНК
-    ============================================================ -->
+    <!-- ===== БАНК ===== -->
     <div class="screen" id="bank-screen">
         <h2 id="bankTitle" style="margin-bottom:12px;">💰 Банк</h2>
 
-        <!-- Мой банк -->
         <div class="accordion">
             <div class="header" onclick="toggleAccordion(this)">
-                <div class="left"><img src="https://ibb.co/TDKZ6tJS" alt="bank" onerror="this.textContent='🏦'"> <span id="bankMyBank">Мой банк</span></div>
+                <div class="left"><img src="https://i.ibb.co/TDKZ6tJS/bank-icon.png" alt="bank" onerror="this.textContent='🏦'"> <span id="bankMyBank">Мой банк</span></div>
                 <span class="arrow">▼</span>
             </div>
             <div class="body open">
@@ -1035,10 +964,9 @@
             </div>
         </div>
 
-        <!-- Кредит -->
         <div class="accordion">
             <div class="header" onclick="toggleAccordion(this)">
-                <div class="left"><img src="https://ibb.co/3yr6VKMh" alt="credit" onerror="this.textContent='💳'"> <span id="bankCredit">Кредит</span></div>
+                <div class="left"><img src="https://i.ibb.co/3yr6VKMh/credit-icon.png" alt="credit" onerror="this.textContent='💳'"> <span id="bankCredit">Кредит</span></div>
                 <span class="arrow">▼</span>
             </div>
             <div class="body">
@@ -1049,10 +977,9 @@
             </div>
         </div>
 
-        <!-- Криптовалюта -->
         <div class="accordion">
             <div class="header" onclick="toggleAccordion(this)">
-                <div class="left"><img src="https://ibb.co/DNnrxnb" alt="crypto" onerror="this.textContent='🪙'"> <span id="bankCrypto">Криптовалюта</span></div>
+                <div class="left"><img src="https://i.ibb.co/DNnrxnb/crypto-icon.png" alt="crypto" onerror="this.textContent='🪙'"> <span id="bankCrypto">Криптовалюта</span></div>
                 <span class="arrow">▼</span>
             </div>
             <div class="body">
@@ -1061,10 +988,9 @@
             </div>
         </div>
 
-        <!-- Доходы и расходы -->
         <div class="accordion">
             <div class="header" onclick="toggleAccordion(this)">
-                <div class="left"><img src="https://ibb.co/LXMnYfV3" alt="stats" onerror="this.textContent='📊'"> <span id="bankStats">Доходы и расходы</span></div>
+                <div class="left"><img src="https://i.ibb.co/LXMnYfV3/stats-icon.png" alt="stats" onerror="this.textContent='📊'"> <span id="bankStats">Доходы и расходы</span></div>
                 <span class="arrow">▼</span>
             </div>
             <div class="body">
@@ -1075,39 +1001,25 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: РЕСУРСЫ
-    ============================================================ -->
+    <!-- ===== РЕСУРСЫ ===== -->
     <div class="screen" id="resources-screen">
         <h2 id="resourcesTitle" style="margin-bottom:12px;">📦 Ресурсы</h2>
-        <div class="resource-grid" id="resourceGrid">
-            <!-- Генерируется JS -->
-        </div>
+        <div class="resource-grid" id="resourceGrid"></div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: СТРОИТЕЛЬСТВО
-    ============================================================ -->
+    <!-- ===== СТРОИТЕЛЬСТВО ===== -->
     <div class="screen" id="build-screen">
         <h2 id="buildTitle" style="margin-bottom:12px;">🏗️ Строительство</h2>
-        <div class="building-list" id="buildingList">
-            <!-- Генерируется JS -->
-        </div>
+        <div class="building-list" id="buildingList"></div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: КВЕСТЫ
-    ============================================================ -->
+    <!-- ===== КВЕСТЫ ===== -->
     <div class="screen" id="quests-screen">
         <h2 id="questsTitle" style="margin-bottom:12px;">📋 Квесты</h2>
-        <div id="questsList">
-            <!-- Генерируется JS -->
-        </div>
+        <div id="questsList"></div>
     </div>
 
-    <!-- ============================================================
-    ЭКРАН: ПРОФИЛЬ
-    ============================================================ -->
+    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="screen" id="profile-screen">
         <h2 id="profileTitle" style="margin-bottom:12px;">👤 Профиль</h2>
         <div class="profile-avatar">👤</div>
@@ -1126,39 +1038,35 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ФУТЕР (6 кнопок)
-    ============================================================ -->
+    <!-- ===== ФУТЕР ===== -->
     <div class="footer" id="footer">
         <button onclick="showScreen('bank-screen')" data-screen="bank-screen">
-            <img src="https://ibb.co/DDHdLL66" alt="Bank" onerror="this.textContent='💰'">
+            <img src="https://i.ibb.co/DDHdLL66/bank-footer.png" alt="Bank" onerror="this.textContent='💰'">
             <span class="label" id="footerBank">Bank</span>
         </button>
         <button onclick="showScreen('resources-screen')" data-screen="resources-screen">
-            <img src="https://ibb.co/b5CqCNTY" alt="Resources" onerror="this.textContent='📦'">
+            <img src="https://i.ibb.co/b5CqCNTY/resources-footer.png" alt="Resources" onerror="this.textContent='📦'">
             <span class="label" id="footerResources">Resources</span>
         </button>
         <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
-            <img src="https://ibb.co/DgGbwS5x" alt="Home" onerror="this.textContent='🏠'">
+            <img src="https://i.ibb.co/DgGbwS5x/home-footer.png" alt="Home" onerror="this.textContent='🏠'">
             <span class="label" id="footerHome">Home</span>
         </button>
         <button onclick="showScreen('build-screen')" data-screen="build-screen">
-            <img src="https://ibb.co/7N8M8QL8" alt="Build" onerror="this.textContent='🏗️'">
+            <img src="https://i.ibb.co/7N8M8QL8/build-footer.png" alt="Build" onerror="this.textContent='🏗️'">
             <span class="label" id="footerBuild">Build</span>
         </button>
         <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
-            <img src="https://ibb.co/DfvcQxXn" alt="Quests" onerror="this.textContent='📋'">
+            <img src="https://i.ibb.co/DfvcQxXn/quests-footer.png" alt="Quests" onerror="this.textContent='📋'">
             <span class="label" id="footerQuests">Quests</span>
         </button>
         <button onclick="showScreen('profile-screen')" data-screen="profile-screen">
-            <img src="https://ibb.co/SXZdtWGD" alt="Profile" onerror="this.textContent='👤'">
+            <img src="https://i.ibb.co/SXZdtWGD/profile-footer.png" alt="Profile" onerror="this.textContent='👤'">
             <span class="label" id="footerProfile">Profile</span>
         </button>
     </div>
 
-    <!-- ============================================================
-    КРИПТО-БИРЖА (МОДАЛКА)
-    ============================================================ -->
+    <!-- ===== КРИПТО-БИРЖА (МОДАЛКА) ===== -->
     <div class="modal-overlay" id="cryptoModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeCryptoModal()">✕</button>
@@ -1169,15 +1077,11 @@
                 <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('sell')" id="cryptoTabSell">Продажа</button>
             </div>
             <input type="text" id="cryptoSearch" placeholder="🔍 Поиск..." style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;margin-bottom:8px;">
-            <div id="cryptoList" style="max-height:300px;overflow-y:auto;">
-                <!-- Генерируется JS -->
-            </div>
+            <div id="cryptoList" style="max-height:300px;overflow-y:auto;"></div>
         </div>
     </div>
 
-    <!-- ============================================================
-    МОДАЛКА КРЕДИТА
-    ============================================================ -->
+    <!-- ===== КРЕДИТ (МОДАЛКА) ===== -->
     <div class="modal-overlay" id="creditModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeCreditModal()">✕</button>
@@ -1204,9 +1108,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    МОДАЛКА ВЫПЛАТЫ КРЕДИТА
-    ============================================================ -->
+    <!-- ===== ВЫПЛАТА КРЕДИТА (МОДАЛКА) ===== -->
     <div class="modal-overlay" id="repayModal">
         <div class="modal-box">
             <button class="close-btn" onclick="closeRepayModal()">✕</button>
@@ -1225,9 +1127,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    TOAST
-    ============================================================ -->
+    <!-- ===== TOAST ===== -->
     <div id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:10px 20px;border-radius:12px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--glass-border);color:#fff;white-space:nowrap;"></div>
 
     <script>
@@ -1236,7 +1136,7 @@
         // ============================================================
         const LANG = {
             en: {
-                appName: "Magnat City",
+                appName: "Novara City",
                 menu: "Menu",
                 bank: "Bank",
                 resources: "Resources",
@@ -1250,7 +1150,6 @@
                 coins: "Coins",
                 crystals: "Crystals",
                 nextLevel: "Next level",
-                // Bank
                 myBank: "My Bank",
                 money: "Money",
                 replenish: "Replenish",
@@ -1264,34 +1163,26 @@
                 stats: "Income & Expenses",
                 income: "Income",
                 expense: "Expenses",
-                // Resources
                 resourcesTitle: "Resources",
-                // Build
                 buildTitle: "Construction",
-                // Quests
                 questsTitle: "Quests",
-                // Profile
                 profileTitle: "Profile",
                 changeLang: "Change language",
                 inGame: "In game",
-                // Crypto
                 main: "Main",
                 exclusive: "Exclusive",
                 sell: "Sell",
                 search: "Search...",
                 buy: "Buy",
                 sellBtn: "Sell",
-                // Common
                 close: "Close",
                 ok: "OK",
-                // Credit
                 amount: "Amount",
                 term: "Term",
                 days: "days",
                 percent: "Percent",
                 take: "Take",
                 repay: "Repay",
-                // Districts
                 district1: "Suburb",
                 district2: "Countryside",
                 district3: "Residential",
@@ -1305,7 +1196,7 @@
                 district11: "Premium Village",
             },
             ru: {
-                appName: "Magnat City",
+                appName: "Novara City",
                 menu: "Меню",
                 bank: "Банк",
                 resources: "Ресурсы",
@@ -1420,16 +1311,10 @@
             document.getElementById('cryptoSearch').placeholder = t('search');
             document.getElementById('creditModalTitle').textContent = '💰 ' + t('takeCredit');
             document.getElementById('repayTitle').textContent = '💳 ' + t('repay');
-
-            // Обновить районы
             renderDistricts();
-            // Обновить ресурсы
             renderResources();
-            // Обновить стройку
             renderBuildings();
-            // Обновить квесты
             renderQuests();
-            // Обновить профиль
             updateProfileUI();
         }
 
@@ -1437,138 +1322,149 @@
         // 2. ДАННЫЕ
         // ============================================================
         const DISTRICTS = [
-            { id: 'suburb', icon: 'https://postimg.cc/PP0p9J3D', key: 'district1' },
-            { id: 'countryside', icon: 'https://ibb.co/ymx8nmdB', key: 'district2' },
-            { id: 'residential', icon: 'https://postimg.cc/mtyJ6120', key: 'district3' },
-            { id: 'midtown', icon: 'https://postimg.cc/94bfmQpx', key: 'district4' },
-            { id: 'commercial', icon: 'https://ibb.co/zhdMW7z', key: 'district5' },
-            { id: 'park', icon: 'https://ibb.co/QFGds8VN', key: 'district6' },
-            { id: 'transport', icon: 'https://postimg.cc/B86rFZ3k', key: 'district7' },
-            { id: 'industrial', icon: 'https://ibb.co/PvTqKQYs', key: 'district8' },
-            { id: 'techpark', icon: 'https://postimg.cc/jWpMjRSf', key: 'district9' },
-            { id: 'business', icon: 'https://ibb.co/Qjj9YHvc', key: 'district10' },
-            { id: 'premium', icon: 'https://ibb.co/JRxLGmGF', key: 'district11' }
+            { id: 'suburb', icon: 'https://i.ibb.co/PP0p9J3D/regular-district.png', key: 'district1' },
+            { id: 'countryside', icon: 'https://i.ibb.co/ymx8nmdB/suburb-district.png', key: 'district2' },
+            { id: 'residential', icon: 'https://i.ibb.co/mtyJ6120/residential-district.png', key: 'district3' },
+            { id: 'midtown', icon: 'https://i.ibb.co/94bfmQpx/mid-district.png', key: 'district4' },
+            { id: 'commercial', icon: 'https://i.ibb.co/zhdMW7z/commercial-district.png', key: 'district5' },
+            { id: 'park', icon: 'https://i.ibb.co/QFGds8VN/park-district.png', key: 'district6' },
+            { id: 'transport', icon: 'https://i.ibb.co/B86rFZ3k/transport-district.png', key: 'district7' },
+            { id: 'industrial', icon: 'https://i.ibb.co/PvTqKQYs/industrial-district.png', key: 'district8' },
+            { id: 'techpark', icon: 'https://i.ibb.co/jWpMjRSf/tech-district.png', key: 'district9' },
+            { id: 'business', icon: 'https://i.ibb.co/Qjj9YHvc/business-district.png', key: 'district10' },
+            { id: 'premium', icon: 'https://i.ibb.co/JRxLGmGF/premium-district.png', key: 'district11' }
         ];
 
         const RESOURCES = [
-            { id: 'oil', name: 'Нефть', icon: 'https://ibb.co/TD9hNtdN', amount: 10, max: 1000 },
-            { id: 'gas', name: 'Газ', icon: 'https://ibb.co/whhBhGJS', amount: 10, max: 1000 },
-            { id: 'wood', name: 'Древесина', icon: 'https://ibb.co/nG683LF', amount: 10, max: 1000 },
-            { id: 'energy', name: 'Энергия', icon: 'https://ibb.co/8n4PDCgw', amount: 10, max: 1000 },
-            { id: 'food', name: 'Еда', icon: 'https://ibb.co/FkvbQNqF', amount: 10, max: 1000 },
-            { id: 'gold', name: 'Золото', icon: 'https://ibb.co/93SC9q7k', amount: 10, max: 1000 }
+            { id: 'oil', name: 'Нефть', icon: 'https://i.ibb.co/TD9hNtdN/oil.png', amount: 10, max: 1000 },
+            { id: 'gas', name: 'Газ', icon: 'https://i.ibb.co/whhBhGJS/gas.png', amount: 10, max: 1000 },
+            { id: 'wood', name: 'Древесина', icon: 'https://i.ibb.co/nG683LF/wood.png', amount: 10, max: 1000 },
+            { id: 'energy', name: 'Энергия', icon: 'https://i.ibb.co/8n4PDCgw/energy.png', amount: 10, max: 1000 },
+            { id: 'food', name: 'Еда', icon: 'https://i.ibb.co/FkvbQNqF/food.png', amount: 10, max: 1000 },
+            { id: 'gold', name: 'Золото', icon: 'https://i.ibb.co/93SC9q7k/gold.png', amount: 10, max: 1000 }
         ];
 
         const BUILDINGS = [
-            { id: 'house', name: 'Жилой дом', icon: 'https://ibb.co/d442Pfjt', cost: 200, resources: { wood: 10 },
+            { id: 'house', name: 'Жилой дом', icon: 'https://i.ibb.co/d442Pfjt/house.png', cost: 200, resources: { wood: 10 },
                 income: 5, xp: 2, time: 5 },
-            { id: 'store', name: 'Магазин', icon: 'https://ibb.co/nqTCdrHF', cost: 300, resources: { wood: 5 },
+            { id: 'store', name: 'Магазин', icon: 'https://i.ibb.co/nqTCdrHF/store.png', cost: 300, resources: { wood: 5 },
                 income: 8, xp: 3, time: 8 },
-            { id: 'coffee', name: 'Кофейня', icon: 'https://ibb.co/HTKvGMHJ', cost: 250, resources: { food: 5 },
-                income: 6, xp: 2, time: 6 },
-            { id: 'workshop', name: 'Мастерская', icon: 'https://ibb.co/Fqz80XvL', cost: 200, resources: { wood: 8 },
-                income: 4, xp: 2, time: 5 },
-            { id: 'power', name: 'Трансформаторная', icon: 'https://ibb.co/0V6y2xLs', cost: 400, resources: { energy: 10 },
-                income: 10, xp: 4, time: 10 },
-            { id: 'school', name: 'Школа', icon: 'https://ibb.co/YB5f3BpW', cost: 500, resources: { wood: 15,
+            { id: 'coffee', name: 'Кофейня', icon: 'https://i.ibb.co/HTKvGMHJ/coffee-shop.png', cost: 250,
+                resources: { food: 5 }, income: 6, xp: 2, time: 6 },
+            { id: 'workshop', name: 'Мастерская', icon: 'https://i.ibb.co/Fqz80XvL/workshop.png', cost: 200,
+                resources: { wood: 8 }, income: 4, xp: 2, time: 5 },
+            { id: 'power', name: 'Трансформаторная', icon: 'https://i.ibb.co/0V6y2xLs/power-plant.png', cost: 400,
+                resources: { energy: 10 }, income: 10, xp: 4, time: 10 },
+            { id: 'school', name: 'Школа', icon: 'https://i.ibb.co/YB5f3BpW/school.png', cost: 500, resources: { wood: 15,
                     energy: 5 }, income: 12, xp: 5, time: 12 },
-            { id: 'kindergarten', name: 'Детский сад', icon: 'https://ibb.co/Z6jfZtrr', cost: 400, resources: { wood: 10,
-                    food: 5 }, income: 10, xp: 4, time: 10 },
-            { id: 'pharmacy', name: 'Аптека', icon: 'https://ibb.co/G3P5wTpY', cost: 300, resources: { wood: 5 },
-                income: 7, xp: 3, time: 7 },
-            { id: 'supermarket', name: 'Супермаркет', icon: 'https://ibb.co/jZJy2nJV', cost: 600, resources: { wood: 20,
-                    food: 10 }, income: 15, xp: 6, time: 15 },
-            { id: 'library', name: 'Библиотека', icon: 'https://ibb.co/8gQ1NVtc', cost: 350, resources: { wood: 8 },
-                income: 8, xp: 3, time: 8 },
-            { id: 'hospital', name: 'Больница', icon: 'https://ibb.co/7xFzLgKK', cost: 800, resources: { wood: 20,
-                    energy: 10, food: 10 }, income: 20, xp: 8, time: 20 },
-            { id: 'apartment', name: 'Жилой комплекс', icon: 'https://ibb.co/yBYbjRYr', cost: 700, resources: { wood: 25,
-                    energy: 5 }, income: 18, xp: 7, time: 18 },
-            { id: 'office', name: 'Офисное здание', icon: 'https://ibb.co/1YPVxQd5', cost: 500, resources: { wood: 15,
-                    energy: 10 }, income: 14, xp: 5, time: 14 },
-            { id: 'gym', name: 'Спортзал', icon: 'https://ibb.co/xKWS777x', cost: 400, resources: { wood: 10,
-                energy: 5 }, income: 10, xp: 4, time: 10 },
-            { id: 'restaurant', name: 'Ресторан', icon: 'https://ibb.co/ZRLP04Bn', cost: 450, resources: { wood: 10,
-                    food: 8 }, income: 12, xp: 5, time: 12 },
-            { id: 'mall', name: 'Торговый центр', icon: 'https://ibb.co/DPRjB0Xq', cost: 1000, resources: { wood: 30,
+            { id: 'kindergarten', name: 'Детский сад', icon: 'https://i.ibb.co/Z6jfZtrr/kindergarten.png', cost: 400,
+                resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10 },
+            { id: 'pharmacy', name: 'Аптека', icon: 'https://i.ibb.co/G3P5wTpY/pharmacy.png', cost: 300,
+                resources: { wood: 5 }, income: 7, xp: 3, time: 7 },
+            { id: 'supermarket', name: 'Супермаркет', icon: 'https://i.ibb.co/jZJy2nJV/supermarket.png', cost: 600,
+                resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15 },
+            { id: 'library', name: 'Библиотека', icon: 'https://i.ibb.co/8gQ1NVtc/library.png', cost: 350,
+                resources: { wood: 8 }, income: 8, xp: 3, time: 8 },
+            { id: 'hospital', name: 'Больница', icon: 'https://i.ibb.co/7xFzLgKK/hospital.png', cost: 800,
+                resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20 },
+            { id: 'apartment', name: 'Жилой комплекс', icon: 'https://i.ibb.co/yBYbjRYr/apartment-complex.png', cost: 700,
+                resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18 },
+            { id: 'office', name: 'Офисное здание', icon: 'https://i.ibb.co/1YPVxQd5/office-building.png', cost: 500,
+                resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14 },
+            { id: 'gym', name: 'Спортзал', icon: 'https://i.ibb.co/xKWS777x/gym.png', cost: 400, resources: { wood: 10,
+                    energy: 5 }, income: 10, xp: 4, time: 10 },
+            { id: 'restaurant', name: 'Ресторан', icon: 'https://i.ibb.co/ZRLP04Bn/restaurant.png', cost: 450,
+                resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12 },
+            { id: 'mall', name: 'ТЦ', icon: 'https://i.ibb.co/DPRjB0Xq/shopping-mall.png', cost: 1000, resources: { wood: 30,
                     energy: 20, food: 10 }, income: 30, xp: 12, time: 30 },
-            { id: 'theater', name: 'Театр', icon: 'https://ibb.co/5WJ1mBdZ', cost: 600, resources: { wood: 15,
+            { id: 'theater', name: 'Театр', icon: 'https://i.ibb.co/5WJ1mBdZ/theater.png', cost: 600, resources: { wood: 15,
                     energy: 10 }, income: 16, xp: 6, time: 16 },
-            { id: 'hotel', name: 'Отель', icon: 'https://ibb.co/NgnQ8Gxy', cost: 800, resources: { wood: 20, energy: 15,
-                    food: 10 }, income: 22, xp: 9, time: 22 },
-            { id: 'business', name: 'Бизнес-центр', icon: 'https://ibb.co/5WjnCj8L', cost: 1200, resources: { wood: 30,
-                    energy: 25 }, income: 35, xp: 14, time: 35 },
-            { id: 'stadium', name: 'Стадион', icon: 'https://ibb.co/B2tvR9ZZ', cost: 900, resources: { wood: 25,
-                    energy: 20 }, income: 25, xp: 10, time: 25 },
-            { id: 'factory', name: 'Завод', icon: 'https://ibb.co/7xvYSKT3', cost: 1000, resources: { wood: 20,
-                    energy: 30 }, income: 28, xp: 11, time: 28 },
-            { id: 'trc', name: 'ТРЦ', icon: 'https://ibb.co/8nfWjn93', cost: 1200, resources: { wood: 35, energy: 25,
-                    food: 15 }, income: 35, xp: 14, time: 35 },
-            { id: 'university', name: 'Университет', icon: 'https://ibb.co/b5tSyhnJ', cost: 1500, resources: { wood: 40,
-                    energy: 30, food: 20 }, income: 45, xp: 18, time: 45 },
-            { id: 'arena', name: 'Арена', icon: 'https://ibb.co/LXnqS6xF', cost: 2000, resources: { wood: 50, energy: 40,
-                    food: 30 }, income: 60, xp: 24, time: 60 },
-            { id: 'modern_house', name: 'Современный дом', icon: 'https://ibb.co/gLwvXDh4', cost: 500, resources: { wood: 12,
-                    energy: 5 }, income: 12, xp: 5, time: 12 },
-            { id: 'gallery', name: 'Галерея', icon: 'https://ibb.co/kgzwXWsT', cost: 350, resources: { wood: 8 },
-                income: 8, xp: 3, time: 8 },
-            { id: 'boutique_hotel', name: 'Бутик-отель', icon: 'https://ibb.co/BVKSR3rw', cost: 700, resources: { wood: 18,
-                    energy: 12, food: 8 }, income: 20, xp: 8, time: 20 },
-            { id: 'bike_station', name: 'Велостанция', icon: 'https://ibb.co/5WGwDxpH', cost: 200, resources: { wood: 5 },
-                income: 4, xp: 2, time: 5 },
-            { id: 'clothing_store', name: 'Магазин одежды', icon: 'https://ibb.co/7JJjX8W8', cost: 300, resources: { wood: 6,
-                    food: 3 }, income: 7, xp: 3, time: 7 },
-            { id: 'high_school', name: 'Гимназия', icon: 'https://ibb.co/M5cYY0gj', cost: 550, resources: { wood: 15,
-                    energy: 8 }, income: 14, xp: 6, time: 14 },
-            { id: 'museum', name: 'Музей', icon: 'https://ibb.co/KzS68sGw', cost: 500, resources: { wood: 12,
+            { id: 'hotel', name: 'Отель', icon: 'https://i.ibb.co/NgnQ8Gxy/hotel.png', cost: 800, resources: { wood: 20,
+                    energy: 15, food: 10 }, income: 22, xp: 9, time: 22 },
+            { id: 'business', name: 'Бизнес-центр', icon: 'https://i.ibb.co/5WjnCj8L/business-center.png', cost: 1200,
+                resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35 },
+            { id: 'stadium', name: 'Стадион', icon: 'https://i.ibb.co/B2tvR9ZZ/stadium.png', cost: 900,
+                resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25 },
+            { id: 'factory', name: 'Завод', icon: 'https://i.ibb.co/7xvYSKT3/factory.png', cost: 1000,
+                resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28 },
+            { id: 'trc', name: 'ТРЦ', icon: 'https://i.ibb.co/8nfWjn93/mall.png', cost: 1200, resources: { wood: 35,
+                    energy: 25, food: 15 }, income: 35, xp: 14, time: 35 },
+            { id: 'university', name: 'Университет', icon: 'https://i.ibb.co/b5tSyhnJ/university.png', cost: 1500,
+                resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45 },
+            { id: 'arena', name: 'Арена', icon: 'https://i.ibb.co/LXnqS6xF/arena.png', cost: 2000, resources: { wood: 50,
+                    energy: 40, food: 30 }, income: 60, xp: 24, time: 60 },
+            { id: 'modern_house', name: 'Современный дом', icon: 'https://i.ibb.co/gLwvXDh4/modern-house.png', cost: 500,
+                resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12 },
+            { id: 'gallery', name: 'Галерея', icon: 'https://i.ibb.co/kgzwXWsT/gallery.png', cost: 350,
+                resources: { wood: 8 }, income: 8, xp: 3, time: 8 },
+            { id: 'boutique_hotel', name: 'Бутик-отель', icon: 'https://i.ibb.co/BVKSR3rw/boutique-hotel.png', cost: 700,
+                resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20 },
+            { id: 'bike_station', name: 'Велостанция', icon: 'https://i.ibb.co/5WGwDxpH/bike-station.png', cost: 200,
+                resources: { wood: 5 }, income: 4, xp: 2, time: 5 },
+            { id: 'clothing_store', name: 'Магазин одежды', icon: 'https://i.ibb.co/7JJjX8W8/clothing-store.png', cost: 300,
+                resources: { wood: 6, food: 3 }, income: 7, xp: 3, time: 7 },
+            { id: 'high_school', name: 'Гимназия', icon: 'https://i.ibb.co/M5cYY0gj/high-school.png', cost: 550,
+                resources: { wood: 15, energy: 8 }, income: 14, xp: 6, time: 14 },
+            { id: 'museum', name: 'Музей', icon: 'https://i.ibb.co/KzS68sGw/museum.png', cost: 500, resources: { wood: 12,
                     energy: 8 }, income: 12, xp: 5, time: 12 },
-            { id: 'pharmacy2', name: 'Аптека (дизайн 2)', icon: 'https://ibb.co/6JFjgS0X', cost: 300, resources: { wood: 5 },
-                income: 7, xp: 3, time: 7 },
-            { id: 'market', name: 'Рынок', icon: 'https://ibb.co/xKXRbL38', cost: 400, resources: { wood: 10,
+            { id: 'pharmacy2', name: 'Аптека (дизайн 2)', icon: 'https://i.ibb.co/6JFjgS0X/pharmacy-2.png', cost: 300,
+                resources: { wood: 5 }, income: 7, xp: 3, time: 7 },
+            { id: 'market', name: 'Рынок', icon: 'https://i.ibb.co/xKXRbL38/market.png', cost: 400, resources: { wood: 10,
                     food: 10 }, income: 10, xp: 4, time: 10 },
-            { id: 'club', name: 'Клуб', icon: 'https://ibb.co/VW2Y2HX3', cost: 350, resources: { wood: 8, energy: 5 },
-                income: 8, xp: 3, time: 8 },
-            { id: 'tech_park', name: 'Технопарк', icon: 'https://ibb.co/d4dMyWN5', cost: 1000, resources: { wood: 20,
-                    energy: 25 }, income: 28, xp: 11, time: 28 },
-            { id: 'medical_center', name: 'Медицинский центр', icon: 'https://ibb.co/JW4CSG9F', cost: 900, resources: { wood: 20,
-                    energy: 15, food: 10 }, income: 24, xp: 10, time: 24 },
-            { id: 'incubator', name: 'Бизнес-инкубатор', icon: 'https://ibb.co/5XZZk279', cost: 600, resources: { wood: 15,
-                    energy: 15 }, income: 16, xp: 6, time: 16 },
-            { id: 'water_park', name: 'Аквапарк', icon: 'https://ibb.co/mF5NXgmH', cost: 1000, resources: { wood: 25,
-                    energy: 20, food: 15 }, income: 28, xp: 11, time: 28 },
-            { id: 'expo', name: 'Выставочный павильон', icon: 'https://ibb.co/BHxgZxsr', cost: 700, resources: { wood: 18,
-                    energy: 12 }, income: 18, xp: 7, time: 18 },
-            { id: 'eco_hotel', name: 'Эко-отель', icon: 'https://ibb.co/Y73VbBCR', cost: 800, resources: { wood: 20,
-                    energy: 10, food: 10 }, income: 22, xp: 9, time: 22 },
-            { id: 'botanical', name: 'Ботанический сад', icon: 'https://ibb.co/4ZCV5hj9', cost: 400, resources: { wood: 10,
-                    food: 15 }, income: 10, xp: 4, time: 10 },
-            { id: 'sports_complex', name: 'Спорткомплекс', icon: 'https://ibb.co/sv0RWC0J', cost: 800, resources: { wood: 20,
-                    energy: 15 }, income: 20, xp: 8, time: 20 },
-            { id: 'concert_hall', name: 'Концертный зал', icon: 'https://ibb.co/YT8XPx23', cost: 700, resources: { wood: 18,
-                    energy: 12 }, income: 18, xp: 7, time: 18 },
-            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: 'https://ibb.co/DPH3WNg1', cost: 500, resources: { wood: 12,
-                    energy: 10, food: 20 }, income: 14, xp: 6, time: 14 },
-            { id: 'logistics', name: 'Логистический центр', icon: 'https://ibb.co/yFT5CLJS', cost: 900, resources: { wood: 25,
-                    energy: 20 }, income: 25, xp: 10, time: 25 },
-            { id: 'rd_center', name: 'НИИ центр', icon: 'https://ibb.co/TMgBGZ0q', cost: 1200, resources: { wood: 30,
-                    energy: 30 }, income: 35, xp: 14, time: 35 }
+            { id: 'club', name: 'Клуб', icon: 'https://i.ibb.co/VW2Y2HX3/club.png', cost: 350, resources: { wood: 8,
+                    energy: 5 }, income: 8, xp: 3, time: 8 },
+            { id: 'tech_park', name: 'Технопарк', icon: 'https://i.ibb.co/d4dMyWN5/tech-park.png', cost: 1000,
+                resources: { wood: 20, energy: 25 }, income: 28, xp: 11, time: 28 },
+            { id: 'medical_center', name: 'Медицинский центр', icon: 'https://i.ibb.co/JW4CSG9F/medical-center.png',
+                cost: 900, resources: { wood: 20, energy: 15, food: 10 }, income: 24, xp: 10, time: 24 },
+            { id: 'incubator', name: 'Бизнес-инкубатор', icon: 'https://i.ibb.co/5XZZk279/business-incubator.png', cost: 600,
+                resources: { wood: 15, energy: 15 }, income: 16, xp: 6, time: 16 },
+            { id: 'water_park', name: 'Аквапарк', icon: 'https://i.ibb.co/mF5NXgmH/water-park.png', cost: 1000,
+                resources: { wood: 25, energy: 20, food: 15 }, income: 28, xp: 11, time: 28 },
+            { id: 'expo', name: 'Выставочный павильон', icon: 'https://i.ibb.co/BHxgZxsr/exhibition-hall.png', cost: 700,
+                resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18 },
+            { id: 'eco_hotel', name: 'Эко-отель', icon: 'https://i.ibb.co/Y73VbBCR/eco-hotel.png', cost: 800,
+                resources: { wood: 20, energy: 10, food: 10 }, income: 22, xp: 9, time: 22 },
+            { id: 'botanical', name: 'Ботанический сад', icon: 'https://i.ibb.co/4ZCV5hj9/botanical-garden.png', cost: 400,
+                resources: { wood: 10, food: 15 }, income: 10, xp: 4, time: 10 },
+            { id: 'sports_complex', name: 'Спорткомплекс', icon: 'https://i.ibb.co/sv0RWC0J/sports-complex.png', cost: 800,
+                resources: { wood: 20, energy: 15 }, income: 20, xp: 8, time: 20 },
+            { id: 'concert_hall', name: 'Концертный зал', icon: 'https://i.ibb.co/YT8XPx23/concert-hall.png', cost: 700,
+                resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18 },
+            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: 'https://i.ibb.co/DPH3WNg1/vertical-farm.png',
+                cost: 500, resources: { wood: 12, energy: 10, food: 20 }, income: 14, xp: 6, time: 14 },
+            { id: 'logistics', name: 'Логистический центр', icon: 'https://i.ibb.co/yFT5CLJS/logistics-center.png',
+                cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25 },
+            { id: 'rd_center', name: 'НИИ центр', icon: 'https://i.ibb.co/TMgBGZ0q/rd-center.png', cost: 1200,
+                resources: { wood: 30, energy: 30 }, income: 35, xp: 14, time: 35 }
         ];
 
         const CRYPTO = [
-            { id: 'btc', name: 'Bitcoin', symbol: 'BTC', icon: 'https://ibb.co/TDYgPXLB', price: 30000, amount: 0 },
-            { id: 'eth', name: 'Ethereum', symbol: 'ETH', icon: 'https://ibb.co/jvdz6Fzz', price: 2000, amount: 0 },
-            { id: 'usdt', name: 'Tether', symbol: 'USDT', icon: 'https://ibb.co/Qjv8Jm9J', price: 1, amount: 0 },
-            { id: 'bnb', name: 'BNB', symbol: 'BNB', icon: 'https://ibb.co/v6RrPyfr', price: 300, amount: 0 },
-            { id: 'xrp', name: 'Ripple', symbol: 'XRP', icon: 'https://ibb.co/NdmV9Tp0', price: 0.5, amount: 0 },
-            { id: 'sol', name: 'Solana', symbol: 'SOL', icon: 'https://ibb.co/N2VtGpvP', price: 100, amount: 0 },
-            { id: 'not', name: 'NotCoin', symbol: 'NOT', icon: 'https://ibb.co/tpZRhjG2', price: 0.01, amount: 0 },
-            { id: 'dogs', name: 'Dogs', symbol: 'DOGS', icon: 'https://ibb.co/nN11JYHg', price: 0.001, amount: 0 },
-            { id: 'cati', name: 'Catizen', symbol: 'CATI', icon: 'https://ibb.co/gLy6hB3c', price: 0.5, amount: 0 },
-            { id: 'hmstr', name: 'Hamster Kombat', symbol: 'HMSTR', icon: 'https://ibb.co/XZcVZC9s', price: 0.1,
+            { id: 'btc', name: 'Bitcoin', symbol: 'BTC', icon: 'https://i.ibb.co/TDYgPXLB/bitcoin.png', price: 30000,
+                amount: 0 },
+            { id: 'eth', name: 'Ethereum', symbol: 'ETH', icon: 'https://i.ibb.co/jvdz6Fzz/ethereum.png', price: 2000,
+                amount: 0 },
+            { id: 'usdt', name: 'Tether', symbol: 'USDT', icon: 'https://i.ibb.co/Qjv8Jm9J/tether.png', price: 1,
             amount: 0 },
-            { id: 'ton', name: 'TONCoin', symbol: 'TON', icon: 'https://ibb.co/6J82LHf0', price: 5, amount: 0 },
-            { id: 'memefi', name: 'MemeFi', symbol: 'MEMEFI', icon: 'https://ibb.co/7dPS790Q', price: 0.05, amount: 0 },
-            { id: 'pixfi', name: 'PixelTap', symbol: 'PIXFI', icon: 'https://ibb.co/DfjHYzcj', price: 0.1, amount: 0 }
+            { id: 'bnb', name: 'BNB', symbol: 'BNB', icon: 'https://i.ibb.co/v6RrPyfr/bnb.png', price: 300, amount: 0 },
+            { id: 'xrp', name: 'Ripple', symbol: 'XRP', icon: 'https://i.ibb.co/NdmV9Tp0/ripple.png', price: 0.5,
+            amount: 0 },
+            { id: 'sol', name: 'Solana', symbol: 'SOL', icon: 'https://i.ibb.co/N2VtGpvP/solana.png', price: 100,
+            amount: 0 },
+            { id: 'not', name: 'NotCoin', symbol: 'NOT', icon: 'https://i.ibb.co/tpZRhjG2/notcoin.png', price: 0.01,
+                amount: 0 },
+            { id: 'dogs', name: 'Dogs', symbol: 'DOGS', icon: 'https://i.ibb.co/nN11JYHg/dogs.png', price: 0.001,
+            amount: 0 },
+            { id: 'cati', name: 'Catizen', symbol: 'CATI', icon: 'https://i.ibb.co/gLy6hB3c/catizen.png', price: 0.5,
+                amount: 0 },
+            { id: 'hmstr', name: 'Hamster Kombat', symbol: 'HMSTR', icon: 'https://i.ibb.co/XZcVZC9s/hamster.png',
+                price: 0.1, amount: 0 },
+            { id: 'ton', name: 'TONCoin', symbol: 'TON', icon: 'https://i.ibb.co/6J82LHf0/toncoin.png', price: 5,
+            amount: 0 },
+            { id: 'memefi', name: 'MemeFi', symbol: 'MEMEFI', icon: 'https://i.ibb.co/7dPS790Q/memefi.png', price: 0.05,
+                amount: 0 },
+            { id: 'pixfi', name: 'PixelTap', symbol: 'PIXFI', icon: 'https://i.ibb.co/DfjHYzcj/pixeltap.png', price: 0.1,
+                amount: 0 }
         ];
 
         // ============================================================
@@ -1629,9 +1525,6 @@
             updateUI();
         }
 
-        // ============================================================
-        // 4. РЕСУРСЫ
-        // ============================================================
         function getResourceAmount(id) {
             return game.resources[id] || 0;
         }
@@ -1660,9 +1553,6 @@
             return true;
         }
 
-        // ============================================================
-        // 5. СТРОИТЕЛЬСТВО
-        // ============================================================
         function buildBuilding(id) {
             const building = BUILDINGS.find(b => b.id === id);
             if (!building) return;
@@ -1674,7 +1564,6 @@
                 showToast('❌ Не хватает денег!');
                 return;
             }
-            // Списываем
             game.balance -= building.cost;
             for (let [resId, amount] of Object.entries(building.resources)) {
                 spendResource(resId, amount);
@@ -1698,9 +1587,6 @@
             return income;
         }
 
-        // ============================================================
-        // 6. КВЕСТЫ
-        // ============================================================
         function generateQuests() {
             const quests = [
                 { id: 'build3', title: 'Построй 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30 },
@@ -1716,7 +1602,6 @@
         }
 
         function updateQuests() {
-            // Строительство
             const buildCount = game.buildings.length;
             game.quests.forEach(q => {
                 if (q.completed) return;
@@ -1739,9 +1624,6 @@
             renderQuests();
         }
 
-        // ============================================================
-        // 7. КРИПТОВАЛЮТА
-        // ============================================================
         function initCrypto() {
             CRYPTO.forEach(c => {
                 if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 };
@@ -1788,9 +1670,6 @@
             renderCryptoList();
         }
 
-        // ============================================================
-        // 8. КРЕДИТЫ
-        // ============================================================
         let creditData = { amount: 0, term: 0, rate: 0, paid: 0 };
 
         function takeCredit() {
@@ -1837,7 +1716,7 @@
         }
 
         // ============================================================
-        // 9. ОТРИСОВКА
+        // 4. ОТРИСОВКА
         // ============================================================
         function renderDistricts() {
             const grid = document.getElementById('districtGrid');
@@ -1896,7 +1775,8 @@
         function updateMapUI() {
             const progress = getXpProgress();
             document.getElementById('mapLvl').textContent = `⭐ LVL ${game.level}`;
-            document.getElementById('mapXpLabel').textContent = `${game.xp - getTotalXp(game.level)} / ${getXpForLevel(game.level)} XP`;
+            document.getElementById('mapXpLabel').textContent =
+            `${game.xp - getTotalXp(game.level)} / ${getXpForLevel(game.level)} XP`;
             document.getElementById('mapXpFill').style.width = `${progress * 100}%`;
             document.getElementById('mapBalance').textContent = Math.round(game.balance);
             document.getElementById('mapCoins').textContent = Math.round(game.coins);
@@ -1950,7 +1830,8 @@
             const container = document.getElementById('questsList');
             container.innerHTML = '';
             if (!game.quests || game.quests.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
+                container.innerHTML =
+                '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
                 return;
             }
             game.quests.forEach(q => {
@@ -1982,7 +1863,7 @@
         }
 
         // ============================================================
-        // 10. КРИПТО-БИРЖА (МОДАЛКА)
+        // 5. КРИПТО-БИРЖА
         // ============================================================
         let cryptoTab = 'main';
 
@@ -2017,7 +1898,8 @@
             }
             items = items.filter(c => c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search));
             if (items.length === 0) {
-                list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>';
+                list.innerHTML =
+                    '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>';
                 return;
             }
             items.forEach(c => {
@@ -2043,7 +1925,7 @@
         }
 
         // ============================================================
-        // 11. КРЕДИТ (МОДАЛКИ)
+        // 6. КРЕДИТЫ
         // ============================================================
         function openCreditModal() {
             if (game.credit) {
@@ -2099,7 +1981,7 @@
         }
 
         // ============================================================
-        // 12. НАВИГАЦИЯ
+        // 7. НАВИГАЦИЯ
         // ============================================================
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -2141,15 +2023,15 @@
                     </div>
                 `;
             } else {
-                document.getElementById('creditInfo').innerHTML = `<span style="color:var(--text-secondary);">${t('noCredit')}</span>`;
+                document.getElementById('creditInfo').innerHTML =
+                `<span style="color:var(--text-secondary);">${t('noCredit')}</span>`;
             }
-            // Доходы/расходы
             document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
             document.getElementById('bankExpense').textContent = '0';
         }
 
         // ============================================================
-        // 13. TOAST
+        // 8. TOAST
         // ============================================================
         let toastTimeout;
 
@@ -2162,7 +2044,7 @@
         }
 
         // ============================================================
-        // 14. СОХРАНЕНИЕ
+        // 9. СОХРАНЕНИЕ
         // ============================================================
         function saveGame() {
             const data = {
@@ -2180,11 +2062,11 @@
                 earned: game.earned,
                 builtCount: game.builtCount
             };
-            localStorage.setItem('magnatCitySave', JSON.stringify(data));
+            localStorage.setItem('novaraCitySave', JSON.stringify(data));
         }
 
         function loadGame() {
-            const raw = localStorage.getItem('magnatCitySave');
+            const raw = localStorage.getItem('novaraCitySave');
             if (!raw) return false;
             try {
                 const data = JSON.parse(raw);
@@ -2196,13 +2078,12 @@
         }
 
         // ============================================================
-        // 15. АВТОМАТИЧЕСКИЕ ЗАДАЧИ
+        // 10. АВТОМАТИЧЕСКИЕ ЗАДАЧИ
         // ============================================================
         function autoGather() {
             RESOURCES.forEach(r => {
                 addResource(r.id, 0.1);
             });
-            // Доход от зданий
             const income = getTotalIncome() / 60;
             if (income > 0) {
                 game.balance += income;
@@ -2220,10 +2101,9 @@
         }
 
         // ============================================================
-        // 16. ИНИЦИАЛИЗАЦИЯ
+        // 11. ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         function init() {
-            // Язык
             const savedLang = localStorage.getItem('lang');
             if (savedLang && LANG[savedLang]) {
                 lang = savedLang;
@@ -2233,16 +2113,13 @@
             }
             currentLang = LANG[lang];
 
-            // Загрузка игры
             const loaded = loadGame();
             if (!loaded) {
-                // Стартовые ресурсы
                 RESOURCES.forEach(r => { game.resources[r.id] = 10; });
                 generateQuests();
                 initCrypto();
                 saveGame();
             } else {
-                // Офлайн-доход
                 const now = Date.now();
                 const diff = (now - game.lastOnline) / 1000;
                 if (diff > 60) {
@@ -2260,7 +2137,6 @@
                 saveGame();
             }
 
-            // Обновить интерфейс
             updateUI();
             renderDistricts();
             renderResources();
@@ -2268,7 +2144,6 @@
             renderQuests();
             renderMap();
 
-            // Автозадачи
             setInterval(autoGather, 5000);
             setInterval(updateCryptoLoop, 10000);
             setInterval(() => {
@@ -2278,15 +2153,11 @@
                 updateMapUI();
             }, 30000);
 
-            // Обработчики слайдеров кредита
             document.getElementById('creditAmountSlider').oninput = updateCreditSliders;
             document.getElementById('creditTermSlider').oninput = updateCreditSliders;
             document.getElementById('creditRateSlider').oninput = updateCreditSliders;
-
-            // Поиск криптовалют
             document.getElementById('cryptoSearch').oninput = renderCryptoList;
 
-            // Аккордеоны
             document.querySelectorAll('.accordion .header').forEach(h => {
                 h.onclick = function() {
                     const body = this.nextElementSibling;
@@ -2302,7 +2173,6 @@
                 };
             });
 
-            // Аккордеон "Мой банк" открыт по умолчанию
             const firstBody = document.querySelector('.accordion .body');
             if (firstBody) {
                 firstBody.classList.add('open');
@@ -2311,12 +2181,9 @@
 
             showScreen('menu-screen');
             updateMenuUI();
-            showToast('🏙️ Добро пожаловать в Magnat City!');
+            showToast('🏙️ Добро пожаловать в Novara City!');
         }
 
-        // ============================================================
-        // 17. ЗАПУСК
-        // ============================================================
         document.addEventListener('DOMContentLoaded', init);
     </script>
 
