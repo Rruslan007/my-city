@@ -2329,6 +2329,144 @@
         }
 
         document.addEventListener('DOMContentLoaded', init);
+// ============================================================
+    // 13. ПАТЧИ И ИСПРАВЛЕНИЯ (Вставьте этот код в самый конец <script>)
+    // ============================================================
+
+    // Исправление 1: Обновление банка при взятии кредита
+    const originalTakeCredit = takeCredit;
+    takeCredit = function() {
+        if (game.credit) {
+            showToast('❌ У вас уже есть активный кредит!');
+            return;
+        }
+        const amount = parseInt(document.getElementById('creditAmountSlider').value);
+        const term = parseInt(document.getElementById('creditTermSlider').value);
+        const rate = parseInt(document.getElementById('creditRateDisplay').textContent);
+        if (amount <= 0 || term <= 0 || rate <= 0) return;
+        
+        game.credit = { amount, term, rate, paid: 0, takenAt: Date.now() };
+        game.balance += amount; // Деньги добавляются
+        showToast(`💰 Кредит ${amount}$ оформлен!`);
+        saveGame();
+        updateUI();
+        updateBankUI(); // <--- ВАЖНО: Явное обновление банка
+        closeCreditModal();
+    };
+
+    // Исправление 2: Взаимодействие с построенными зданиями и перерисовка
+    const originalRenderMap = renderMap;
+    renderMap = function(districtId) {
+        originalRenderMap(districtId); // Запускаем стандартную отрисовку
+        
+        // Находим все занятые участки и добавляем им обработчик клика
+        const builtPlots = document.querySelectorAll('.map-plot.built');
+        builtPlots.forEach(plot => {
+            // Вешаем обработчик, если его еще нет
+            if (!plot.dataset.listenerAttached) {
+                plot.dataset.listenerAttached = 'true';
+                plot.style.cursor = 'pointer';
+                plot.addEventListener('click', function(e) {
+                    // Не срабатываем, если кликнули на кнопку или внутренний элемент
+                    if (e.target !== this) return;
+
+                    const plotId = this.dataset.plotId;
+                    const existingBuilding = game.buildings.find(b => b.plotId === plotId);
+                    if (existingBuilding) {
+                        const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
+                        showToast(`🏢 ${bData ? bData.name : 'Здание'} (Ур. ${existingBuilding.level}) | Доход: ${bData ? bData.income * existingBuilding.level : 0}$/мин`);
+                    }
+                });
+            }
+        });
+    };
+
+    // Исправление 3: Сброс карты при выходе и запоминание района
+    const originalShowScreen = showScreen;
+    showScreen = function(screenId) {
+        // Если мы уходим с карты, сбрасываем её положение
+        if (screenId === 'menu-screen' && document.getElementById('map-screen').classList.contains('active')) {
+            mapOffsetX = 0;
+            mapOffsetY = 0;
+        }
+        originalShowScreen(screenId);
+        
+        // Если мы открываем карту, перерисовываем её с правильным районом
+        if (screenId === 'map-screen') {
+            const districtId = document.getElementById('mapTitle').dataset.districtId || 'suburb';
+            renderMap(districtId);
+            updateMapUI();
+        }
+    };
+
+    // Исправление 4: Запоминание ID района и инициализация свайпов
+    const originalOpenMap = openMap;
+    openMap = function(districtId, name) {
+        document.getElementById('mapTitle').textContent = name;
+        document.getElementById('mapTitle').dataset.districtId = districtId; // Сохраняем район
+        mapOffsetX = 0;
+        mapOffsetY = 0;
+        renderMap(districtId);
+        showScreen('map-screen');
+        updateMapUI();
+        initMapDrag(); // Запускаем свайпы
+    };
+
+    // Исправление 5: Выносим логику перетаскивания в отдельную функцию
+    function initMapDrag() {
+        const container = document.getElementById('mapScrollContainer');
+        const world = document.getElementById('mapWorld');
+        if (!container || !world) return;
+        
+        // Очищаем старые обработчики, заменяя их новыми через клонирование (чтобы избежать задвоения)
+        const newContainer = container.cloneNode(true);
+        container.parentNode.replaceChild(newContainer, container);
+        const newWorld = newContainer.querySelector('#mapWorld');
+
+        const onStart = (e) => {
+            isDragging = true;
+            const t = e.touches ? e.touches[0] : e;
+            startX = t.clientX - mapOffsetX;
+            startY = t.clientY - mapOffsetY;
+            newWorld.style.cursor = 'grabbing';
+        };
+        const onMove = (e) => {
+            if (!isDragging) return;
+            const t = e.touches ? e.touches[0] : e;
+            let newX = t.clientX - startX;
+            let newY = t.clientY - startY;
+            const maxX = 0;
+            const minX = -(3000 - newContainer.clientWidth);
+            const maxY = 0;
+            const minY = -(3000 - newContainer.clientHeight);
+            mapOffsetX = Math.max(minX, Math.min(maxX, newX));
+            mapOffsetY = Math.max(minY, Math.min(maxY, newY));
+            newWorld.style.transform = `translate(${mapOffsetX}px, ${mapOffsetY}px)`;
+        };
+        const onEnd = () => {
+            isDragging = false;
+            newWorld.style.cursor = 'grab';
+        };
+
+        newContainer.onmousedown = onStart;
+        newContainer.onmousemove = onMove;
+        newContainer.onmouseup = onEnd;
+        newContainer.onmouseleave = onEnd;
+        newContainer.ontouchstart = onStart;
+        newContainer.ontouchmove = onMove;
+        newContainer.ontouchend = onEnd;
+    }
+
+    // Исправление 6: Защита квестов от null
+    const originalRenderQuests = renderQuests;
+    renderQuests = function() {
+        if (!game.quests || !Array.isArray(game.quests)) {
+            document.getElementById('questsList').innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
+            return;
+        }
+        originalRenderQuests();
+    };
+        
     </script>
 </body>
 </html>
