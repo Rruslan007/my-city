@@ -205,7 +205,6 @@
             border-radius: 4px;
         }
 
-        /* Языковая модалка */
         .lang-modal {
             display: none;
             position: fixed;
@@ -261,7 +260,6 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        /* ===== МЕНЮ ===== */
         #menu-screen {
             background: url('https://rruslan007.github.io/novara-city-images/effects/menu.PNG') center/cover no-repeat;
             padding: 0;
@@ -283,7 +281,6 @@
             position: relative;
         }
 
-        /* Сетка районов по координатам */
         .district-grid-absolute {
             position: relative;
             width: 100%;
@@ -333,7 +330,6 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
-        /* Круг уровня */
         .level-circle-wrapper {
             position: absolute;
             bottom: 20px;
@@ -375,7 +371,6 @@
             pointer-events: none;
         }
 
-        /* ===== КАРТА ===== */
         #map-screen {
             padding: 0;
             top: 0;
@@ -466,7 +461,6 @@
             cursor: grabbing;
         }
 
-        /* Дороги */
         .map-road-h {
             position: absolute;
             height: 120px;
@@ -500,7 +494,6 @@
             background: repeating-linear-gradient(180deg, #ffeb3b 0px, #ffeb3b 30px, transparent 30px, transparent 50px);
         }
 
-        /* Участки */
         .map-plot {
             position: absolute;
             background: #5a9c4a;
@@ -543,7 +536,6 @@
             transform: scale(0.9);
         }
 
-        /* Построенное здание на карте */
         .map-built-building {
             width: 100%;
             height: 100%;
@@ -589,7 +581,6 @@
             text-align: center;
         }
 
-        /* Нижняя плашка */
         .map-bottom-stats {
             position: absolute;
             bottom: 70px;
@@ -633,7 +624,6 @@
             transition: width 0.5s ease;
         }
 
-        /* ===== ОКНО СТРОИТЕЛЬСТВА ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -785,7 +775,6 @@
             cursor: default;
         }
 
-        /* ===== ОКНО ИНФО ЗДАНИЯ ===== */
         .modal-overlay-info {
             display: none;
             position: fixed;
@@ -875,7 +864,6 @@
             box-shadow: 0 0 20px rgba(255,215,0,0.3);
         }
 
-        /* ===== ОКНО ПОДТВЕРЖДЕНИЯ СНОСА ===== */
         .modal-overlay-confirm {
             display: none;
             position: fixed;
@@ -971,7 +959,6 @@
             text-align: center;
         }
 
-        /* ===== БАНК ===== */
         #bank-screen {
             background: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.PNG') center/cover no-repeat;
             padding: 16px;
@@ -1083,7 +1070,6 @@
             margin-bottom: 6px;
         }
 
-        /* ===== РЕСУРСЫ ===== */
         #resources-screen {
             padding: 16px;
             top: 0;
@@ -1121,7 +1107,6 @@
             color: var(--gold);
         }
 
-        /* ===== КВЕСТЫ ===== */
         #quests-screen {
             padding: 16px;
             top: 0;
@@ -1172,7 +1157,6 @@
             margin-top: 4px;
         }
 
-        /* ===== ПРОФИЛЬ ===== */
         #profile-screen {
             padding: 16px;
             top: 0;
@@ -1215,7 +1199,6 @@
             color: var(--gold);
         }
 
-        /* ===== КРИПТО-БИРЖА ===== */
         .modal-box {
             background: var(--bg-secondary);
             border-radius: 24px;
@@ -1237,7 +1220,6 @@
             cursor: pointer;
         }
 
-        /* ===== TOAST ===== */
         #toast {
             position: fixed;
             bottom: 80px;
@@ -1257,7 +1239,6 @@
             white-space: nowrap;
         }
 
-        /* ===== РАЗНОЕ ===== */
         .text-gold { color: var(--gold); }
         .text-green { color: var(--green); }
         .text-red { color: var(--red); }
@@ -1679,7 +1660,6 @@
             { id: 'premium', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district11' }
         ];
 
-        // Координаты для районов (центры кругов)
         const DISTRICT_COORDS = [
             { x: 370, y: 415 },
             { x: 705, y: 435 },
@@ -1701,56 +1681,55 @@
             { id: 'gold', name: 'Золото', icon: BASE_URL + 'resources/gold_icon.png', amount: 10, max: 1000 }
         ];
 
-        // Здания с репутацией и стоимостью сноса
         const BUILDINGS = [
-            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, demolishCost: 20, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown', 'premium'] },
-            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, demolishCost: 30, allowedDistricts: ['commercial', 'midtown', 'business'] },
-            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, demolishCost: 25, allowedDistricts: ['commercial', 'midtown', 'business', 'residential', 'park'] },
-            { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, demolishCost: 20, allowedDistricts: ['industrial', 'countryside', 'residential'] },
-            { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, resources: { energy: 10 }, income: 10, xp: 4, time: 10, reputation: 5, demolishCost: 40, allowedDistricts: ['industrial', 'transport', 'suburb'] },
-            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, demolishCost: 50, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
-            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrten.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, demolishCost: 40, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
-            { id: 'pharmacy', name: 'Аптека', icon: BASE_URL + 'buildings_en/pharmacy.jpg', cost: 300, resources: { wood: 5 }, income: 7, xp: 3, time: 7, reputation: 5, demolishCost: 30, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, demolishCost: 60, allowedDistricts: ['commercial', 'business', 'midtown'] },
-            { id: 'library', name: 'Библиотека', icon: BASE_URL + 'buildings_en/library.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 7, demolishCost: 35, allowedDistricts: ['midtown', 'residential', 'techpark'] },
-            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 80, allowedDistricts: ['midtown', 'business', 'premium'] },
-            { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18, reputation: 8, demolishCost: 70, allowedDistricts: ['residential', 'midtown', 'suburb'] },
-            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, demolishCost: 50, allowedDistricts: ['business', 'techpark', 'commercial'] },
-            { id: 'gym', name: 'Спортзал', icon: BASE_URL + 'buildings_en/gym.jpg', cost: 400, resources: { wood: 10, energy: 5 }, income: 10, xp: 4, time: 10, reputation: 6, demolishCost: 40, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, demolishCost: 45, allowedDistricts: ['commercial', 'business', 'midtown', 'park'] },
-            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, demolishCost: 100, allowedDistricts: ['commercial', 'business'] },
-            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, demolishCost: 60, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, demolishCost: 80, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, allowedDistricts: ['business', 'techpark'] },
-            { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 20, demolishCost: 90, allowedDistricts: ['park', 'residential', 'midtown'] },
-            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, demolishCost: 100, allowedDistricts: ['industrial', 'transport'] },
-            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, allowedDistricts: ['commercial', 'business'] },
-            { id: 'university', name: 'Университет', icon: BASE_URL + 'buildings_en/university.jpg', cost: 1500, resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45, reputation: 30, demolishCost: 150, allowedDistricts: ['techpark', 'midtown'] },
-            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, demolishCost: 200, allowedDistricts: ['park', 'business'] },
-            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, demolishCost: 50, allowedDistricts: ['premium', 'residential'] },
-            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, demolishCost: 35, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 70, allowedDistricts: ['premium', 'business'] },
-            { id: 'bike_station', name: 'Велостанция', icon: BASE_URL + 'buildings_en/bike_station.jpg', cost: 200, resources: { wood: 5 }, income: 4, xp: 2, time: 5, reputation: 3, demolishCost: 20, allowedDistricts: ['park', 'residential', 'transport'] },
-            { id: 'clothing_store', name: 'Магазин одежды', icon: BASE_URL + 'buildings_en/clothing_store.jpg', cost: 300, resources: { wood: 6, food: 3 }, income: 7, xp: 3, time: 7, reputation: 4, demolishCost: 30, allowedDistricts: ['commercial', 'midtown'] },
-            { id: 'high_school', name: 'Гимназия', icon: BASE_URL + 'buildings_en/high_school.jpg', cost: 550, resources: { wood: 15, energy: 8 }, income: 14, xp: 6, time: 14, reputation: 12, demolishCost: 55, allowedDistricts: ['residential', 'premium'] },
-            { id: 'museum', name: 'Музей', icon: BASE_URL + 'buildings_en/museum.jpg', cost: 500, resources: { wood: 12, energy: 8 }, income: 12, xp: 5, time: 12, reputation: 15, demolishCost: 50, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'market', name: 'Рынок', icon: BASE_URL + 'buildings_en/market.jpg', cost: 400, resources: { wood: 10, food: 10 }, income: 10, xp: 4, time: 10, reputation: 7, demolishCost: 40, allowedDistricts: ['commercial', 'countryside'] },
-            { id: 'club', name: 'Клуб', icon: BASE_URL + 'buildings_en/club.jpg', cost: 350, resources: { wood: 8, energy: 5 }, income: 8, xp: 3, time: 8, reputation: 6, demolishCost: 35, allowedDistricts: ['midtown', 'business'] },
-            { id: 'tech_park', name: 'Технопарк', icon: BASE_URL + 'buildings_en/tech_park.jpg', cost: 1000, resources: { wood: 20, energy: 25 }, income: 28, xp: 11, time: 28, reputation: 20, demolishCost: 100, allowedDistricts: ['techpark'] },
-            { id: 'medical_center', name: 'Медицинский центр', icon: BASE_URL + 'buildings_en/medical_center.jpg', cost: 900, resources: { wood: 20, energy: 15, food: 10 }, income: 24, xp: 10, time: 24, reputation: 18, demolishCost: 90, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'incubator', name: 'Бизнес-инкубатор', icon: BASE_URL + 'buildings_en/business_incubator.jpg', cost: 600, resources: { wood: 15, energy: 15 }, income: 16, xp: 6, time: 16, reputation: 12, demolishCost: 60, allowedDistricts: ['techpark', 'business'] },
-            { id: 'water_park', name: 'Аквапарк', icon: BASE_URL + 'buildings_en/water_park.jpg', cost: 1000, resources: { wood: 25, energy: 20, food: 15 }, income: 28, xp: 11, time: 28, reputation: 20, demolishCost: 100, allowedDistricts: ['park', 'premium'] },
-            { id: 'expo', name: 'Выставочный павильон', icon: BASE_URL + 'buildings_en/exhibition_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 15, demolishCost: 70, allowedDistricts: ['business', 'techpark'] },
-            { id: 'eco_hotel', name: 'Эко-отель', icon: BASE_URL + 'buildings_en/eco_hotel.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 22, xp: 9, time: 22, reputation: 18, demolishCost: 80, allowedDistricts: ['premium', 'park'] },
-            { id: 'botanical', name: 'Ботанический сад', icon: BASE_URL + 'buildings_en/botanical_garden.jpg', cost: 400, resources: { wood: 10, food: 15 }, income: 10, xp: 4, time: 10, reputation: 12, demolishCost: 40, allowedDistricts: ['park', 'suburb'] },
-            { id: 'sports_complex', name: 'Спорткомплекс', icon: BASE_URL + 'buildings_en/sports_complex.jpg', cost: 800, resources: { wood: 20, energy: 15 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 80, allowedDistricts: ['residential', 'park'] },
-            { id: 'concert_hall', name: 'Концертный зал', icon: BASE_URL + 'buildings_en/concert_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 18, demolishCost: 70, allowedDistricts: ['midtown', 'business'] },
-            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: BASE_URL + 'buildings_en/vertical_farm.jpg', cost: 500, resources: { wood: 12, energy: 10, food: 20 }, income: 14, xp: 6, time: 14, reputation: 10, demolishCost: 50, allowedDistricts: ['industrial', 'techpark'] },
-            { id: 'logistics', name: 'Логистический центр', icon: BASE_URL + 'buildings_en/logistics_center.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 12, demolishCost: 90, allowedDistricts: ['transport', 'industrial'] },
-            { id: 'rd_center', name: 'НИИ центр', icon: BASE_URL + 'buildings_en/R&D_center.jpg', cost: 1200, resources: { wood: 30, energy: 30 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, allowedDistricts: ['techpark'] },
-            { id: 'megamall', name: 'Крупный ТРЦ', icon: BASE_URL + 'buildings_en/megamall.jpg', cost: 2000, resources: { wood: 40, energy: 30, food: 20 }, income: 50, xp: 20, time: 40, reputation: 30, demolishCost: 200, allowedDistricts: ['commercial', 'business'] },
-            { id: 'skyscraper', name: 'Высотный офис', icon: BASE_URL + 'buildings_en/skyscraper_office.jpg', cost: 2500, resources: { wood: 45, energy: 35, food: 15 }, income: 60, xp: 22, time: 45, reputation: 35, demolishCost: 250, allowedDistricts: ['business'] },
-            { id: 'industrial_zone', name: 'Промышленная зона', icon: BASE_URL + 'buildings_en/industrial_zone.jpg', cost: 3000, resources: { wood: 50, energy: 40, food: 30 }, income: 70, xp: 25, time: 50, reputation: 25, demolishCost: 300, allowedDistricts: ['industrial'] }
+            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, demolishCost: 20, maxCount: 10, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown', 'premium'] },
+            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, demolishCost: 30, maxCount: 8, allowedDistricts: ['commercial', 'midtown', 'business'] },
+            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, demolishCost: 25, maxCount: 10, allowedDistricts: ['commercial', 'midtown', 'business', 'residential', 'park'] },
+            { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, demolishCost: 20, maxCount: 12, allowedDistricts: ['industrial', 'countryside', 'residential'] },
+            { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, resources: { energy: 10 }, income: 10, xp: 4, time: 10, reputation: 5, demolishCost: 40, maxCount: 5, allowedDistricts: ['industrial', 'transport', 'suburb'] },
+            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, demolishCost: 50, maxCount: 4, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
+            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrten.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, demolishCost: 40, maxCount: 5, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
+            { id: 'pharmacy', name: 'Аптека', icon: BASE_URL + 'buildings_en/pharmacy.jpg', cost: 300, resources: { wood: 5 }, income: 7, xp: 3, time: 7, reputation: 5, demolishCost: 30, maxCount: 6, allowedDistricts: ['commercial', 'residential', 'midtown'] },
+            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, demolishCost: 60, maxCount: 4, allowedDistricts: ['commercial', 'business', 'midtown'] },
+            { id: 'library', name: 'Библиотека', icon: BASE_URL + 'buildings_en/library.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 7, demolishCost: 35, maxCount: 5, allowedDistricts: ['midtown', 'residential', 'techpark'] },
+            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 80, maxCount: 2, allowedDistricts: ['midtown', 'business', 'premium'] },
+            { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18, reputation: 8, demolishCost: 70, maxCount: 6, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, demolishCost: 50, maxCount: 8, allowedDistricts: ['business', 'techpark', 'commercial'] },
+            { id: 'gym', name: 'Спортзал', icon: BASE_URL + 'buildings_en/gym.jpg', cost: 400, resources: { wood: 10, energy: 5 }, income: 10, xp: 4, time: 10, reputation: 6, demolishCost: 40, maxCount: 6, allowedDistricts: ['commercial', 'residential', 'midtown'] },
+            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, demolishCost: 45, maxCount: 6, allowedDistricts: ['commercial', 'business', 'midtown', 'park'] },
+            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, demolishCost: 100, maxCount: 2, allowedDistricts: ['commercial', 'business'] },
+            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, demolishCost: 60, maxCount: 3, allowedDistricts: ['midtown', 'business', 'park'] },
+            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, demolishCost: 80, maxCount: 4, allowedDistricts: ['business', 'midtown', 'premium'] },
+            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, maxCount: 2, allowedDistricts: ['business', 'techpark'] },
+            { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 20, demolishCost: 90, maxCount: 2, allowedDistricts: ['park', 'residential', 'midtown'] },
+            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, demolishCost: 100, maxCount: 3, allowedDistricts: ['industrial', 'transport'] },
+            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, maxCount: 2, allowedDistricts: ['commercial', 'business'] },
+            { id: 'university', name: 'Университет', icon: BASE_URL + 'buildings_en/university.jpg', cost: 1500, resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45, reputation: 30, demolishCost: 150, maxCount: 2, allowedDistricts: ['techpark', 'midtown'] },
+            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, demolishCost: 200, maxCount: 1, allowedDistricts: ['park', 'business'] },
+            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, demolishCost: 50, maxCount: 8, allowedDistricts: ['premium', 'residential'] },
+            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, demolishCost: 35, maxCount: 3, allowedDistricts: ['midtown', 'business', 'park'] },
+            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 70, maxCount: 3, allowedDistricts: ['premium', 'business'] },
+            { id: 'bike_station', name: 'Велостанция', icon: BASE_URL + 'buildings_en/bike_station.jpg', cost: 200, resources: { wood: 5 }, income: 4, xp: 2, time: 5, reputation: 3, demolishCost: 20, maxCount: 10, allowedDistricts: ['park', 'residential', 'transport'] },
+            { id: 'clothing_store', name: 'Магазин одежды', icon: BASE_URL + 'buildings_en/clothing_store.jpg', cost: 300, resources: { wood: 6, food: 3 }, income: 7, xp: 3, time: 7, reputation: 4, demolishCost: 30, maxCount: 8, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'high_school', name: 'Гимназия', icon: BASE_URL + 'buildings_en/high_school.jpg', cost: 550, resources: { wood: 15, energy: 8 }, income: 14, xp: 6, time: 14, reputation: 12, demolishCost: 55, maxCount: 3, allowedDistricts: ['residential', 'premium'] },
+            { id: 'museum', name: 'Музей', icon: BASE_URL + 'buildings_en/museum.jpg', cost: 500, resources: { wood: 12, energy: 8 }, income: 12, xp: 5, time: 12, reputation: 15, demolishCost: 50, maxCount: 2, allowedDistricts: ['midtown', 'business', 'park'] },
+            { id: 'market', name: 'Рынок', icon: BASE_URL + 'buildings_en/market.jpg', cost: 400, resources: { wood: 10, food: 10 }, income: 10, xp: 4, time: 10, reputation: 7, demolishCost: 40, maxCount: 5, allowedDistricts: ['commercial', 'countryside'] },
+            { id: 'club', name: 'Клуб', icon: BASE_URL + 'buildings_en/club.jpg', cost: 350, resources: { wood: 8, energy: 5 }, income: 8, xp: 3, time: 8, reputation: 6, demolishCost: 35, maxCount: 5, allowedDistricts: ['midtown', 'business'] },
+            { id: 'tech_park', name: 'Технопарк', icon: BASE_URL + 'buildings_en/tech_park.jpg', cost: 1000, resources: { wood: 20, energy: 25 }, income: 28, xp: 11, time: 28, reputation: 20, demolishCost: 100, maxCount: 2, allowedDistricts: ['techpark'] },
+            { id: 'medical_center', name: 'Медицинский центр', icon: BASE_URL + 'buildings_en/medical_center.jpg', cost: 900, resources: { wood: 20, energy: 15, food: 10 }, income: 24, xp: 10, time: 24, reputation: 18, demolishCost: 90, maxCount: 3, allowedDistricts: ['business', 'midtown', 'premium'] },
+            { id: 'incubator', name: 'Бизнес-инкубатор', icon: BASE_URL + 'buildings_en/business_incubator.jpg', cost: 600, resources: { wood: 15, energy: 15 }, income: 16, xp: 6, time: 16, reputation: 12, demolishCost: 60, maxCount: 3, allowedDistricts: ['techpark', 'business'] },
+            { id: 'water_park', name: 'Аквапарк', icon: BASE_URL + 'buildings_en/water_park.jpg', cost: 1000, resources: { wood: 25, energy: 20, food: 15 }, income: 28, xp: 11, time: 28, reputation: 20, demolishCost: 100, maxCount: 2, allowedDistricts: ['park', 'premium'] },
+            { id: 'expo', name: 'Выставочный павильон', icon: BASE_URL + 'buildings_en/exhibition_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 15, demolishCost: 70, maxCount: 3, allowedDistricts: ['business', 'techpark'] },
+            { id: 'eco_hotel', name: 'Эко-отель', icon: BASE_URL + 'buildings_en/eco_hotel.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 22, xp: 9, time: 22, reputation: 18, demolishCost: 80, maxCount: 3, allowedDistricts: ['premium', 'park'] },
+            { id: 'botanical', name: 'Ботанический сад', icon: BASE_URL + 'buildings_en/botanical_garden.jpg', cost: 400, resources: { wood: 10, food: 15 }, income: 10, xp: 4, time: 10, reputation: 12, demolishCost: 40, maxCount: 3, allowedDistricts: ['park', 'suburb'] },
+            { id: 'sports_complex', name: 'Спорткомплекс', icon: BASE_URL + 'buildings_en/sports_complex.jpg', cost: 800, resources: { wood: 20, energy: 15 }, income: 20, xp: 8, time: 20, reputation: 15, demolishCost: 80, maxCount: 3, allowedDistricts: ['residential', 'park'] },
+            { id: 'concert_hall', name: 'Концертный зал', icon: BASE_URL + 'buildings_en/concert_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 18, demolishCost: 70, maxCount: 2, allowedDistricts: ['midtown', 'business'] },
+            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: BASE_URL + 'buildings_en/vertical_farm.jpg', cost: 500, resources: { wood: 12, energy: 10, food: 20 }, income: 14, xp: 6, time: 14, reputation: 10, demolishCost: 50, maxCount: 4, allowedDistricts: ['industrial', 'techpark'] },
+            { id: 'logistics', name: 'Логистический центр', icon: BASE_URL + 'buildings_en/logistics_center.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 12, demolishCost: 90, maxCount: 3, allowedDistricts: ['transport', 'industrial'] },
+            { id: 'rd_center', name: 'НИИ центр', icon: BASE_URL + 'buildings_en/R&D_center.jpg', cost: 1200, resources: { wood: 30, energy: 30 }, income: 35, xp: 14, time: 35, reputation: 25, demolishCost: 120, maxCount: 2, allowedDistricts: ['techpark'] },
+            { id: 'megamall', name: 'Крупный ТРЦ', icon: BASE_URL + 'buildings_en/megamall.jpg', cost: 2000, resources: { wood: 40, energy: 30, food: 20 }, income: 50, xp: 20, time: 40, reputation: 30, demolishCost: 200, maxCount: 1, allowedDistricts: ['commercial', 'business'] },
+            { id: 'skyscraper', name: 'Высотный офис', icon: BASE_URL + 'buildings_en/skyscraper_office.jpg', cost: 2500, resources: { wood: 45, energy: 35, food: 15 }, income: 60, xp: 22, time: 45, reputation: 35, demolishCost: 250, maxCount: 2, allowedDistricts: ['business'] },
+            { id: 'industrial_zone', name: 'Промышленная зона', icon: BASE_URL + 'buildings_en/industrial_zone.jpg', cost: 3000, resources: { wood: 50, energy: 40, food: 30 }, income: 70, xp: 25, time: 50, reputation: 25, demolishCost: 300, maxCount: 1, allowedDistricts: ['industrial'] }
         ];
 
         const CRYPTO = [
@@ -1877,7 +1856,6 @@
         function renderDistrictsAbsolute() {
             const container = document.getElementById('districtGridAbsolute');
             container.innerHTML = '';
-            // Сопоставляем районы с координатами (первые 9 районов)
             const coords = DISTRICT_COORDS;
             DISTRICTS.forEach((d, index) => {
                 if (index >= coords.length) return;
@@ -1917,7 +1895,6 @@
         function openMap(districtId, name) {
             currentDistrictId = districtId;
             document.getElementById('mapTitle').textContent = name;
-            // Центрируем карту: смещаем так, чтобы центр района (1500, 1500) был в центре экрана
             const container = document.getElementById('mapScrollContainer');
             const containerWidth = container.clientWidth || window.innerWidth;
             const containerHeight = container.clientHeight || (window.innerHeight - 120);
@@ -1927,7 +1904,6 @@
             showScreen('map-screen');
             updateMapUI();
             
-            // Инициализация свайпов
             const world = document.getElementById('mapWorld');
             
             const onStart = (e) => {
@@ -1973,7 +1949,6 @@
             const roadWidth = 120;
             const plotSize = 300;
 
-            // Дороги
             for (let x = 0; x <= worldSize; x += plotSize + roadWidth) {
                 const hRoad = document.createElement('div');
                 hRoad.className = 'map-road-h';
@@ -1987,7 +1962,6 @@
                 world.appendChild(vRoad);
             }
 
-            // Участки
             let plotCounter = 0;
             for (let x = roadWidth/2 + 10; x < worldSize - roadWidth/2 - 10; x += plotSize + roadWidth) {
                 for (let y = roadWidth/2 + 10; y < worldSize - roadWidth/2 - 10; y += plotSize + roadWidth) {
@@ -2009,9 +1983,7 @@
                         const buildingDiv = document.createElement('div');
                         buildingDiv.className = 'map-built-building';
                         
-                        // Проверяем, не в процессе сноса
                         if (existingBuilding.demolishStart) {
-                            // Отображаем оверлей с таймером
                             const overlay = document.createElement('div');
                             overlay.className = 'demolish-overlay';
                             const timerBox = document.createElement('div');
@@ -2024,10 +1996,8 @@
                             text.textContent = 'Решение властей:\nснос здания.';
                             overlay.appendChild(text);
                             buildingDiv.appendChild(overlay);
-                            // Запускаем таймер сноса
                             startDemolishTimer(plotId, existingBuilding);
                         } else {
-                            // Нормальное здание
                             const img = document.createElement('img');
                             img.src = bData.icon;
                             img.alt = bData.name;
@@ -2204,10 +2174,9 @@
                 return;
             }
 
-            // Начинаем снос
             game.balance -= bData.demolishCost;
             building.demolishStart = Date.now();
-            building.demolishDuration = 30000; // 30 секунд для теста
+            building.demolishDuration = 30000;
             saveGame();
             closeConfirmModal();
             closeInfoModal();
@@ -2227,9 +2196,7 @@
                         elem.textContent = `⏳ ${Math.ceil(remaining / 1000)}с`;
                         requestAnimationFrame(updateTimer);
                     } else {
-                        // Снос завершен
                         elem.textContent = '✅';
-                        // Удаляем здание
                         const idx = game.buildings.indexOf(building);
                         if (idx > -1) {
                             game.buildings.splice(idx, 1);
@@ -2283,7 +2250,6 @@
             document.getElementById('bankExpense').textContent = '0';
         }
 
-        // Кредит
         function openCreditModal() {
             if (game.credit) {
                 document.getElementById('creditForm').style.display = 'none';
@@ -2395,7 +2361,6 @@
             repayCredit(amount);
         }
 
-        // Крипто
         function initCrypto() {
             CRYPTO.forEach(c => {
                 if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 };
