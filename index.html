@@ -21,6 +21,8 @@
             --text-secondary: #b0b0b0;
             --radius: 20px;
             --transition: 0.3s ease;
+            --menu-bg-width: 1080;
+            --menu-bg-height: 1920;
         }
 
         * {
@@ -242,43 +244,56 @@
         /* === МЕНЮ === */
         #menu-screen {
             background: url('https://rruslan007.github.io/novara-city-images/effects/menu.PNG') center/cover no-repeat;
+            background-size: cover;
+            background-position: center;
             padding: 0;
             top: 0;
             bottom: 64px;
             overflow: hidden !important;
+            position: relative;
         }
 
         #menu-screen .overlay {
-            background: rgba(0, 0, 0, 0.3);
-            min-height: 100%;
+            position: relative;
             width: 100%;
             height: 100%;
-            padding: 20px 16px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            /* Используем соотношение сторон фона 1080:1920 = 9:16 */
+            max-width: 100%;
+            overflow: hidden;
         }
 
-        .district-grid-circle {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px 40px;
+        /* Контейнер для кнопок районов с абсолютным позиционированием */
+        .districts-absolute-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 340px;
-            margin: 0 auto;
+            height: 100%;
+            /* Этот контейнер будет масштабироваться под размер экрана */
+        }
+
+        /* Обёртка для сохранения пропорций */
+        .districts-wrapper {
             position: relative;
-            top: -20px;
+            width: 100%;
+            /* padding-top: 177.78% = 1920/1080 * 100% */
+            padding-top: 177.78%;
+        }
+
+        .districts-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         .district-btn-circle {
+            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            aspect-ratio: 1 / 1;
-            width: 100%;
             border-radius: 50%;
             background: rgba(10, 14, 26, 0.85);
             border: 3px solid var(--gold);
@@ -286,30 +301,58 @@
             cursor: pointer;
             transition: var(--transition);
             text-align: center;
-            padding: 10px;
+            /* Размер круга: 90px на фоне 1080px = ~8.33% */
+            width: 8.33%;
+            /* padding-top для сохранения круга: высота = ширина */
+            padding-top: 0;
+            /* Используем aspect-ratio или зададим высоту через JS/CSS calc */
+            /* Вместо этого зададим фиксированный размер в vw */
+            width: 16vw;
+            height: 16vw;
+            max-width: 90px;
+            max-height: 90px;
+            min-width: 60px;
+            min-height: 60px;
+            transform: translate(-50%, -50%);
+            z-index: 5;
         }
 
         .district-btn-circle:hover {
-            transform: scale(1.08);
+            transform: translate(-50%, -50%) scale(1.08);
             box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
         }
 
+        .district-btn-circle:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
         .district-btn-circle img {
-            width: 45px;
-            height: 45px;
+            width: 50%;
+            height: 50%;
             border-radius: 50%;
             object-fit: cover;
             background: #1a1f2f;
         }
 
         .district-btn-circle .dname {
-            font-size: 11px;
-            margin-top: 6px;
+            font-size: clamp(8px, 1.4vw, 12px);
+            margin-top: 4px;
             color: var(--gold);
             font-weight: 700;
             line-height: 1.2;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
+
+        /* Координаты для каждого района (в % от 1080x1920) */
+        .district-btn-circle.pos-1 { top: 21.88%; left: 37.04%; }  /* (400, 420) */
+        .district-btn-circle.pos-2 { top: 22.92%; left: 62.96%; }  /* (680, 440) */
+        .district-btn-circle.pos-3 { top: 29.17%; left: 37.96%; }  /* (410, 560) */
+        .district-btn-circle.pos-4 { top: 28.65%; left: 62.96%; }  /* (680, 550) */
+        .district-btn-circle.pos-5 { top: 36.46%; left: 37.04%; }  /* (400, 700) */
+        .district-btn-circle.pos-6 { top: 35.42%; left: 60.19%; }  /* (650, 680) */
+        .district-btn-circle.pos-7 { top: 42.71%; left: 35.19%; }  /* (380, 820) */
+        .district-btn-circle.pos-8 { top: 41.15%; left: 58.33%; }  /* (630, 790) */
+        .district-btn-circle.pos-9 { top: 47.92%; left: 55.56%; }  /* (600, 920) */
 
         .level-circle-wrapper {
             position: absolute;
@@ -1089,20 +1132,11 @@
 
         @media (min-width: 480px) {
             .resource-grid { grid-template-columns: repeat(3, 1fr); }
-            .district-grid-circle { gap: 40px 60px; max-width: 400px; }
-            .district-btn-circle img { width: 60px; height: 60px; }
-            .district-btn-circle .dname { font-size: 14px; }
         }
         @media (min-width: 768px) {
             body { max-width: 500px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
             .footer { max-width: 500px; left: 50%; transform: translateX(-50%); }
             .screen { max-width: 500px; left: 50%; transform: translateX(-50%); }
-        }
-        @media (max-width: 360px) {
-            .district-btn-circle img { width: 35px; height: 35px; }
-            .district-btn-circle .dname { font-size: 9px; }
-            .district-grid-circle { gap: 20px 25px; }
-            .build-card img { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -1120,8 +1154,13 @@
     <!-- ===== МЕНЮ ===== -->
     <div class="screen active" id="menu-screen">
         <div class="overlay">
-            <div class="district-grid-circle" id="districtGridCircle"></div>
+            <div class="districts-wrapper">
+                <div class="districts-inner" id="districtsContainer">
+                    <!-- Кнопки районов генерируются скриптом -->
+                </div>
+            </div>
             
+            <!-- Круг уровня -->
             <div class="level-circle-wrapper">
                 <svg class="level-circle-svg" viewBox="0 0 56 56">
                     <circle class="level-circle-bg" cx="28" cy="28" r="22"></circle>
@@ -1475,6 +1514,19 @@
         const BASE_URL = 'https://rruslan007.github.io/novara-city-images/';
         const MONETA_ICON = BASE_URL + 'effects/moneta.PNG';
 
+        // Координаты центров кругов (в % от 1080x1920)
+        const DISTRICT_POSITIONS = [
+            { x: 37.04, y: 21.88 },  // 1. (400, 420)
+            { x: 62.96, y: 22.92 },  // 2. (680, 440)
+            { x: 37.96, y: 29.17 },  // 3. (410, 560)
+            { x: 62.96, y: 28.65 },  // 4. (680, 550)
+            { x: 37.04, y: 36.46 },  // 5. (400, 700)
+            { x: 60.19, y: 35.42 },  // 6. (650, 680)
+            { x: 35.19, y: 42.71 },  // 7. (380, 820)
+            { x: 58.33, y: 41.15 },  // 8. (630, 790)
+            { x: 55.56, y: 47.92 }   // 9. (600, 920)
+        ];
+
         const DISTRICTS = [
             { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', key: 'district1' },
             { id: 'countryside', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district2' },
@@ -1484,9 +1536,7 @@
             { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6' },
             { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7' },
             { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', key: 'district8' },
-            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', key: 'district9' },
-            { id: 'business', icon: BASE_URL + 'districts/centre.png', key: 'district10' },
-            { id: 'premium', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district11' }
+            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', key: 'district9' }
         ];
 
         const RESOURCES = [
@@ -1498,7 +1548,6 @@
             { id: 'gold', name: 'Золото', icon: BASE_URL + 'resources/gold_icon.png', amount: 10, max: 1000 }
         ];
 
-        // Здания с ценами сноса и репутацией
         const BUILDINGS = [
             { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown', 'premium'] },
             { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'business'] },
@@ -1616,26 +1665,17 @@
             updateUI();
         }
 
-        function addReputation(amount) {
-            game.reputation += amount;
-            saveGame();
-            updateUI();
-        }
-
+        function addReputation(amount) { game.reputation += amount; saveGame(); updateUI(); }
         function getResourceAmount(id) { return game.resources[id] || 0; }
         function addResource(id, amount) {
             const max = RESOURCES.find(r => r.id === id)?.max || 1000;
             game.resources[id] = Math.min((game.resources[id] || 0) + amount, max);
-            saveGame();
-            renderResources();
-            updateUI();
+            saveGame(); renderResources(); updateUI();
         }
         function spendResource(id, amount) {
             if ((game.resources[id] || 0) < amount) return false;
             game.resources[id] -= amount;
-            saveGame();
-            renderResources();
-            updateUI();
+            saveGame(); renderResources(); updateUI();
             return true;
         }
         function canAfford(resources) {
@@ -1648,183 +1688,31 @@
             let income = 0;
             for (let b of game.buildings) {
                 const data = BUILDINGS.find(d => d.id === b.id);
-                if (data) income += data.income * b.level;
+                if (data && b.status !== 'demolishing') income += data.income * b.level;
             }
             return income;
         }
 
         // ============================================================
-        // СТРОИТЕЛЬСТВО
-        // ============================================================
-        function openBuildModal(districtId, plotId) {
-            currentDistrictId = districtId;
-            currentPlotId = plotId;
-            document.getElementById('buildModal').classList.add('active');
-            renderBuildModalList(districtId);
-        }
-
-        function closeBuildModal() {
-            document.getElementById('buildModal').classList.remove('active');
-            currentDistrictId = null;
-            currentPlotId = null;
-        }
-
-        function renderBuildModalList(districtId) {
-            const container = document.getElementById('buildModalList');
-            container.innerHTML = '';
-            const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
-            if (availableBuildings.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
-                return;
-            }
-            availableBuildings.forEach(b => {
-                const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
-                const maxCount = b.maxCount || 999;
-                const canBuildMore = builtCount < maxCount;
-                const hasResources = canAfford(b.resources) && game.balance >= b.cost;
-
-                const card = document.createElement('div');
-                card.className = 'build-card';
-                card.innerHTML = `
-                    <div class="limit">Доступно: ${builtCount}/${maxCount}</div>
-                    <img src="${b.icon}" alt="${b.name}" onerror="this.textContent='🏢'">
-                    <div class="bname">${b.name}</div>
-                    <div class="price"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
-                    <button class="btn-gold" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
-                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function buildOnPlot(buildingId) {
-            const building = BUILDINGS.find(b => b.id === buildingId);
-            if (!building || !currentDistrictId || currentPlotId === null) return;
-
-            const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
-            if (builtCount >= building.maxCount) {
-                showToast('❌ Достигнут лимит таких зданий в городе!');
-                return;
-            }
-            if (!canAfford(building.resources)) {
-                showToast('❌ Не хватает ресурсов!');
-                return;
-            }
-            if (game.balance < building.cost) {
-                showToast('❌ Не хватает денег!');
-                return;
-            }
-
-            game.balance -= building.cost;
-            for (let [resId, amount] of Object.entries(building.resources)) {
-                spendResource(resId, amount);
-            }
-
-            game.buildings.push({
-                id: building.id,
-                level: 1,
-                builtAt: Date.now(),
-                plotId: currentPlotId,
-                districtId: currentDistrictId,
-                status: 'built'
-            });
-            game.builtCount++;
-            addXp(building.xp);
-            addReputation(building.reputation);
-
-            showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
-            saveGame();
-            closeBuildModal();
-            renderMap(currentDistrictId);
-            updateUI();
-        }
-
-        // ============================================================
-        // ИНФОРМАЦИЯ О ЗДАНИИ И СНОС
-        // ============================================================
-        function openBuildingInfo(building) {
-            const bData = BUILDINGS.find(b => b.id === building.id);
-            if (!bData) return;
-            document.getElementById('infoBuildingImg').src = bData.icon;
-            document.getElementById('infoBuildingName').textContent = bData.name;
-            document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
-            document.getElementById('infoReputation').textContent = bData.reputation || 0;
-            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
-            demolishTarget = building;
-            document.getElementById('buildingInfoModal').classList.add('active');
-        }
-
-        function closeBuildingInfo() {
-            document.getElementById('buildingInfoModal').classList.remove('active');
-            demolishTarget = null;
-        }
-
-        function openDemolishConfirm() {
-            if (!demolishTarget) return;
-            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
-            if (!bData) return;
-            document.getElementById('demolishCostText').textContent = `Стоимость сноса: ${bData.demolishCost} монет`;
-            document.getElementById('demolishError').textContent = `Вам не хватает ${bData.demolishCost - game.balance} монет`;
-            document.getElementById('confirmDemolishBtn').disabled = game.balance < bData.demolishCost;
-            document.getElementById('demolishError').style.display = game.balance < bData.demolishCost ? 'block' : 'none';
-            document.getElementById('demolishConfirm').classList.add('active');
-        }
-
-        function closeDemolishConfirm() {
-            document.getElementById('demolishConfirm').classList.remove('active');
-        }
-
-        function confirmDemolish() {
-            if (!demolishTarget) return;
-            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
-            if (!bData || game.balance < bData.demolishCost) return;
-
-            game.balance -= bData.demolishCost;
-            demolishTarget.status = 'demolishing';
-            demolishTarget.demolishStart = Date.now();
-            demolishTarget.demolishTime = (bData.demolishCost / 10) * 1000; // Время сноса пропорционально стоимости
-
-            showToast(`🏗️ Снос начат! Здание исчезнет через ${Math.round(demolishTarget.demolishTime / 1000)} сек.`);
-            saveGame();
-            closeDemolishConfirm();
-            closeBuildingInfo();
-            renderMap(demolishTarget.districtId);
-            updateUI();
-        }
-
-        function checkDemolishCompletion() {
-            const now = Date.now();
-            let changed = false;
-            game.buildings = game.buildings.filter(b => {
-                if (b.status === 'demolishing' && now - b.demolishStart >= b.demolishTime) {
-                    showToast(`🏚️ Здание снесено. Участок освобожден.`);
-                    changed = true;
-                    return false;
-                }
-                return true;
-            });
-            if (changed) {
-                saveGame();
-                if (currentDistrictId) renderMap(currentDistrictId);
-            }
-        }
-
-        // ============================================================
-        // ОТРИСОВКА МЕНЮ
+        // ОТРИСОВКА МЕНЮ (АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ)
         // ============================================================
         function renderDistrictsCircle() {
-            const grid = document.getElementById('districtGridCircle');
-            grid.innerHTML = '';
-            DISTRICTS.forEach(d => {
+            const container = document.getElementById('districtsContainer');
+            container.innerHTML = '';
+            
+            DISTRICTS.forEach((d, index) => {
+                if (index >= DISTRICT_POSITIONS.length) return;
+                const pos = DISTRICT_POSITIONS[index];
                 const btn = document.createElement('div');
                 btn.className = 'district-btn-circle';
+                btn.style.left = pos.x + '%';
+                btn.style.top = pos.y + '%';
                 btn.innerHTML = `
                     <img src="${d.icon}" alt="${t(d.key)}" onerror="this.style.display='none'">
                     <span class="dname">${t(d.key)}</span>
                 `;
                 btn.onclick = () => openMap(d.id, t(d.key));
-                grid.appendChild(btn);
+                container.appendChild(btn);
             });
         }
 
@@ -1846,26 +1734,21 @@
             document.getElementById('mapTitle').textContent = name;
             renderMap(districtId);
             showScreen('map-screen');
-            
-            // Центрируем карту
             const container = document.getElementById('mapScrollContainer');
             setTimeout(() => {
                 container.scrollLeft = (3000 - container.clientWidth) / 2;
                 container.scrollTop = (3000 - container.clientHeight) / 2;
             }, 100);
-            
             updateMapUI();
         }
 
         function renderMap(districtId) {
             const world = document.getElementById('mapWorld');
             world.innerHTML = '';
-
             const worldSize = 3000;
             const roadWidth = 120;
             const plotSize = 280;
 
-            // Дороги
             for (let x = 0; x <= worldSize; x += plotSize + roadWidth) {
                 const hRoad = document.createElement('div');
                 hRoad.className = 'map-road-h';
@@ -1879,7 +1762,6 @@
                 world.appendChild(vRoad);
             }
 
-            // Участки
             let plotCounter = 0;
             for (let x = roadWidth/2 + 10; x < worldSize - roadWidth/2 - 10; x += plotSize + roadWidth) {
                 for (let y = roadWidth/2 + 10; y < worldSize - roadWidth/2 - 10; y += plotSize + roadWidth) {
@@ -1889,7 +1771,6 @@
                     plot.style.top = y + 'px';
                     plot.style.width = plotSize + 'px';
                     plot.style.height = plotSize + 'px';
-
                     const plotId = `plot_${plotCounter}`;
                     plot.dataset.plotId = plotId;
 
@@ -1904,10 +1785,8 @@
                                 <div style="background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;border:1px solid #555;">⏳ ${sec}с</div>
                                 <div style="color:var(--red);font-size:10px;margin-top:4px;">Решение властей:<br>снос здания</div>
                             </div>`;
-                            plot.onclick = () => showToast('⏳ Идёт снос здания...');
                         } else {
                             plot.classList.add('built');
-                            const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
                             plot.innerHTML = `<div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">🏢</div>`;
                             plot.onclick = () => openBuildingInfo(existingBuilding);
                         }
@@ -1915,13 +1794,9 @@
                         const btn = document.createElement('div');
                         btn.className = 'map-btn-plus';
                         btn.textContent = '+';
-                        btn.onclick = (e) => {
-                            e.stopPropagation();
-                            openBuildModal(districtId, plotId);
-                        };
+                        btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, plotId); };
                         plot.appendChild(btn);
                     }
-
                     world.appendChild(plot);
                     plotCounter++;
                 }
@@ -1937,6 +1812,122 @@
             document.getElementById('mapXpLabelBottom').textContent = `${Math.round(currentXp)} / ${neededXp} XP`;
             document.getElementById('mapXpFillBottom').style.width = `${progress * 100}%`;
             document.getElementById('mapReputationBottom').textContent = game.reputation;
+        }
+
+        // ============================================================
+        // СТРОИТЕЛЬСТВО
+        // ============================================================
+        function openBuildModal(districtId, plotId) {
+            currentDistrictId = districtId;
+            currentPlotId = plotId;
+            document.getElementById('buildModal').classList.add('active');
+            renderBuildModalList(districtId);
+        }
+        function closeBuildModal() {
+            document.getElementById('buildModal').classList.remove('active');
+            currentDistrictId = null;
+            currentPlotId = null;
+        }
+        function renderBuildModalList(districtId) {
+            const container = document.getElementById('buildModalList');
+            container.innerHTML = '';
+            const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
+            if (availableBuildings.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
+                return;
+            }
+            availableBuildings.forEach(b => {
+                const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
+                const maxCount = b.maxCount || 999;
+                const canBuildMore = builtCount < maxCount;
+                const hasResources = canAfford(b.resources) && game.balance >= b.cost;
+                const card = document.createElement('div');
+                card.className = 'build-card';
+                card.innerHTML = `
+                    <div class="limit">Доступно: ${builtCount}/${maxCount}</div>
+                    <img src="${b.icon}" alt="${b.name}" onerror="this.textContent='🏢'">
+                    <div class="bname">${b.name}</div>
+                    <div class="price"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
+                    <button class="btn-gold" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
+                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+        function buildOnPlot(buildingId) {
+            const building = BUILDINGS.find(b => b.id === buildingId);
+            if (!building || !currentDistrictId || currentPlotId === null) return;
+            const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
+            if (builtCount >= building.maxCount) { showToast('❌ Достигнут лимит таких зданий в городе!'); return; }
+            if (!canAfford(building.resources)) { showToast('❌ Не хватает ресурсов!'); return; }
+            if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= building.cost;
+            for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
+            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
+            game.builtCount++;
+            addXp(building.xp);
+            addReputation(building.reputation);
+            showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
+            saveGame();
+            closeBuildModal();
+            renderMap(currentDistrictId);
+            updateUI();
+        }
+
+        // ============================================================
+        // ИНФОРМАЦИЯ О ЗДАНИИ И СНОС
+        // ============================================================
+        function openBuildingInfo(building) {
+            const bData = BUILDINGS.find(b => b.id === building.id);
+            if (!bData) return;
+            document.getElementById('infoBuildingImg').src = bData.icon;
+            document.getElementById('infoBuildingName').textContent = bData.name;
+            document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
+            document.getElementById('infoReputation').textContent = bData.reputation || 0;
+            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
+            demolishTarget = building;
+            document.getElementById('buildingInfoModal').classList.add('active');
+        }
+        function closeBuildingInfo() { document.getElementById('buildingInfoModal').classList.remove('active'); demolishTarget = null; }
+        function openDemolishConfirm() {
+            if (!demolishTarget) return;
+            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
+            if (!bData) return;
+            document.getElementById('demolishCostText').textContent = `Стоимость сноса: ${bData.demolishCost} монет`;
+            document.getElementById('confirmDemolishBtn').disabled = game.balance < bData.demolishCost;
+            document.getElementById('demolishError').textContent = `Вам не хватает ${bData.demolishCost - game.balance} монет`;
+            document.getElementById('demolishError').style.display = game.balance < bData.demolishCost ? 'block' : 'none';
+            document.getElementById('demolishConfirm').classList.add('active');
+        }
+        function closeDemolishConfirm() { document.getElementById('demolishConfirm').classList.remove('active'); }
+        function confirmDemolish() {
+            if (!demolishTarget) return;
+            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
+            if (!bData || game.balance < bData.demolishCost) return;
+            game.balance -= bData.demolishCost;
+            demolishTarget.status = 'demolishing';
+            demolishTarget.demolishStart = Date.now();
+            demolishTarget.demolishTime = (bData.demolishCost / 10) * 1000;
+            showToast(`🏗️ Снос начат! Здание исчезнет через ${Math.round(demolishTarget.demolishTime / 1000)} сек.`);
+            saveGame();
+            closeDemolishConfirm();
+            closeBuildingInfo();
+            renderMap(demolishTarget.districtId);
+            updateUI();
+        }
+        function checkDemolishCompletion() {
+            const now = Date.now();
+            let changed = false;
+            game.buildings = game.buildings.filter(b => {
+                if (b.status === 'demolishing' && now - b.demolishStart >= b.demolishTime) {
+                    showToast(`🏚️ Здание снесено. Участок освобожден.`);
+                    changed = true;
+                    return false;
+                }
+                return true;
+            });
+            if (changed) { saveGame(); if (currentDistrictId) renderMap(currentDistrictId); }
         }
 
         // ============================================================
@@ -1958,13 +1949,7 @@
                 grid.appendChild(card);
             });
         }
-
-        function mineResource(id) {
-            addResource(id, 5);
-            addXp(1);
-            showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`);
-        }
-
+        function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
         function generateQuests() {
             const quests = [
                 { id: 'build3', title: 'Построй 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30 },
@@ -1973,10 +1958,8 @@
                 { id: 'level2', title: 'Достигни 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 40 }
             ];
             game.quests = quests.map(q => ({ ...q, progress: 0, completed: false }));
-            saveGame();
-            renderQuests();
+            saveGame(); renderQuests();
         }
-
         function updateQuests() {
             game.quests.forEach(q => {
                 if (q.completed) return;
@@ -1991,10 +1974,8 @@
                     showToast(`✅ Квест выполнен: ${q.title}! +${q.rewardXp} XP, +${q.rewardCoins} монет`);
                 }
             });
-            saveGame();
-            renderQuests();
+            saveGame(); renderQuests();
         }
-
         function renderQuests() {
             const container = document.getElementById('questsList');
             container.innerHTML = '';
@@ -2007,17 +1988,13 @@
                 div.className = 'quest-item';
                 const progress = Math.min(q.progress / q.target, 1);
                 div.innerHTML = `
-                    <div class="qheader">
-                        <span class="qtitle">${q.title} ${q.completed ? '✅' : ''}</span>
-                        <span class="qreward">+${q.rewardXp} XP +${q.rewardCoins} 🪙</span>
-                    </div>
+                    <div class="qheader"><span class="qtitle">${q.title} ${q.completed ? '✅' : ''}</span><span class="qreward">+${q.rewardXp} XP +${q.rewardCoins} 🪙</span></div>
                     <div class="progress-bar"><div class="fill" style="width:${progress * 100}%"></div></div>
                     <div class="qstatus">${Math.round(q.progress)} / ${q.target} ${q.completed ? '(Выполнено!)' : ''}</div>
                 `;
                 container.appendChild(div);
             });
         }
-
         function updateProfileUI() {
             document.getElementById('profileLevel').textContent = game.level;
             document.getElementById('profileXp').textContent = game.xp;
@@ -2025,15 +2002,10 @@
             document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
             document.getElementById('profileEarned').textContent = Math.round(game.earned);
             let totalCryptoVal = 0;
-            for(let key in game.crypto) {
-                const c = CRYPTO.find(cr => cr.id === key);
-                if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price;
-            }
+            for(let key in game.crypto) { const c = CRYPTO.find(cr => cr.id === key); if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price; }
             document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
-            const mins = Math.floor((Date.now() - game.lastOnline) / 60000);
-            document.getElementById('profileTime').textContent = `${t('inGame')}: ${mins} мин`;
-            const nameInput = document.getElementById('playerName');
-            nameInput.value = localStorage.getItem('playerName') || '';
+            document.getElementById('profileTime').textContent = `${t('inGame')}: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
+            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
         }
 
         // ============================================================
@@ -2045,11 +2017,9 @@
             body.classList.toggle('open');
             arrow.classList.toggle('open');
         }
-
         function updateBankUI() {
             document.getElementById('bankBalanceDisplay').textContent = Math.round(game.balance);
             document.getElementById('bankCrystalsDisplay').textContent = game.crystals;
-            
             const creditBtnWrapper = document.getElementById('creditBtnWrapper');
             if (game.credit) {
                 const remaining = game.credit.amount - game.credit.paid;
@@ -2059,11 +2029,8 @@
                         <div class="bank-row"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
                         <div class="bank-row"><span>✅ Выплачено</span><span>${game.credit.paid}$</span></div>
                         <div class="bank-row"><span>⏳ Остаток</span><span class="text-red">${remaining}$</span></div>
-                        <div style="text-align:center;margin-top:8px;">
-                            <button class="btn-gold" onclick="openRepayModal()" style="width:auto;padding:6px 20px;">Выплатить</button>
-                        </div>
-                    </div>
-                `;
+                        <div style="text-align:center;margin-top:8px;"><button class="btn-gold" onclick="openRepayModal()" style="width:auto;padding:6px 20px;">Выплатить</button></div>
+                    </div>`;
                 creditBtnWrapper.style.display = 'none';
             } else {
                 document.getElementById('creditInfo').innerHTML = `<span style="color:var(--text-secondary);">${t('noCredit')}</span>`;
@@ -2072,42 +2039,30 @@
             document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
             document.getElementById('bankExpense').textContent = '0';
         }
-
         function openCreditModal() {
-            if (game.credit) {
-                document.getElementById('creditForm').style.display = 'none';
-                document.getElementById('creditLock').style.display = 'block';
-            } else {
-                document.getElementById('creditForm').style.display = 'block';
-                document.getElementById('creditLock').style.display = 'none';
-                updateCreditSliders();
-            }
+            if (game.credit) { document.getElementById('creditForm').style.display = 'none'; document.getElementById('creditLock').style.display = 'block'; }
+            else { document.getElementById('creditForm').style.display = 'block'; document.getElementById('creditLock').style.display = 'none'; updateCreditSliders(); }
             document.getElementById('creditModal').classList.add('active');
         }
         function closeCreditModal() { document.getElementById('creditModal').classList.remove('active'); }
-
         function updateCreditSliders() {
             const amountSlider = document.getElementById('creditAmountSlider');
             const termSlider = document.getElementById('creditTermSlider');
-            const income = getTotalIncome();
-            const maxCredit = Math.max(100, Math.round(income * 50));
+            const maxCredit = Math.max(100, Math.round(getTotalIncome() * 50));
             amountSlider.max = maxCredit;
             if (parseInt(amountSlider.value) > maxCredit) amountSlider.value = maxCredit;
             const amount = parseInt(amountSlider.value);
             const term = parseInt(termSlider.value);
-            let rate = 5 + (amount / maxCredit) * 10 + (term / 30) * 5;
-            rate = Math.min(25, Math.max(5, Math.round(rate)));
+            let rate = Math.min(25, Math.max(5, Math.round(5 + (amount / maxCredit) * 10 + (term / 30) * 5)));
             const totalPay = Math.round(amount + (amount * (rate / 100)));
-            const monthlyPay = Math.round(totalPay / term);
             document.getElementById('creditAmountDisplay').textContent = amount;
             document.getElementById('creditTermDisplay').textContent = term;
             document.getElementById('creditRateDisplay').textContent = rate + '%';
-            document.getElementById('creditTotalPayDisplay').textContent = totalPay + ' ' + t('coins');
-            document.getElementById('creditMonthlyPayDisplay').textContent = monthlyPay + ' ' + t('coins');
+            document.getElementById('creditTotalPayDisplay').textContent = totalPay + ' монет';
+            document.getElementById('creditMonthlyPayDisplay').textContent = Math.round(totalPay / term) + ' монет';
         }
-
         function takeCredit() {
-            if (game.credit) { showToast('❌ У вас уже есть активный кредит!'); return; }
+            if (game.credit) { showToast('❌ Уже есть активный кредит!'); return; }
             const amount = parseInt(document.getElementById('creditAmountSlider').value);
             const term = parseInt(document.getElementById('creditTermSlider').value);
             const rate = parseInt(document.getElementById('creditRateDisplay').textContent);
@@ -2115,33 +2070,18 @@
             game.credit = { amount, term, rate, paid: 0, takenAt: Date.now() };
             game.balance += amount;
             showToast(`💰 Кредит ${amount}$ оформлен!`);
-            saveGame();
-            updateUI();
-            closeCreditModal();
+            saveGame(); updateUI(); closeCreditModal();
         }
-
+        function getCreditRemaining() { return game.credit ? game.credit.amount - game.credit.paid : 0; }
         function repayCredit(amount) {
-            if (!game.credit) return;
-            if (amount > game.balance) { showToast('❌ Не хватает денег!'); return; }
-            const remaining = game.credit.amount - game.credit.paid;
-            const pay = Math.min(amount, remaining);
+            if (!game.credit || amount > game.balance) { showToast('❌ Не хватает денег!'); return; }
+            const pay = Math.min(amount, getCreditRemaining());
             game.balance -= pay;
             game.credit.paid += pay;
-            if (game.credit.paid >= game.credit.amount) {
-                game.credit = null;
-                showToast('🎉 Кредит полностью погашен!');
-            } else {
-                showToast(`✅ Выплачено ${pay}$`);
-            }
-            saveGame();
-            updateUI();
-            closeRepayModal();
+            if (game.credit.paid >= game.credit.amount) { game.credit = null; showToast('🎉 Кредит погашен!'); }
+            else showToast(`✅ Выплачено ${pay}$`);
+            saveGame(); updateUI(); closeRepayModal();
         }
-        function getCreditRemaining() {
-            if (!game.credit) return 0;
-            return game.credit.amount - game.credit.paid;
-        }
-
         function openRepayModal() {
             if (!game.credit) return;
             document.getElementById('repayAmount').value = 0;
@@ -2153,63 +2093,39 @@
         function closeRepayModal() { document.getElementById('repayModal').classList.remove('active'); }
         function adjustRepay(delta) {
             const input = document.getElementById('repayAmount');
-            let val = parseInt(input.value) || 0;
-            const max = Math.min(game.balance, getCreditRemaining());
-            val = Math.max(0, Math.min(max, val + delta));
+            let val = Math.max(0, Math.min(Math.min(game.balance, getCreditRemaining()), (parseInt(input.value) || 0) + delta));
             input.value = val;
             document.getElementById('repayBtn').disabled = val <= 0;
         }
-        function confirmRepay() {
-            const amount = parseInt(document.getElementById('repayAmount').value) || 0;
-            if (amount <= 0) return;
-            repayCredit(amount);
-        }
+        function confirmRepay() { const amount = parseInt(document.getElementById('repayAmount').value) || 0; if (amount > 0) repayCredit(amount); }
 
         // Крипто
-        function initCrypto() {
-            CRYPTO.forEach(c => { if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 }; });
-        }
-        function updateCryptoPrices() {
-            CRYPTO.forEach(c => { const change = (Math.random() - 0.48) * 0.05; c.price = Math.max(0.01, c.price * (1 + change)); });
-        }
+        function initCrypto() { CRYPTO.forEach(c => { if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 }; }); }
+        function updateCryptoPrices() { CRYPTO.forEach(c => { c.price = Math.max(0.01, c.price * (1 + (Math.random() - 0.48) * 0.05)); }); }
         function buyCrypto(id, amount) {
-            const crypto = CRYPTO.find(c => c.id === id);
-            if (!crypto) return;
-            const totalCost = crypto.price * amount * 1.005;
-            if (game.balance < totalCost) { showToast('❌ Не хватает денег!'); return; }
-            game.balance -= totalCost;
+            const c = CRYPTO.find(cr => cr.id === id);
+            if (!c || game.balance < c.price * amount * 1.005) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= c.price * amount * 1.005;
             game.crypto[id].amount = (game.crypto[id].amount || 0) + amount;
-            showToast(`✅ Куплено ${amount} ${crypto.symbol}`);
-            saveGame();
-            updateUI();
-            renderCryptoList();
+            showToast(`✅ Куплено ${amount} ${c.symbol}`);
+            saveGame(); updateUI(); renderCryptoList();
         }
         function sellCrypto(id, amount) {
-            const crypto = CRYPTO.find(c => c.id === id);
-            if (!crypto) return;
-            const current = game.crypto[id]?.amount || 0;
-            if (current < amount) { showToast('❌ Не хватает монет!'); return; }
-            const total = crypto.price * amount * 0.995;
-            game.balance += total;
+            const c = CRYPTO.find(cr => cr.id === id);
+            if (!c || (game.crypto[id]?.amount || 0) < amount) { showToast('❌ Не хватает монет!'); return; }
+            game.balance += c.price * amount * 0.995;
             game.crypto[id].amount -= amount;
-            showToast(`✅ Продано ${amount} ${crypto.symbol} за ${Math.round(total)}$`);
-            saveGame();
-            updateUI();
-            renderCryptoList();
+            showToast(`✅ Продано ${amount} ${c.symbol}`);
+            saveGame(); updateUI(); renderCryptoList();
         }
         function openCryptoExchange() { document.getElementById('cryptoModal').classList.add('active'); renderCryptoList(); }
         function closeCryptoModal() { document.getElementById('cryptoModal').classList.remove('active'); }
-
         let cryptoTab = 'main';
         function switchCryptoTab(tab) {
             cryptoTab = tab;
-            ['cryptoTabMain', 'cryptoTabExclusive', 'cryptoTabSell'].forEach(id => {
-                document.getElementById(id).style.background = 'rgba(255,255,255,0.05)';
-                document.getElementById(id).style.color = '#fff';
-            });
-            const activeBtn = document.getElementById(tab === 'main' ? 'cryptoTabMain' : tab === 'exclusive' ? 'cryptoTabExclusive' : 'cryptoTabSell');
-            activeBtn.style.background = 'var(--gold-gradient)';
-            activeBtn.style.color = '#1a1a2e';
+            ['cryptoTabMain','cryptoTabExclusive','cryptoTabSell'].forEach(id => { document.getElementById(id).style.background='rgba(255,255,255,0.05)'; document.getElementById(id).style.color='#fff'; });
+            const active = document.getElementById(tab==='main'?'cryptoTabMain':tab==='exclusive'?'cryptoTabExclusive':'cryptoTabSell');
+            active.style.background='var(--gold-gradient)'; active.style.color='#1a1a2e';
             renderCryptoList();
         }
         function renderCryptoList() {
@@ -2219,22 +2135,15 @@
             let items = CRYPTO;
             if (cryptoTab === 'sell') items = CRYPTO.filter(c => (game.crypto[c.id]?.amount || 0) > 0);
             items = items.filter(c => c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search));
-            if (items.length === 0) {
-                list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>';
-                return;
-            }
+            if (!items.length) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>'; return; }
             items.forEach(c => {
                 const amount = game.crypto[c.id]?.amount || 0;
                 const div = document.createElement('div');
                 div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border);';
                 div.innerHTML = `
-                    <img src="${c.icon}" alt="${c.name}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">
-                    <div style="flex:1;">
-                        <div style="font-weight:600;font-size:14px;">${c.name}</div>
-                        <div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount > 0 ? amount.toFixed(2) + ' шт.' : ''}</div>
-                    </div>
-                    ${cryptoTab === 'sell' && amount > 0 ? `<button class="btn-red" onclick="sellCrypto('${c.id}', 1)">Продать</button>` :
-                      cryptoTab !== 'sell' ? `<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}', 1)">Купить</button>` : ''}
+                    <img src="${c.icon}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">
+                    <div style="flex:1;"><div style="font-weight:600;font-size:14px;">${c.name}</div><div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount>0?amount.toFixed(2)+' шт.':''}</div></div>
+                    ${cryptoTab==='sell'&&amount>0?`<button class="btn-red" onclick="sellCrypto('${c.id}',1)">Продать</button>`:cryptoTab!=='sell'?`<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}',1)">Купить</button>`:''}
                 `;
                 list.appendChild(div);
             });
@@ -2267,18 +2176,15 @@
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 2500);
         }
-
         function saveGame() {
-            const data = {
+            localStorage.setItem('novaraCitySave', JSON.stringify({
                 balance: game.balance, coins: game.coins, crystals: game.crystals,
                 xp: game.xp, level: game.level, reputation: game.reputation,
                 resources: game.resources, buildings: game.buildings, credit: game.credit,
                 crypto: game.crypto, quests: game.quests, lastOnline: game.lastOnline,
                 earned: game.earned, builtCount: game.builtCount
-            };
-            localStorage.setItem('novaraCitySave', JSON.stringify(data));
+            }));
         }
-
         function loadGame() {
             const raw = localStorage.getItem('novaraCitySave');
             if (!raw) return false;
@@ -2295,12 +2201,12 @@
         // АВТОМАТИЧЕСКИЕ ЗАДАЧИ
         // ============================================================
         function autoGather() {
-            RESOURCES.forEach(r => { addResource(r.id, 0.1); });
+            RESOURCES.forEach(r => addResource(r.id, 0.1));
             const income = getTotalIncome() / 60;
             if (income > 0) { game.balance += income; game.earned += income; }
             updateQuests();
-            updateUI();
             checkDemolishCompletion();
+            updateUI();
         }
 
         // ============================================================
@@ -2308,12 +2214,11 @@
         // ============================================================
         function init() {
             const savedLang = localStorage.getItem('lang');
-            if (savedLang && LANG[savedLang]) { lang = savedLang; }
+            if (savedLang && LANG[savedLang]) lang = savedLang;
             else { document.getElementById('langModal').classList.add('active'); return; }
             currentLang = LANG[lang];
 
-            const loaded = loadGame();
-            if (!loaded) {
+            if (!loadGame()) {
                 RESOURCES.forEach(r => { game.resources[r.id] = 10; });
                 generateQuests();
                 initCrypto();
@@ -2321,12 +2226,11 @@
             } else {
                 const diff = (Date.now() - game.lastOnline) / 1000;
                 if (diff > 60) {
-                    const minutes = Math.min(diff / 60, 60);
-                    const income = getTotalIncome() / 60 * minutes;
+                    const income = getTotalIncome() / 60 * Math.min(diff / 60, 60);
                     if (income > 0) { game.balance += income; game.earned += income; showToast(`💰 Офлайн-доход: +${Math.round(income)}$`); }
                 }
                 game.lastOnline = Date.now();
-                if (!game.quests || game.quests.length === 0) generateQuests();
+                if (!game.quests || !game.quests.length) generateQuests();
                 initCrypto();
                 saveGame();
             }
