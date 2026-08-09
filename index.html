@@ -11,7 +11,6 @@
             --bg-secondary: #1a1f2f;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --gold: #ffd700;
             --gold-gradient: linear-gradient(135deg, #f7971e, #ffd200);
             --green: #00c853;
@@ -21,8 +20,6 @@
             --text-secondary: #b0b0b0;
             --radius: 20px;
             --transition: 0.3s ease;
-            --menu-bg-width: 1080;
-            --menu-bg-height: 1920;
         }
 
         * {
@@ -42,15 +39,6 @@
             position: relative;
             padding-bottom: 70px;
             touch-action: manipulation;
-        }
-
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            box-shadow: var(--glass-shadow);
         }
 
         .btn-gold {
@@ -178,188 +166,80 @@
             display: block;
         }
 
-        .screen::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .screen::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .screen::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        .lang-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .lang-modal.active {
-            display: flex;
-        }
-
-        .lang-modal .box {
-            background: linear-gradient(135deg, #00c853, #ffeb3b);
-            padding: 30px 24px;
-            border-radius: 24px;
-            max-width: 340px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-
-        .lang-modal .box h2 {
-            color: #1a1a2e;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .lang-modal .box .btn-lang {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            background: #fff;
-            color: #1a1a2e;
-        }
-
         /* === МЕНЮ === */
         #menu-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/menu.PNG') center/cover no-repeat;
-            background-size: cover;
-            background-position: center;
+            background: url('https://rruslan007.github.io/novara-city-images/effects/menu.png') center/cover no-repeat;
             padding: 0;
-            top: 0;
-            bottom: 64px;
             overflow: hidden !important;
-            position: relative;
         }
 
-        #menu-screen .overlay {
+        #menu-screen .districts-container {
             position: relative;
             width: 100%;
             height: 100%;
-            /* Используем соотношение сторон фона 1080:1920 = 9:16 */
-            max-width: 100%;
-            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 80px;
         }
 
-        /* Контейнер для кнопок районов с абсолютным позиционированием */
-        .districts-absolute-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Этот контейнер будет масштабироваться под размер экрана */
+        .districts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 15px 25px;
+            padding: 0 10px;
+            max-width: 400px;
         }
 
-        /* Обёртка для сохранения пропорций */
-        .districts-wrapper {
-            position: relative;
-            width: 100%;
-            /* padding-top: 177.78% = 1920/1080 * 100% */
-            padding-top: 177.78%;
-        }
-
-        .districts-inner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .district-btn-circle {
-            position: absolute;
+        .district-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(10, 14, 26, 0.85);
-            border: 3px solid var(--gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            width: 75px;
             cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            /* Размер круга: 90px на фоне 1080px = ~8.33% */
-            width: 8.33%;
-            /* padding-top для сохранения круга: высота = ширина */
-            padding-top: 0;
-            /* Используем aspect-ratio или зададим высоту через JS/CSS calc */
-            /* Вместо этого зададим фиксированный размер в vw */
-            width: 16vw;
-            height: 16vw;
-            max-width: 90px;
-            max-height: 90px;
-            min-width: 60px;
-            min-height: 60px;
-            transform: translate(-50%, -50%);
-            z-index: 5;
         }
 
-        .district-btn-circle:hover {
-            transform: translate(-50%, -50%) scale(1.08);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-        }
-
-        .district-btn-circle:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-
-        .district-btn-circle img {
-            width: 50%;
-            height: 50%;
+        .district-circle {
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
-            object-fit: cover;
-            background: #1a1f2f;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            animation: pulse 2s infinite ease-in-out;
         }
 
-        .district-btn-circle .dname {
-            font-size: clamp(8px, 1.4vw, 12px);
-            margin-top: 4px;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .district-name {
+            background: rgba(10, 14, 26, 0.9);
+            border: 1px solid var(--gold);
+            border-radius: 0 0 8px 8px;
+            padding: 2px 6px;
+            font-size: 9px;
             color: var(--gold);
-            font-weight: 700;
-            line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            font-weight: 600;
+            margin-top: -1px;
+            width: 65px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        /* Координаты для каждого района (в % от 1080x1920) */
-        .district-btn-circle.pos-1 { top: 21.88%; left: 37.04%; }  /* (400, 420) */
-        .district-btn-circle.pos-2 { top: 22.92%; left: 62.96%; }  /* (680, 440) */
-        .district-btn-circle.pos-3 { top: 29.17%; left: 37.96%; }  /* (410, 560) */
-        .district-btn-circle.pos-4 { top: 28.65%; left: 62.96%; }  /* (680, 550) */
-        .district-btn-circle.pos-5 { top: 36.46%; left: 37.04%; }  /* (400, 700) */
-        .district-btn-circle.pos-6 { top: 35.42%; left: 60.19%; }  /* (650, 680) */
-        .district-btn-circle.pos-7 { top: 42.71%; left: 35.19%; }  /* (380, 820) */
-        .district-btn-circle.pos-8 { top: 41.15%; left: 58.33%; }  /* (630, 790) */
-        .district-btn-circle.pos-9 { top: 47.92%; left: 55.56%; }  /* (600, 920) */
 
         .level-circle-wrapper {
             position: absolute;
-            bottom: 20px;
+            bottom: 70px;
             right: 20px;
-            width: 56px;
-            height: 56px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             z-index: 10;
         }
 
@@ -395,10 +275,17 @@
             pointer-events: none;
         }
 
+        .level-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
         /* === КАРТА === */
         #map-screen {
             padding: 0;
-            top: 0;
             overflow: hidden;
             background: #2d4a22;
             border: 1px solid rgba(255,255,255,0.1);
@@ -430,11 +317,6 @@
             font-size: 14px;
             padding: 6px 12px;
             cursor: pointer;
-        }
-
-        #map-screen .map-header .back-btn img {
-            width: 20px;
-            height: 20px;
         }
 
         #map-screen .map-header .district-title {
@@ -483,6 +365,7 @@
             left: 0;
             width: 100%;
         }
+
         .map-road-h::after {
             content: '';
             position: absolute;
@@ -492,6 +375,7 @@
             height: 10px;
             background: repeating-linear-gradient(90deg, #ffeb3b 0px, #ffeb3b 30px, transparent 30px, transparent 50px);
         }
+
         .map-road-v {
             position: absolute;
             width: 120px;
@@ -499,6 +383,7 @@
             top: 0;
             height: 100%;
         }
+
         .map-road-v::after {
             content: '';
             position: absolute;
@@ -517,17 +402,17 @@
             align-items: center;
             justify-content: center;
             z-index: 2;
-            transition: background 0.2s;
             cursor: pointer;
+            overflow: hidden;
         }
-        .map-plot:hover {
-            background: #6aac5a;
-        }
-        .map-plot.built {
-            background: #3a6a2a;
-        }
-        .map-plot.demolishing {
-            background: #2a4a1a;
+
+        .map-plot img.plot-building-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .map-btn-plus {
@@ -547,6 +432,7 @@
             transition: var(--transition);
             z-index: 3;
         }
+
         .map-btn-plus:hover {
             transform: scale(1.1);
         }
@@ -561,6 +447,7 @@
             flex-direction: column;
             gap: 4px;
         }
+
         .map-bottom-stats .compact-box {
             background: rgba(10, 14, 26, 0.7);
             backdrop-filter: blur(6px);
@@ -571,14 +458,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .map-bottom-stats .compact-box .lbl {
-            font-size: 10px;
-            color: var(--text-secondary);
-        }
-        .map-bottom-stats .compact-box .val {
-            font-size: 12px;
-            font-weight: 600;
-        }
+
         .map-bottom-stats .xp-bar {
             width: 100%;
             height: 4px;
@@ -587,6 +467,7 @@
             overflow: hidden;
             margin-top: 2px;
         }
+
         .map-bottom-stats .xp-bar .fill {
             height: 100%;
             background: var(--gold-gradient);
@@ -626,6 +507,7 @@
             animation: slideUp 0.3s ease;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         @keyframes slideUp {
@@ -683,14 +565,6 @@
             padding: 12px;
             border: 1px solid var(--glass-border);
             text-align: center;
-            position: relative;
-        }
-
-        .build-card .limit {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-bottom: 6px;
         }
 
         .build-card img {
@@ -707,31 +581,6 @@
             margin: 6px 0 4px;
         }
 
-        .build-card .price {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        .build-card .price img {
-            width: 14px;
-            height: 14px;
-        }
-
-        .build-card .btn-gold {
-            font-size: 12px;
-            padding: 6px 12px;
-            width: auto;
-        }
-        .build-card .btn-gold.building {
-            background: var(--blue);
-            color: #fff;
-            font-size: 11px;
-        }
-
         /* === ОКНО ИНФОРМАЦИИ О ЗДАНИИ === */
         .modal-box-info {
             background: var(--bg-secondary);
@@ -742,8 +591,9 @@
             max-height: 85vh;
             overflow-y: auto;
             border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             text-align: center;
+            position: relative;
         }
 
         .modal-box-info .close-btn {
@@ -771,10 +621,6 @@
             color: var(--text-secondary);
         }
 
-        .modal-box-info .info-row span {
-            color: var(--text-primary);
-        }
-
         .modal-box-info .built-date {
             font-size: 11px;
             color: var(--text-secondary);
@@ -782,106 +628,11 @@
             margin-top: 8px;
         }
 
-        .modal-box-info .btn-gold.demolish {
-            margin-top: 12px;
-        }
-
-        /* === ОКНО ПОДТВЕРЖДЕНИЯ СНОСА === */
-        .modal-confirm {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 600;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-confirm.active {
-            display: flex;
-        }
-
-        .confirm-box {
-            background: #1a3a6a;
-            border-radius: 16px;
-            max-width: 340px;
-            width: 100%;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
-
-        .confirm-box .confirm-header {
-            background: #1e447a;
-            padding: 14px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .confirm-box .confirm-body {
-            padding: 16px 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .confirm-box .confirm-body .cost {
-            font-size: 11px;
-            margin-top: 4px;
-            color: var(--text-secondary);
-        }
-
-        .confirm-box .confirm-actions {
-            display: flex;
-            gap: 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .confirm-box .confirm-actions button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .confirm-box .confirm-actions .btn-cancel {
-            background: #1e447a;
-            color: #fff;
-        }
-
-        .confirm-box .confirm-actions .btn-confirm {
-            background: var(--gold-gradient);
-            color: #1a1a2e;
-        }
-        .confirm-box .confirm-actions .btn-confirm:disabled {
-            background: #555;
-            color: #fff;
-            cursor: not-allowed;
-        }
-        .confirm-box .confirm-actions .btn-confirm:disabled + .error-text {
-            display: block;
-        }
-        .error-text {
-            display: none;
-            color: var(--red);
-            font-size: 10px;
-            text-align: center;
-            padding: 4px;
-        }
-
         /* === БАНК === */
         #bank-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.PNG') center/cover no-repeat;
+            background: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.png') center/cover no-repeat;
             padding: 16px;
-            top: 0;
-            padding-top: 100px;
+            padding-top: 60px;
         }
 
         #bank-screen .bank-accordion-wrapper {
@@ -898,7 +649,6 @@
             overflow: hidden;
             background: rgba(10, 14, 26, 0.7);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
         }
 
         .accordion .header {
@@ -907,11 +657,6 @@
             justify-content: space-between;
             padding: 14px 16px;
             cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .accordion .header:hover {
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .accordion .header .left {
@@ -920,22 +665,6 @@
             gap: 10px;
             font-weight: 600;
             font-size: 15px;
-        }
-
-        .accordion .header .left img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
-
-        .accordion .header .arrow {
-            font-size: 18px;
-            transition: var(--transition);
-            color: var(--text-secondary);
-        }
-
-        .accordion .header .arrow.open {
-            transform: rotate(180deg);
         }
 
         .accordion .body {
@@ -951,15 +680,6 @@
             overflow-y: auto;
         }
 
-        .accordion .body::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .accordion .body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
         .bank-row {
             display: flex;
             justify-content: space-between;
@@ -973,45 +693,62 @@
             align-items: center;
             gap: 6px;
         }
-        .bank-row .label img {
-            width: 16px;
-            height: 16px;
-        }
 
         /* === РЕСУРСЫ === */
+        #resources-screen {
+            background: url('https://rruslan007.github.io/novara-city-images/effects/res_fon.png') center/cover no-repeat;
+            padding: 16px;
+            padding-top: 60px;
+        }
+
         .resource-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
         .resource-card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 12px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             border: 1px solid var(--glass-border);
         }
 
         .resource-card img {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             object-fit: contain;
         }
 
         .resource-card .rname {
-            font-size: 12px;
+            font-size: 11px;
             margin: 4px 0;
             color: var(--text-secondary);
         }
 
         .resource-card .ramount {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--gold);
         }
 
         /* === КВЕСТЫ === */
+        #quests-screen {
+            background: url('https://rruslan007.github.io/novara-city-images/effects/quests.png') center/cover no-repeat;
+            padding: 16px;
+            padding-top: 60px;
+        }
+
+        .quest-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 12px 0 6px;
+        }
+
         .quest-item {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 12px;
@@ -1026,12 +763,12 @@
             align-items: center;
         }
 
-        .quest-item .qheader .qtitle {
+        .quest-item .qtitle {
             font-weight: 600;
             font-size: 14px;
         }
 
-        .quest-item .qheader .qreward {
+        .quest-item .qreward {
             color: var(--gold);
             font-size: 13px;
         }
@@ -1058,6 +795,12 @@
         }
 
         /* === ПРОФИЛЬ === */
+        #profile-screen {
+            background: url('https://rruslan007.github.io/novara-city-images/effects/profile_fon.png') center/cover no-repeat;
+            padding: 16px;
+            padding-top: 60px;
+        }
+
         .profile-avatar {
             width: 80px;
             height: 80px;
@@ -1075,6 +818,8 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
         .profile-stats .stat {
@@ -1095,29 +840,64 @@
             color: var(--gold);
         }
 
-        /* === МОДАЛКА === */
-        .modal-box {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 24px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            position: relative;
+        /* === ЯЗЫКОВАЯ МОДАЛКА === */
+        .lang-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .modal-box .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
+        .lang-modal.active {
+            display: flex;
+        }
+
+        .lang-modal .box {
+            background: linear-gradient(135deg, #00c853, #ffeb3b);
+            padding: 30px 24px;
+            border-radius: 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .lang-modal .box h2 {
+            color: #1a1a2e;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .lang-modal .box .btn-lang {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
             border: none;
-            color: var(--red);
-            font-size: 24px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+            background: #fff;
+            color: #1a1a2e;
+        }
+
+        .section-title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .text-gold { color: var(--gold); }
@@ -1125,10 +905,8 @@
         .text-red { color: var(--red); }
         .text-center { text-align: center; }
         .mt-8 { margin-top: 8px; }
-        .mb-8 { margin-bottom: 8px; }
         .mt-12 { margin-top: 12px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .gap-8 { gap: 8px; }
 
         @media (min-width: 480px) {
             .resource-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1145,7 +923,7 @@
     <!-- ===== ЯЗЫКОВАЯ МОДАЛКА ===== -->
     <div class="lang-modal" id="langModal">
         <div class="box">
-            <h2 id="langTitle">Choose Language / Выберите язык</h2>
+            <h2>Choose Language / Выберите язык</h2>
             <button class="btn-lang" onclick="setLang('en')">🇬🇧 English</button>
             <button class="btn-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
         </div>
@@ -1153,20 +931,15 @@
 
     <!-- ===== МЕНЮ ===== -->
     <div class="screen active" id="menu-screen">
-        <div class="overlay">
-            <div class="districts-wrapper">
-                <div class="districts-inner" id="districtsContainer">
-                    <!-- Кнопки районов генерируются скриптом -->
-                </div>
-            </div>
-            
-            <!-- Круг уровня -->
+        <div class="districts-container">
+            <div class="districts-grid" id="districtsGrid"></div>
             <div class="level-circle-wrapper">
                 <svg class="level-circle-svg" viewBox="0 0 56 56">
                     <circle class="level-circle-bg" cx="28" cy="28" r="22"></circle>
                     <circle class="level-circle-progress" id="levelProgressCircle" cx="28" cy="28" r="22" stroke-dasharray="138.23" stroke-dashoffset="0"></circle>
                 </svg>
                 <div class="level-circle-text" id="menuLevelCircleText">1</div>
+                <div class="level-label">Уровень</div>
             </div>
         </div>
     </div>
@@ -1174,19 +947,12 @@
     <!-- ===== КАРТА ===== -->
     <div class="screen" id="map-screen">
         <div class="map-header">
-            <button class="back-btn" onclick="showScreen('menu-screen')">
-                <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back" onerror="this.style.display='none'">
-                <span id="mapBack">←</span>
-            </button>
+            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
             <span class="district-title" id="mapTitle">Район</span>
         </div>
-        
         <div class="map-scroll-container" id="mapScrollContainer">
-            <div class="map-world" id="mapWorld">
-                <!-- Генерируется скриптом -->
-            </div>
+            <div class="map-world" id="mapWorld"></div>
         </div>
-
         <div class="map-bottom-stats" id="mapBottomStats">
             <div class="compact-box">
                 <span><span class="lbl">⭐ LVL </span><span class="val" id="mapLvlBottom">1</span></span>
@@ -1203,14 +969,14 @@
 
     <!-- ===== БАНК ===== -->
     <div class="screen" id="bank-screen">
+        <div class="section-title">БАНК</div>
         <div class="bank-accordion-wrapper">
             <div class="accordion">
                 <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_icon.png" alt="bank" onerror="this.textContent='🏦'"> <span id="bankMyBank">Мой банк</span></div>
+                    <div class="left">🏦 <span>Мой банк</span></div>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="body open">
-                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankMyBankTitle">Мой банк</div>
                     <div class="bank-row">
                         <div class="label"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;" onerror="this.textContent='💰'"> Баланс</div>
                         <span id="bankBalanceDisplay">1000</span>
@@ -1218,48 +984,49 @@
                     <div class="bank-row">
                         <span>💎 Кристаллы</span><span id="bankCrystalsDisplay">50</span>
                     </div>
-                    <div style="margin-top:12px;text-align:center;">
-                        <button class="btn-gold" id="bankReplenishBtn" onclick="showToast('💰 Пополнение в разработке')" style="width:auto;padding:6px 20px;">Пополнить</button>
-                    </div>
                 </div>
             </div>
 
             <div class="accordion">
                 <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/credit_icon.png" alt="credit" onerror="this.textContent='💳'"> <span id="bankCredit">Кредит</span></div>
+                    <div class="left">💳 <span>Кредит</span></div>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="body">
-                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankCreditTitle">Кредит</div>
                     <div id="creditInfo"><span style="color:var(--text-secondary);">Нет активных кредитов</span></div>
                     <div style="text-align:center;margin-top:12px;" id="creditBtnWrapper">
-                        <button class="btn-gold" id="bankTakeCredit" onclick="openCreditModal()" style="width:auto;padding:6px 20px;">Взять кредит</button>
+                        <button class="btn-gold" id="takeCreditBtn" onclick="openCreditModal()" style="width:auto;padding:6px 20px;">Взять кредит</button>
                     </div>
                 </div>
             </div>
 
             <div class="accordion">
                 <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/crypto_icon.png" alt="crypto" onerror="this.textContent='🪙'"> <span id="bankCrypto">Криптовалюта</span></div>
+                    <div class="left">🪙 <span>Криптовалюта</span></div>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="body">
                     <div id="cryptoPortfolio"><span style="color:var(--text-secondary);">У вас нет криптовалют</span></div>
                     <div style="text-align:center;margin-top:12px;">
-                        <button class="btn-gold" onclick="openCryptoExchange()" style="width:auto;padding:6px 20px;">🚀 Биржа</button>
+                        <button class="btn-gold" onclick="openCryptoModal()" style="width:auto;padding:6px 20px;">🚀 Биржа</button>
                     </div>
                 </div>
             </div>
 
             <div class="accordion">
                 <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/income_and_expence_icon.png" alt="stats" onerror="this.textContent='📊'"> <span id="bankStats">Доходы и расходы</span></div>
+                    <div class="left">📊 <span>Доходы и расходы</span></div>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="body">
-                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankStatsTitle">Доходы и расходы</div>
-                    <div class="bank-row"><span>📈 Доходы</span><span class="text-green" id="bankIncome">0</span></div>
-                    <div class="bank-row"><span>📉 Расходы</span><span class="text-red" id="bankExpense">0</span></div>
+                    <div class="bank-row">
+                        <span>📈 Доходы</span>
+                        <span class="text-green"><span id="bankIncome">0</span>/мин <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;height:14px;vertical-align:middle;"></span>
+                    </div>
+                    <div class="bank-row">
+                        <span>📉 Расходы</span>
+                        <span class="text-red"><span id="bankExpense">0</span>/мин <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;height:14px;vertical-align:middle;"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1267,16 +1034,22 @@
 
     <!-- ===== РЕСУРСЫ ===== -->
     <div class="screen" id="resources-screen">
+        <div class="section-title">РЕСУРСЫ</div>
         <div class="resource-grid" id="resourceGrid"></div>
     </div>
 
     <!-- ===== КВЕСТЫ ===== -->
     <div class="screen" id="quests-screen">
-        <div id="questsList"></div>
+        <div class="section-title">КВЕСТЫ</div>
+        <div class="quest-section-title">📋 Ежедневные квесты</div>
+        <div id="dailyQuests"></div>
+        <div class="quest-section-title">🌱 Квесты новичков</div>
+        <div id="beginnerQuests"></div>
     </div>
 
     <!-- ===== ПРОФИЛЬ ===== -->
     <div class="screen" id="profile-screen">
+        <div class="section-title">ПРОФИЛЬ</div>
         <div class="profile-avatar">👤</div>
         <div style="text-align:center;margin-bottom:12px;">
             <input type="text" id="playerName" placeholder="Ваше имя" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;padding:8px 14px;color:#fff;width:100%;max-width:250px;font-size:16px;text-align:center;">
@@ -1292,32 +1065,29 @@
         <div style="text-align:center;margin-top:12px;">
             <button class="btn-gold" onclick="openLangModal()" style="width:auto;padding:8px 24px;">🌐 Сменить язык</button>
         </div>
-        <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-secondary);">
-            <span id="profileTime">В игре: 0 мин</span>
-        </div>
     </div>
 
     <!-- ===== ФУТЕР ===== -->
     <div class="footer" id="footer">
         <button onclick="showScreen('bank-screen')" data-screen="bank-screen">
             <img src="https://rruslan007.github.io/novara-city-images/logo/bank_1.png" alt="Bank" onerror="this.textContent='💰'">
-            <span class="label" id="footerBank">Bank</span>
+            <span class="label">Bank</span>
         </button>
         <button onclick="showScreen('resources-screen')" data-screen="resources-screen">
             <img src="https://rruslan007.github.io/novara-city-images/logo/resources_icon.png" alt="Resources" onerror="this.textContent='📦'">
-            <span class="label" id="footerResources">Resources</span>
+            <span class="label">Res</span>
         </button>
         <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
             <img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png" alt="Home" onerror="this.textContent='🏠'">
-            <span class="label" id="footerHome">Home</span>
+            <span class="label">Home</span>
         </button>
         <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
             <img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png" alt="Quests" onerror="this.textContent='📋'">
-            <span class="label" id="footerQuests">Quests</span>
+            <span class="label">Quests</span>
         </button>
         <button onclick="showScreen('profile-screen')" data-screen="profile-screen">
             <img src="https://rruslan007.github.io/novara-city-images/logo/profile_icon.png" alt="Profile" onerror="this.textContent='👤'">
-            <span class="label" id="footerProfile">Profile</span>
+            <span class="label">Profile</span>
         </button>
     </div>
 
@@ -1325,99 +1095,41 @@
     <div class="modal-overlay" id="buildModal">
         <div class="modal-box-build" style="position:relative;">
             <button class="close-btn" onclick="closeBuildModal()">✕</button>
-            <h2 id="buildModalTitle">Строительство</h2>
+            <h2>Строительство</h2>
             <div class="build-grid" id="buildModalList"></div>
         </div>
     </div>
 
     <!-- ===== ОКНО ИНФОРМАЦИИ О ЗДАНИИ ===== -->
     <div class="modal-overlay" id="buildingInfoModal" style="align-items:center;">
-        <div class="modal-box-info" style="position:relative;">
+        <div class="modal-box-info">
             <button class="close-btn" onclick="closeBuildingInfo()">✕</button>
             <img id="infoBuildingImg" src="" alt="building">
             <h3 id="infoBuildingName" style="margin-bottom:8px;"></h3>
             <div class="info-row">⚡ Электричество: <span id="infoEnergy">0</span>/час</div>
             <div class="info-row">⭐ Репутация: <span id="infoReputation">0</span></div>
             <div class="built-date" id="infoBuiltDate"></div>
-            <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
-        </div>
-    </div>
-
-    <!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ СНОСА ===== -->
-    <div class="modal-confirm" id="demolishConfirm">
-        <div class="confirm-box">
-            <div class="confirm-header">⚠️ Снос здания</div>
-            <div class="confirm-body">
-                <p>Вы точно хотите снести данное здание?</p>
-                <p class="cost" id="demolishCostText">Стоимость сноса: 0 монет</p>
-            </div>
-            <div class="confirm-actions">
-                <button class="btn-cancel" onclick="closeDemolishConfirm()">Отмена</button>
-                <button class="btn-confirm" id="confirmDemolishBtn" onclick="confirmDemolish()">Подтвердить</button>
-            </div>
-            <div class="error-text" id="demolishError">Вам не хватает 0 монет</div>
+            <button class="btn-gold demolish" onclick="demolishBuilding()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
         </div>
     </div>
 
     <!-- ===== КРИПТО-БИРЖА ===== -->
     <div class="modal-overlay" id="cryptoModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
+        <div class="modal-box-info">
             <button class="close-btn" onclick="closeCryptoModal()">✕</button>
-            <h2 id="cryptoModalTitle" style="text-align:center;">📈 Биржа криптовалют</h2>
-            <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
-                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;" onclick="switchCryptoTab('main')" id="cryptoTabMain">Основные</button>
-                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('exclusive')" id="cryptoTabExclusive">Эксклюзив</button>
-                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('sell')" id="cryptoTabSell">Продажа</button>
-            </div>
-            <input type="text" id="cryptoSearch" placeholder="🔍 Поиск..." style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;margin-bottom:8px;">
-            <div id="cryptoList" style="max-height:300px;overflow-y:auto;"></div>
-        </div>
-    </div>
-
-    <!-- ===== КРЕДИТ ===== -->
-    <div class="modal-overlay" id="creditModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
-            <button class="close-btn" onclick="closeCreditModal()">✕</button>
-            <h2 id="creditModalTitle" style="text-align:center;">💰 Взять кредит</h2>
-            <div id="creditForm">
-                <div style="margin-bottom:8px;">
-                    <div class="flex-between"><span>Сумма: <span id="creditAmountDisplay">0</span></span></div>
-                    <input type="range" id="creditAmountSlider" min="0" max="1000" step="50" value="0" style="width:100%;">
+            <h3>📈 Криптобиржа</h3>
+            <div id="cryptoList" style="max-height:300px;overflow-y:auto;">
+                <div style="padding:8px;border-bottom:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;">
+                    <span>₿ Bitcoin</span>
+                    <span class="text-gold">$30,000</span>
+                    <button class="btn-gold" style="width:auto;padding:4px 8px;font-size:11px;">Купить</button>
                 </div>
-                <div style="margin-bottom:8px;">
-                    <div class="flex-between"><span>Срок: <span id="creditTermDisplay">7</span> дней</span></div>
-                    <input type="range" id="creditTermSlider" min="7" max="30" step="1" value="7" style="width:100%;">
+                <div style="padding:8px;border-bottom:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;">
+                    <span>Ξ Ethereum</span>
+                    <span class="text-gold">$2,000</span>
+                    <button class="btn-gold" style="width:auto;padding:4px 8px;font-size:11px;">Купить</button>
                 </div>
-                <div style="margin-bottom:8px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;font-size:13px;">
-                    <div class="flex-between"><span>Процентная ставка:</span><span class="text-red" id="creditRateDisplay">0%</span></div>
-                    <div class="flex-between"><span>Итоговая сумма к выплате:</span><span id="creditTotalPayDisplay">0</span></div>
-                    <div class="flex-between"><span>Ежемесячный платеж:</span><span id="creditMonthlyPayDisplay">0</span></div>
-                </div>
-                <button class="btn-gold" onclick="takeCredit()">Взять кредит</button>
             </div>
-            <div id="creditLock" style="display:none;text-align:center;padding:20px;">
-                <div style="font-size:48px;">🔒</div>
-                <div style="color:var(--text-secondary);">У вас уже есть активный кредит. Погасите его, чтобы взять новый.</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== ВЫПЛАТА КРЕДИТА ===== -->
-    <div class="modal-overlay" id="repayModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
-            <button class="close-btn" onclick="closeRepayModal()">✕</button>
-            <h2 id="repayTitle" style="text-align:center;">💳 Выплата</h2>
-            <div style="text-align:center;color:var(--text-secondary);font-size:14px;">Введите сумму для погашения</div>
-            <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
-                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(-10)">−</button>
-                <input type="number" id="repayAmount" value="0" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--gold);background:rgba(255,255,255,0.05);color:#fff;font-size:18px;font-weight:700;text-align:center;">
-                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(10)">+</button>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);">
-                <span>Баланс: <span id="repayBalance">0</span></span>
-                <span>Остаток: <span id="repayRemaining">0</span></span>
-            </div>
-            <button class="btn-gold mt-8" id="repayBtn" onclick="confirmRepay()" disabled>Выплатить</button>
         </div>
     </div>
 
@@ -1428,84 +1140,21 @@
         // ============================================================
         // ЛОКАЛИЗАЦИЯ
         // ============================================================
-        const LANG = {
-            en: {
-                appName: "Novara City", menu: "Menu", bank: "Bank", resources: "Resources", quests: "Quests", profile: "Profile",
-                back: "Back", level: "Level", exp: "XP", balance: "Balance", coins: "Coins", crystals: "Crystals",
-                myBank: "My Bank", money: "Money", replenish: "Replenish", credit: "Credit",
-                myCredit: "My Credit", noCredit: "No active credits", takeCredit: "Take Credit", crypto: "Cryptocurrency",
-                noCrypto: "You have no cryptocurrencies", exchange: "Exchange", stats: "Income & Expenses",
-                income: "Income", expense: "Expenses", changeLang: "Change language", inGame: "In game",
-                main: "Main", exclusive: "Exclusive", sell: "Sell", search: "Search...", buy: "Buy", sellBtn: "Sell",
-                close: "Close", ok: "OK", amount: "Amount", term: "Term", days: "days", percent: "Percent",
-                take: "Take", repay: "Repay", buildTitle: "Construction",
-                district1: "Suburb", district2: "Countryside", district3: "Residential", district4: "Midtown",
-                district5: "Commercial", district6: "Park", district7: "Transport Hub", district8: "Industrial",
-                district9: "Tech Park", district10: "Business Center", district11: "Premium Village"
-            },
-            ru: {
-                appName: "Novara City", menu: "Меню", bank: "Банк", resources: "Ресурсы", quests: "Квесты", profile: "Профиль",
-                back: "Назад", level: "Уровень", exp: "Опыт", balance: "Баланс", coins: "Монеты", crystals: "Кристаллы",
-                myBank: "Мой банк", money: "Деньги", replenish: "Пополнение",
-                credit: "Кредит", myCredit: "Мой кредит", noCredit: "Нет активных кредитов", takeCredit: "Взять кредит",
-                crypto: "Криптовалюта", noCrypto: "У вас нет криптовалют", exchange: "Биржа",
-                stats: "Доходы и расходы", income: "Доходы", expense: "Расходы",
-                changeLang: "Сменить язык", inGame: "В игре",
-                main: "Основные", exclusive: "Эксклюзив", sell: "Продажа", search: "Поиск...", buy: "Купить",
-                sellBtn: "Продать", close: "Закрыть", ok: "ОК", amount: "Сумма", term: "Срок", days: "дней",
-                percent: "Процент", take: "Взять", repay: "Выплатить",
-                district1: "Обычный посёлок", district2: "Пригород", district3: "Жилой район",
-                district4: "Средний посёлок", district5: "Торговый район", district6: "Парк",
-                district7: "Транспортный хаб", district8: "Промышленная зона", district9: "Технопарк",
-                district10: "Деловой центр", district11: "Премиальный посёлок", buildTitle: "Строительство"
-            }
-        };
-
         let lang = 'ru';
-        let currentLang = {};
 
         function setLang(l) {
             lang = l;
-            currentLang = LANG[lang];
             localStorage.setItem('lang', lang);
             document.getElementById('langModal').classList.remove('active');
-            updateUI();
-            showToast('🌐 Language changed');
+            showToast('🌐 Язык изменён');
+        }
+
+        function openLangModal() {
+            document.getElementById('langModal').classList.add('active');
         }
 
         function t(key) {
-            return currentLang[key] || key;
-        }
-
-        function updateUI() {
-            document.getElementById('mapBack').textContent = t('back');
-            document.getElementById('footerBank').textContent = t('bank');
-            document.getElementById('footerResources').textContent = t('resources');
-            document.getElementById('footerHome').textContent = t('menu');
-            document.getElementById('footerQuests').textContent = t('quests');
-            document.getElementById('footerProfile').textContent = t('profile');
-            document.getElementById('bankMyBank').textContent = t('myBank');
-            document.getElementById('bankMyBankTitle').textContent = t('myBank');
-            document.getElementById('bankReplenishBtn').textContent = t('replenish');
-            document.getElementById('bankCredit').textContent = t('credit');
-            document.getElementById('bankCreditTitle').textContent = t('credit');
-            document.getElementById('bankTakeCredit').textContent = t('takeCredit');
-            document.getElementById('bankCrypto').textContent = t('crypto');
-            document.getElementById('bankStats').textContent = t('stats');
-            document.getElementById('bankStatsTitle').textContent = t('stats');
-            document.getElementById('cryptoModalTitle').textContent = '📈 ' + t('exchange');
-            document.getElementById('cryptoTabMain').textContent = t('main');
-            document.getElementById('cryptoTabExclusive').textContent = t('exclusive');
-            document.getElementById('cryptoTabSell').textContent = t('sell');
-            document.getElementById('cryptoSearch').placeholder = t('search');
-            document.getElementById('creditModalTitle').textContent = '💰 ' + t('takeCredit');
-            document.getElementById('repayTitle').textContent = '💳 ' + t('repay');
-            document.getElementById('buildModalTitle').textContent = t('buildTitle');
-            renderDistrictsCircle();
-            renderResources();
-            renderQuests();
-            updateProfileUI();
-            updateBankUI();
+            return key;
         }
 
         // ============================================================
@@ -1514,29 +1163,16 @@
         const BASE_URL = 'https://rruslan007.github.io/novara-city-images/';
         const MONETA_ICON = BASE_URL + 'effects/moneta.PNG';
 
-        // Координаты центров кругов (в % от 1080x1920)
-        const DISTRICT_POSITIONS = [
-            { x: 37.04, y: 21.88 },  // 1. (400, 420)
-            { x: 62.96, y: 22.92 },  // 2. (680, 440)
-            { x: 37.96, y: 29.17 },  // 3. (410, 560)
-            { x: 62.96, y: 28.65 },  // 4. (680, 550)
-            { x: 37.04, y: 36.46 },  // 5. (400, 700)
-            { x: 60.19, y: 35.42 },  // 6. (650, 680)
-            { x: 35.19, y: 42.71 },  // 7. (380, 820)
-            { x: 58.33, y: 41.15 },  // 8. (630, 790)
-            { x: 55.56, y: 47.92 }   // 9. (600, 920)
-        ];
-
         const DISTRICTS = [
-            { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', key: 'district1' },
-            { id: 'countryside', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district2' },
-            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3' },
-            { id: 'midtown', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district4' },
-            { id: 'commercial', icon: BASE_URL + 'districts/torgovii_raion.png', key: 'district5' },
-            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6' },
-            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7' },
-            { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', key: 'district8' },
-            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', key: 'district9' }
+            { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', name: 'Пригород' },
+            { id: 'countryside', icon: BASE_URL + 'districts/malii_poselok.png', name: 'Посёлок' },
+            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', name: 'Жилой' },
+            { id: 'midtown', icon: BASE_URL + 'districts/elita_poselok.png', name: 'Элитный' },
+            { id: 'commercial', icon: BASE_URL + 'districts/torgovii_raion.png', name: 'Торговый' },
+            { id: 'park', icon: BASE_URL + 'districts/park.png', name: 'Парк' },
+            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', name: 'Портовый' },
+            { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', name: 'Промзона' },
+            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', name: 'Офисный' }
         ];
 
         const RESOURCES = [
@@ -1549,70 +1185,17 @@
         ];
 
         const BUILDINGS = [
-            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown', 'premium'] },
-            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'business'] },
-            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, maxCount: 10, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'business', 'residential', 'park'] },
-            { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, maxCount: 12, demolishCost: 40, energyUse: 1, allowedDistricts: ['industrial', 'countryside', 'residential'] },
-            { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, resources: { energy: 10 }, income: 10, xp: 4, time: 10, reputation: 5, maxCount: 5, demolishCost: 120, energyUse: 5, allowedDistricts: ['industrial', 'transport', 'suburb'] },
-            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 4, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
-            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrten.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, maxCount: 5, demolishCost: 150, energyUse: 3, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
-            { id: 'pharmacy', name: 'Аптека', icon: BASE_URL + 'buildings_en/pharmacy.jpg', cost: 300, resources: { wood: 5 }, income: 7, xp: 3, time: 7, reputation: 5, maxCount: 6, demolishCost: 70, energyUse: 2, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, maxCount: 4, demolishCost: 250, energyUse: 6, allowedDistricts: ['commercial', 'business', 'midtown'] },
-            { id: 'library', name: 'Библиотека', icon: BASE_URL + 'buildings_en/library.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 7, maxCount: 5, demolishCost: 100, energyUse: 2, allowedDistricts: ['midtown', 'residential', 'techpark'] },
-            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 2, demolishCost: 400, energyUse: 8, allowedDistricts: ['midtown', 'business', 'premium'] },
-            { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18, reputation: 8, maxCount: 6, demolishCost: 300, energyUse: 5, allowedDistricts: ['residential', 'midtown', 'suburb'] },
-            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, maxCount: 8, demolishCost: 180, energyUse: 5, allowedDistricts: ['business', 'techpark', 'commercial'] },
-            { id: 'gym', name: 'Спортзал', icon: BASE_URL + 'buildings_en/gym.jpg', cost: 400, resources: { wood: 10, energy: 5 }, income: 10, xp: 4, time: 10, reputation: 6, maxCount: 6, demolishCost: 120, energyUse: 3, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, maxCount: 6, demolishCost: 150, energyUse: 4, allowedDistricts: ['commercial', 'business', 'midtown', 'park'] },
-            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['commercial', 'business'] },
-            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 6, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, maxCount: 4, demolishCost: 350, energyUse: 8, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['business', 'techpark'] },
-            { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 20, maxCount: 2, demolishCost: 450, energyUse: 10, allowedDistricts: ['park', 'residential', 'midtown'] },
-            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, maxCount: 3, demolishCost: 500, energyUse: 20, allowedDistricts: ['industrial', 'transport'] },
-            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['commercial', 'business'] },
-            { id: 'university', name: 'Университет', icon: BASE_URL + 'buildings_en/university.jpg', cost: 1500, resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45, reputation: 30, maxCount: 2, demolishCost: 800, energyUse: 20, allowedDistricts: ['techpark', 'midtown'] },
-            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, maxCount: 1, demolishCost: 1000, energyUse: 30, allowedDistricts: ['park', 'business'] },
-            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, maxCount: 8, demolishCost: 200, energyUse: 3, allowedDistricts: ['premium', 'residential'] },
-            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, maxCount: 3, demolishCost: 120, energyUse: 2, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 7, allowedDistricts: ['premium', 'business'] },
-            { id: 'bike_station', name: 'Велостанция', icon: BASE_URL + 'buildings_en/bike_station.jpg', cost: 200, resources: { wood: 5 }, income: 4, xp: 2, time: 5, reputation: 3, maxCount: 10, demolishCost: 30, energyUse: 1, allowedDistricts: ['park', 'residential', 'transport'] },
-            { id: 'clothing_store', name: 'Магазин одежды', icon: BASE_URL + 'buildings_en/clothing_store.jpg', cost: 300, resources: { wood: 6, food: 3 }, income: 7, xp: 3, time: 7, reputation: 4, maxCount: 8, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown'] },
-            { id: 'high_school', name: 'Гимназия', icon: BASE_URL + 'buildings_en/high_school.jpg', cost: 550, resources: { wood: 15, energy: 8 }, income: 14, xp: 6, time: 14, reputation: 12, maxCount: 3, demolishCost: 220, energyUse: 5, allowedDistricts: ['residential', 'premium'] },
-            { id: 'museum', name: 'Музей', icon: BASE_URL + 'buildings_en/museum.jpg', cost: 500, resources: { wood: 12, energy: 8 }, income: 12, xp: 5, time: 12, reputation: 15, maxCount: 2, demolishCost: 200, energyUse: 4, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'market', name: 'Рынок', icon: BASE_URL + 'buildings_en/market.jpg', cost: 400, resources: { wood: 10, food: 10 }, income: 10, xp: 4, time: 10, reputation: 7, maxCount: 5, demolishCost: 100, energyUse: 3, allowedDistricts: ['commercial', 'countryside'] },
-            { id: 'club', name: 'Клуб', icon: BASE_URL + 'buildings_en/club.jpg', cost: 350, resources: { wood: 8, energy: 5 }, income: 8, xp: 3, time: 8, reputation: 6, maxCount: 5, demolishCost: 80, energyUse: 3, allowedDistricts: ['midtown', 'business'] },
-            { id: 'tech_park', name: 'Технопарк', icon: BASE_URL + 'buildings_en/tech_park.jpg', cost: 1000, resources: { wood: 20, energy: 25 }, income: 28, xp: 11, time: 28, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 15, allowedDistricts: ['techpark'] },
-            { id: 'medical_center', name: 'Медицинский центр', icon: BASE_URL + 'buildings_en/medical_center.jpg', cost: 900, resources: { wood: 20, energy: 15, food: 10 }, income: 24, xp: 10, time: 24, reputation: 18, maxCount: 3, demolishCost: 400, energyUse: 10, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'incubator', name: 'Бизнес-инкубатор', icon: BASE_URL + 'buildings_en/business_incubator.jpg', cost: 600, resources: { wood: 15, energy: 15 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 8, allowedDistricts: ['techpark', 'business'] },
-            { id: 'water_park', name: 'Аквапарк', icon: BASE_URL + 'buildings_en/water_park.jpg', cost: 1000, resources: { wood: 25, energy: 20, food: 15 }, income: 28, xp: 11, time: 28, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['park', 'premium'] },
-            { id: 'expo', name: 'Выставочный павильон', icon: BASE_URL + 'buildings_en/exhibition_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 6, allowedDistricts: ['business', 'techpark'] },
-            { id: 'eco_hotel', name: 'Эко-отель', icon: BASE_URL + 'buildings_en/eco_hotel.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 22, xp: 9, time: 22, reputation: 18, maxCount: 3, demolishCost: 350, energyUse: 6, allowedDistricts: ['premium', 'park'] },
-            { id: 'botanical', name: 'Ботанический сад', icon: BASE_URL + 'buildings_en/botanical_garden.jpg', cost: 400, resources: { wood: 10, food: 15 }, income: 10, xp: 4, time: 10, reputation: 12, maxCount: 3, demolishCost: 150, energyUse: 3, allowedDistricts: ['park', 'suburb'] },
-            { id: 'sports_complex', name: 'Спорткомплекс', icon: BASE_URL + 'buildings_en/sports_complex.jpg', cost: 800, resources: { wood: 20, energy: 15 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 350, energyUse: 8, allowedDistricts: ['residential', 'park'] },
-            { id: 'concert_hall', name: 'Концертный зал', icon: BASE_URL + 'buildings_en/concert_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 18, maxCount: 2, demolishCost: 300, energyUse: 8, allowedDistricts: ['midtown', 'business'] },
-            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: BASE_URL + 'buildings_en/vertical_farm.jpg', cost: 500, resources: { wood: 12, energy: 10, food: 20 }, income: 14, xp: 6, time: 14, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 8, allowedDistricts: ['industrial', 'techpark'] },
-            { id: 'logistics', name: 'Логистический центр', icon: BASE_URL + 'buildings_en/logistics_center.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 12, maxCount: 3, demolishCost: 400, energyUse: 12, allowedDistricts: ['transport', 'industrial'] },
-            { id: 'rd_center', name: 'НИИ центр', icon: BASE_URL + 'buildings_en/R&D_center.jpg', cost: 1200, resources: { wood: 30, energy: 30 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 20, allowedDistricts: ['techpark'] },
-            { id: 'megamall', name: 'Крупный ТРЦ', icon: BASE_URL + 'buildings_en/megamall.jpg', cost: 2000, resources: { wood: 40, energy: 30, food: 20 }, income: 50, xp: 20, time: 40, reputation: 30, maxCount: 1, demolishCost: 1000, energyUse: 25, allowedDistricts: ['commercial', 'business'] },
-            { id: 'skyscraper', name: 'Высотный офис', icon: BASE_URL + 'buildings_en/skyscraper_office.jpg', cost: 2500, resources: { wood: 45, energy: 35, food: 15 }, income: 60, xp: 22, time: 45, reputation: 35, maxCount: 2, demolishCost: 1200, energyUse: 25, allowedDistricts: ['business'] },
-            { id: 'industrial_zone', name: 'Промышленная зона', icon: BASE_URL + 'buildings_en/industrial_zone.jpg', cost: 3000, resources: { wood: 50, energy: 40, food: 30 }, income: 70, xp: 25, time: 50, reputation: 25, maxCount: 1, demolishCost: 1500, energyUse: 30, allowedDistricts: ['industrial'] }
-        ];
-
-        const CRYPTO = [
-            { id: 'btc', name: 'Bitcoin', symbol: 'BTC', icon: BASE_URL + 'crypto/bitcoin.png', price: 30000, amount: 0 },
-            { id: 'eth', name: 'Ethereum', symbol: 'ETH', icon: BASE_URL + 'crypto/ethereum.png', price: 2000, amount: 0 },
-            { id: 'usdt', name: 'Tether', symbol: 'USDT', icon: BASE_URL + 'crypto/tether.png', price: 1, amount: 0 },
-            { id: 'bnb', name: 'BNB', symbol: 'BNB', icon: BASE_URL + 'crypto/BNB.png', price: 300, amount: 0 },
-            { id: 'xrp', name: 'Ripple', symbol: 'XRP', icon: BASE_URL + 'crypto/ripple.png', price: 0.5, amount: 0 },
-            { id: 'sol', name: 'Solana', symbol: 'SOL', icon: BASE_URL + 'crypto/solara.png', price: 100, amount: 0 },
-            { id: 'not', name: 'NotCoin', symbol: 'NOT', icon: BASE_URL + 'crypto/not.png', price: 0.01, amount: 0 },
-            { id: 'dogs', name: 'Dogs', symbol: 'DOGS', icon: BASE_URL + 'crypto/dogs.png', price: 0.001, amount: 0 },
-            { id: 'cati', name: 'Catizen', symbol: 'CATI', icon: BASE_URL + 'crypto/cati.png', price: 0.5, amount: 0 },
-            { id: 'hmstr', name: 'Hamster Kombat', symbol: 'HMSTR', icon: BASE_URL + 'crypto/hmstr.png', price: 0.1, amount: 0 },
-            { id: 'ton', name: 'TONCoin', symbol: 'TON', icon: BASE_URL + 'crypto/ton.png', price: 5, amount: 0 },
-            { id: 'memefi', name: 'MemeFi', symbol: 'MEMEFI', icon: BASE_URL + 'crypto/MemFi.png', price: 0.05, amount: 0 },
-            { id: 'pixfi', name: 'PixelTap', symbol: 'PIXFI', icon: BASE_URL + 'crypto/pixeltap.png', price: 0.1, amount: 0 }
+            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, income: 5, xp: 2, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown'] },
+            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, income: 8, xp: 3, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, income: 6, xp: 2, reputation: 3, maxCount: 10, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'residential', 'park'] },
+            { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, income: 10, xp: 4, reputation: 5, maxCount: 5, demolishCost: 120, energyUse: 5, allowedDistricts: ['industrial', 'transport', 'suburb'] },
+            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, income: 12, xp: 5, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 4, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, income: 15, xp: 6, reputation: 10, maxCount: 4, demolishCost: 250, energyUse: 6, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, income: 20, xp: 8, reputation: 15, maxCount: 2, demolishCost: 400, energyUse: 8, allowedDistricts: ['midtown'] },
+            { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, income: 18, xp: 7, reputation: 8, maxCount: 6, demolishCost: 300, energyUse: 5, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, income: 14, xp: 5, reputation: 8, maxCount: 8, demolishCost: 180, energyUse: 5, allowedDistricts: ['techpark', 'commercial'] },
+            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, income: 28, xp: 11, reputation: 10, maxCount: 3, demolishCost: 500, energyUse: 20, allowedDistricts: ['industrial', 'transport'] },
+            { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, income: 25, xp: 10, reputation: 20, maxCount: 2, demolishCost: 450, energyUse: 10, allowedDistricts: ['park', 'residential'] }
         ];
 
         // ============================================================
@@ -1672,18 +1255,6 @@
             game.resources[id] = Math.min((game.resources[id] || 0) + amount, max);
             saveGame(); renderResources(); updateUI();
         }
-        function spendResource(id, amount) {
-            if ((game.resources[id] || 0) < amount) return false;
-            game.resources[id] -= amount;
-            saveGame(); renderResources(); updateUI();
-            return true;
-        }
-        function canAfford(resources) {
-            for (let [id, amount] of Object.entries(resources)) {
-                if ((game.resources[id] || 0) < amount) return false;
-            }
-            return true;
-        }
         function getTotalIncome() {
             let income = 0;
             for (let b of game.buildings) {
@@ -1694,25 +1265,19 @@
         }
 
         // ============================================================
-        // ОТРИСОВКА МЕНЮ (АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ)
+        // ОТРИСОВКА МЕНЮ
         // ============================================================
-        function renderDistrictsCircle() {
-            const container = document.getElementById('districtsContainer');
-            container.innerHTML = '';
-            
-            DISTRICTS.forEach((d, index) => {
-                if (index >= DISTRICT_POSITIONS.length) return;
-                const pos = DISTRICT_POSITIONS[index];
-                const btn = document.createElement('div');
-                btn.className = 'district-btn-circle';
-                btn.style.left = pos.x + '%';
-                btn.style.top = pos.y + '%';
-                btn.innerHTML = `
-                    <img src="${d.icon}" alt="${t(d.key)}" onerror="this.style.display='none'">
-                    <span class="dname">${t(d.key)}</span>
+        function renderDistricts() {
+            const grid = document.getElementById('districtsGrid');
+            grid.innerHTML = '';
+            DISTRICTS.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'district-item';
+                item.innerHTML = `
+                    <div class="district-circle" style="background-image:url(${d.icon})" onclick="openMap('${d.id}','${d.name}')"></div>
+                    <div class="district-name">${d.name}</div>
                 `;
-                btn.onclick = () => openMap(d.id, t(d.key));
-                container.appendChild(btn);
+                grid.appendChild(item);
             });
         }
 
@@ -1747,7 +1312,7 @@
             world.innerHTML = '';
             const worldSize = 3000;
             const roadWidth = 120;
-            const plotSize = 280;
+            const plotSize = 300;
 
             for (let x = 0; x <= worldSize; x += plotSize + roadWidth) {
                 const hRoad = document.createElement('div');
@@ -1771,6 +1336,7 @@
                     plot.style.top = y + 'px';
                     plot.style.width = plotSize + 'px';
                     plot.style.height = plotSize + 'px';
+
                     const plotId = `plot_${plotCounter}`;
                     plot.dataset.plotId = plotId;
 
@@ -1778,7 +1344,6 @@
 
                     if (existingBuilding) {
                         if (existingBuilding.status === 'demolishing') {
-                            plot.classList.add('demolishing');
                             const remaining = Math.max(0, existingBuilding.demolishStart + existingBuilding.demolishTime - Date.now());
                             const sec = Math.ceil(remaining / 1000);
                             plot.innerHTML = `<div style="text-align:center;color:#fff;font-size:12px;">
@@ -1786,17 +1351,27 @@
                                 <div style="color:var(--red);font-size:10px;margin-top:4px;">Решение властей:<br>снос здания</div>
                             </div>`;
                         } else {
-                            plot.classList.add('built');
-                            plot.innerHTML = `<div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">🏢</div>`;
+                            const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
+                            if (bData) {
+                                const img = document.createElement('img');
+                                img.className = 'plot-building-img';
+                                img.src = bData.icon;
+                                img.onerror = () => { img.style.display = 'none'; plot.innerHTML = '<div style="font-size:36px;">🏢</div>'; };
+                                plot.appendChild(img);
+                            }
                             plot.onclick = () => openBuildingInfo(existingBuilding);
                         }
                     } else {
                         const btn = document.createElement('div');
                         btn.className = 'map-btn-plus';
                         btn.textContent = '+';
-                        btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, plotId); };
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            openBuildModal(districtId, plotId);
+                        };
                         plot.appendChild(btn);
                     }
+
                     world.appendChild(plot);
                     plotCounter++;
                 }
@@ -1823,51 +1398,71 @@
             document.getElementById('buildModal').classList.add('active');
             renderBuildModalList(districtId);
         }
+
         function closeBuildModal() {
             document.getElementById('buildModal').classList.remove('active');
             currentDistrictId = null;
             currentPlotId = null;
         }
+
         function renderBuildModalList(districtId) {
             const container = document.getElementById('buildModalList');
             container.innerHTML = '';
             const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
             if (availableBuildings.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока ничего нельзя построить.</div>';
                 return;
             }
             availableBuildings.forEach(b => {
                 const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
                 const maxCount = b.maxCount || 999;
                 const canBuildMore = builtCount < maxCount;
-                const hasResources = canAfford(b.resources) && game.balance >= b.cost;
+                const hasResources = game.balance >= b.cost;
+
                 const card = document.createElement('div');
                 card.className = 'build-card';
                 card.innerHTML = `
-                    <div class="limit">Доступно: ${builtCount}/${maxCount}</div>
+                    <div style="font-size:10px;color:var(--text-secondary);">Доступно: ${builtCount}/${maxCount}</div>
                     <img src="${b.icon}" alt="${b.name}" onerror="this.textContent='🏢'">
                     <div class="bname">${b.name}</div>
-                    <div class="price"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
+                    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">
+                        <img src="${MONETA_ICON}" style="width:14px;height:14px;vertical-align:middle;" onerror="this.textContent='💰'"> ${b.cost}
+                    </div>
                     <button class="btn-gold" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
-                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
+                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Деньги') : '⛔ Лимит'}
                     </button>
                 `;
                 container.appendChild(card);
             });
         }
+
         function buildOnPlot(buildingId) {
             const building = BUILDINGS.find(b => b.id === buildingId);
             if (!building || !currentDistrictId || currentPlotId === null) return;
+
             const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
-            if (builtCount >= building.maxCount) { showToast('❌ Достигнут лимит таких зданий в городе!'); return; }
-            if (!canAfford(building.resources)) { showToast('❌ Не хватает ресурсов!'); return; }
-            if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
+            if (builtCount >= building.maxCount) {
+                showToast('❌ Достигнут лимит таких зданий в городе!');
+                return;
+            }
+            if (game.balance < building.cost) {
+                showToast('❌ Не хватает денег!');
+                return;
+            }
+
             game.balance -= building.cost;
-            for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
-            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
+            game.buildings.push({
+                id: building.id,
+                level: 1,
+                builtAt: Date.now(),
+                plotId: currentPlotId,
+                districtId: currentDistrictId,
+                status: 'built'
+            });
             game.builtCount++;
             addXp(building.xp);
             addReputation(building.reputation);
+
             showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
             saveGame();
             closeBuildModal();
@@ -1889,33 +1484,34 @@
             demolishTarget = building;
             document.getElementById('buildingInfoModal').classList.add('active');
         }
-        function closeBuildingInfo() { document.getElementById('buildingInfoModal').classList.remove('active'); demolishTarget = null; }
-        function openDemolishConfirm() {
+
+        function closeBuildingInfo() {
+            document.getElementById('buildingInfoModal').classList.remove('active');
+            demolishTarget = null;
+        }
+
+        function demolishBuilding() {
             if (!demolishTarget) return;
             const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
             if (!bData) return;
-            document.getElementById('demolishCostText').textContent = `Стоимость сноса: ${bData.demolishCost} монет`;
-            document.getElementById('confirmDemolishBtn').disabled = game.balance < bData.demolishCost;
-            document.getElementById('demolishError').textContent = `Вам не хватает ${bData.demolishCost - game.balance} монет`;
-            document.getElementById('demolishError').style.display = game.balance < bData.demolishCost ? 'block' : 'none';
-            document.getElementById('demolishConfirm').classList.add('active');
-        }
-        function closeDemolishConfirm() { document.getElementById('demolishConfirm').classList.remove('active'); }
-        function confirmDemolish() {
-            if (!demolishTarget) return;
-            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
-            if (!bData || game.balance < bData.demolishCost) return;
+
+            if (game.balance < bData.demolishCost) {
+                showToast(`❌ Не хватает ${bData.demolishCost - game.balance} монет для сноса!`);
+                return;
+            }
+
             game.balance -= bData.demolishCost;
             demolishTarget.status = 'demolishing';
             demolishTarget.demolishStart = Date.now();
             demolishTarget.demolishTime = (bData.demolishCost / 10) * 1000;
+
             showToast(`🏗️ Снос начат! Здание исчезнет через ${Math.round(demolishTarget.demolishTime / 1000)} сек.`);
             saveGame();
-            closeDemolishConfirm();
             closeBuildingInfo();
             renderMap(demolishTarget.districtId);
             updateUI();
         }
+
         function checkDemolishCompletion() {
             const now = Date.now();
             let changed = false;
@@ -1927,7 +1523,10 @@
                 }
                 return true;
             });
-            if (changed) { saveGame(); if (currentDistrictId) renderMap(currentDistrictId); }
+            if (changed) {
+                saveGame();
+                if (currentDistrictId) renderMap(currentDistrictId);
+            }
         }
 
         // ============================================================
@@ -1944,29 +1543,28 @@
                     <img src="${r.icon}" alt="${r.name}" onerror="this.textContent='🛢️'">
                     <div class="rname">${r.name}</div>
                     <div class="ramount">${Math.round(amount)}</div>
-                    <button class="btn-green" onclick="mineResource('${r.id}')">⛏️ Добыть</button>
                 `;
                 grid.appendChild(card);
             });
         }
-        function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
+
         function generateQuests() {
-            const quests = [
-                { id: 'build3', title: 'Построй 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30 },
-                { id: 'earn500', title: 'Заработай 500$', target: 500, progress: 0, rewardXp: 40, rewardCoins: 20 },
-                { id: 'collect100', title: 'Собери 100 древесины', target: 100, progress: 0, rewardXp: 35, rewardCoins: 25, res: 'wood' },
-                { id: 'level2', title: 'Достигни 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 40 }
+            game.quests = [
+                { id: 'daily1', title: 'Построй 2 здания', target: 2, progress: 0, rewardXp: 30, rewardCoins: 20, type: 'daily' },
+                { id: 'daily2', title: 'Заработай 300 монет', target: 300, progress: 0, rewardXp: 25, rewardCoins: 15, type: 'daily' },
+                { id: 'beginner1', title: 'Построй первое здание', target: 1, progress: 0, rewardXp: 50, rewardCoins: 40, type: 'beginner' },
+                { id: 'beginner2', title: 'Достигни 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 50, type: 'beginner' }
             ];
-            game.quests = quests.map(q => ({ ...q, progress: 0, completed: false }));
-            saveGame(); renderQuests();
+            saveGame();
+            renderQuests();
         }
+
         function updateQuests() {
             game.quests.forEach(q => {
                 if (q.completed) return;
-                if (q.id === 'build3') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
-                if (q.id === 'level2' && game.level >= 2) q.progress = q.target;
-                if (q.id === 'earn500') q.progress = Math.min(game.earned, q.target);
-                if (q.id === 'collect100' && q.res) q.progress = Math.min(getResourceAmount(q.res), q.target);
+                if (q.id === 'daily1' || q.id === 'beginner1') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
+                if (q.id === 'daily2') q.progress = Math.min(game.earned, q.target);
+                if (q.id === 'beginner2' && game.level >= 2) q.progress = q.target;
                 if (q.progress >= q.target && !q.completed) {
                     q.completed = true;
                     addXp(q.rewardXp);
@@ -1974,27 +1572,40 @@
                     showToast(`✅ Квест выполнен: ${q.title}! +${q.rewardXp} XP, +${q.rewardCoins} монет`);
                 }
             });
-            saveGame(); renderQuests();
+            saveGame();
+            renderQuests();
         }
+
         function renderQuests() {
-            const container = document.getElementById('questsList');
-            container.innerHTML = '';
+            const dailyContainer = document.getElementById('dailyQuests');
+            const beginnerContainer = document.getElementById('beginnerQuests');
+            dailyContainer.innerHTML = '';
+            beginnerContainer.innerHTML = '';
+
             if (!game.quests || game.quests.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
+                dailyContainer.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
                 return;
             }
-            game.quests.forEach(q => {
-                const div = document.createElement('div');
-                div.className = 'quest-item';
-                const progress = Math.min(q.progress / q.target, 1);
-                div.innerHTML = `
-                    <div class="qheader"><span class="qtitle">${q.title} ${q.completed ? '✅' : ''}</span><span class="qreward">+${q.rewardXp} XP +${q.rewardCoins} 🪙</span></div>
-                    <div class="progress-bar"><div class="fill" style="width:${progress * 100}%"></div></div>
-                    <div class="qstatus">${Math.round(q.progress)} / ${q.target} ${q.completed ? '(Выполнено!)' : ''}</div>
-                `;
-                container.appendChild(div);
-            });
+
+            game.quests.filter(q => q.type === 'daily').forEach(q => renderQuestItem(q, dailyContainer));
+            game.quests.filter(q => q.type === 'beginner').forEach(q => renderQuestItem(q, beginnerContainer));
         }
+
+        function renderQuestItem(q, container) {
+            const div = document.createElement('div');
+            div.className = 'quest-item';
+            const progress = Math.min(q.progress / q.target, 1);
+            div.innerHTML = `
+                <div class="qheader">
+                    <span class="qtitle">${q.title} ${q.completed ? '✅' : ''}</span>
+                    <span class="qreward">+${q.rewardXp} XP +${q.rewardCoins} 🪙</span>
+                </div>
+                <div class="progress-bar"><div class="fill" style="width:${progress * 100}%"></div></div>
+                <div class="qstatus">${Math.round(q.progress)} / ${q.target} ${q.completed ? '(Выполнено!)' : ''}</div>
+            `;
+            container.appendChild(div);
+        }
+
         function updateProfileUI() {
             document.getElementById('profileLevel').textContent = game.level;
             document.getElementById('profileXp').textContent = game.xp;
@@ -2002,10 +1613,12 @@
             document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
             document.getElementById('profileEarned').textContent = Math.round(game.earned);
             let totalCryptoVal = 0;
-            for(let key in game.crypto) { const c = CRYPTO.find(cr => cr.id === key); if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price; }
+            for(let key in game.crypto) {
+                totalCryptoVal += (game.crypto[key]?.amount || 0) * 1;
+            }
             document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
-            document.getElementById('profileTime').textContent = `${t('inGame')}: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
-            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+            const nameInput = document.getElementById('playerName');
+            nameInput.value = localStorage.getItem('playerName') || '';
         }
 
         // ============================================================
@@ -2015,138 +1628,86 @@
             const body = header.nextElementSibling;
             const arrow = header.querySelector('.arrow');
             body.classList.toggle('open');
-            arrow.classList.toggle('open');
+            arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
         }
+
         function updateBankUI() {
             document.getElementById('bankBalanceDisplay').textContent = Math.round(game.balance);
             document.getElementById('bankCrystalsDisplay').textContent = game.crystals;
+
             const creditBtnWrapper = document.getElementById('creditBtnWrapper');
             if (game.credit) {
                 const remaining = game.credit.amount - game.credit.paid;
+                const timeLeft = Math.max(0, game.credit.term - Math.floor((Date.now() - game.credit.takenAt) / 86400000));
                 document.getElementById('creditInfo').innerHTML = `
                     <div style="border:1px solid var(--glass-border);border-radius:10px;padding:10px;margin:4px 0;">
-                        <div class="bank-row"><span>💰 Сумма</span><span>${game.credit.amount}$</span></div>
+                        <div class="bank-row"><span>💰 Сумма</span><span>${game.credit.amount} <img src="${MONETA_ICON}" style="width:14px;height:14px;vertical-align:middle;"></span></div>
                         <div class="bank-row"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
-                        <div class="bank-row"><span>✅ Выплачено</span><span>${game.credit.paid}$</span></div>
-                        <div class="bank-row"><span>⏳ Остаток</span><span class="text-red">${remaining}$</span></div>
-                        <div style="text-align:center;margin-top:8px;"><button class="btn-gold" onclick="openRepayModal()" style="width:auto;padding:6px 20px;">Выплатить</button></div>
-                    </div>`;
+                        <div class="bank-row"><span>✅ Выплачено</span><span>${game.credit.paid} <img src="${MONETA_ICON}" style="width:14px;height:14px;vertical-align:middle;"></span></div>
+                        <div class="bank-row"><span>⏳ Остаток</span><span class="text-red">${remaining} <img src="${MONETA_ICON}" style="width:14px;height:14px;vertical-align:middle;"></span></div>
+                        <div class="bank-row"><span>📅 Осталось дней</span><span>${timeLeft} дн.</span></div>
+                        <div style="text-align:center;margin-top:8px;">
+                            <button class="btn-gold" onclick="repayCredit()" style="width:auto;padding:6px 20px;">Выплатить</button>
+                        </div>
+                    </div>
+                `;
                 creditBtnWrapper.style.display = 'none';
             } else {
-                document.getElementById('creditInfo').innerHTML = `<span style="color:var(--text-secondary);">${t('noCredit')}</span>`;
+                document.getElementById('creditInfo').innerHTML = `<span style="color:var(--text-secondary);">Нет активных кредитов</span>`;
                 creditBtnWrapper.style.display = 'block';
             }
-            document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
+            document.getElementById('bankIncome').textContent = getTotalIncome();
             document.getElementById('bankExpense').textContent = '0';
         }
+
         function openCreditModal() {
-            if (game.credit) { document.getElementById('creditForm').style.display = 'none'; document.getElementById('creditLock').style.display = 'block'; }
-            else { document.getElementById('creditForm').style.display = 'block'; document.getElementById('creditLock').style.display = 'none'; updateCreditSliders(); }
-            document.getElementById('creditModal').classList.add('active');
-        }
-        function closeCreditModal() { document.getElementById('creditModal').classList.remove('active'); }
-        function updateCreditSliders() {
-            const amountSlider = document.getElementById('creditAmountSlider');
-            const termSlider = document.getElementById('creditTermSlider');
-            const maxCredit = Math.max(100, Math.round(getTotalIncome() * 50));
-            amountSlider.max = maxCredit;
-            if (parseInt(amountSlider.value) > maxCredit) amountSlider.value = maxCredit;
-            const amount = parseInt(amountSlider.value);
-            const term = parseInt(termSlider.value);
-            let rate = Math.min(25, Math.max(5, Math.round(5 + (amount / maxCredit) * 10 + (term / 30) * 5)));
-            const totalPay = Math.round(amount + (amount * (rate / 100)));
-            document.getElementById('creditAmountDisplay').textContent = amount;
-            document.getElementById('creditTermDisplay').textContent = term;
-            document.getElementById('creditRateDisplay').textContent = rate + '%';
-            document.getElementById('creditTotalPayDisplay').textContent = totalPay + ' монет';
-            document.getElementById('creditMonthlyPayDisplay').textContent = Math.round(totalPay / term) + ' монет';
-        }
-        function takeCredit() {
-            if (game.credit) { showToast('❌ Уже есть активный кредит!'); return; }
-            const amount = parseInt(document.getElementById('creditAmountSlider').value);
-            const term = parseInt(document.getElementById('creditTermSlider').value);
-            const rate = parseInt(document.getElementById('creditRateDisplay').textContent);
-            if (amount <= 0 || term <= 0 || rate <= 0) return;
-            game.credit = { amount, term, rate, paid: 0, takenAt: Date.now() };
+            if (game.credit) {
+                showToast('❌ У вас уже есть активный кредит!');
+                return;
+            }
+            const amount = parseInt(prompt('Введите сумму кредита (монеты):', '500'));
+            if (!amount || amount <= 0) return;
+            const term = Math.min(2, parseInt(prompt('Введите срок (макс. 2 дня):', '1')));
+            if (!term || term <= 0) return;
+
+            game.credit = { amount, term, rate: 10, paid: 0, takenAt: Date.now() };
             game.balance += amount;
-            showToast(`💰 Кредит ${amount}$ оформлен!`);
-            saveGame(); updateUI(); closeCreditModal();
+            showToast(`💰 Кредит ${amount} монет оформлен на ${term} дн.!`);
+            saveGame();
+            updateUI();
         }
-        function getCreditRemaining() { return game.credit ? game.credit.amount - game.credit.paid : 0; }
-        function repayCredit(amount) {
-            if (!game.credit || amount > game.balance) { showToast('❌ Не хватает денег!'); return; }
-            const pay = Math.min(amount, getCreditRemaining());
+
+        function repayCredit() {
+            if (!game.credit) return;
+            const remaining = game.credit.amount - game.credit.paid;
+            const pay = Math.min(game.balance, remaining);
+            if (pay <= 0) {
+                showToast('❌ Не хватает денег для выплаты!');
+                return;
+            }
             game.balance -= pay;
             game.credit.paid += pay;
-            if (game.credit.paid >= game.credit.amount) { game.credit = null; showToast('🎉 Кредит погашен!'); }
-            else showToast(`✅ Выплачено ${pay}$`);
-            saveGame(); updateUI(); closeRepayModal();
+            if (game.credit.paid >= game.credit.amount) {
+                game.credit = null;
+                showToast('🎉 Кредит полностью погашен!');
+            } else {
+                showToast(`✅ Выплачено ${pay} монет`);
+            }
+            saveGame();
+            updateUI();
         }
-        function openRepayModal() {
-            if (!game.credit) return;
-            document.getElementById('repayAmount').value = 0;
-            document.getElementById('repayBalance').textContent = Math.round(game.balance);
-            document.getElementById('repayRemaining').textContent = getCreditRemaining();
-            document.getElementById('repayBtn').disabled = true;
-            document.getElementById('repayModal').classList.add('active');
-        }
-        function closeRepayModal() { document.getElementById('repayModal').classList.remove('active'); }
-        function adjustRepay(delta) {
-            const input = document.getElementById('repayAmount');
-            let val = Math.max(0, Math.min(Math.min(game.balance, getCreditRemaining()), (parseInt(input.value) || 0) + delta));
-            input.value = val;
-            document.getElementById('repayBtn').disabled = val <= 0;
-        }
-        function confirmRepay() { const amount = parseInt(document.getElementById('repayAmount').value) || 0; if (amount > 0) repayCredit(amount); }
 
-        // Крипто
-        function initCrypto() { CRYPTO.forEach(c => { if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 }; }); }
-        function updateCryptoPrices() { CRYPTO.forEach(c => { c.price = Math.max(0.01, c.price * (1 + (Math.random() - 0.48) * 0.05)); }); }
-        function buyCrypto(id, amount) {
-            const c = CRYPTO.find(cr => cr.id === id);
-            if (!c || game.balance < c.price * amount * 1.005) { showToast('❌ Не хватает денег!'); return; }
-            game.balance -= c.price * amount * 1.005;
-            game.crypto[id].amount = (game.crypto[id].amount || 0) + amount;
-            showToast(`✅ Куплено ${amount} ${c.symbol}`);
-            saveGame(); updateUI(); renderCryptoList();
+        function getCreditRemaining() {
+            if (!game.credit) return 0;
+            return game.credit.amount - game.credit.paid;
         }
-        function sellCrypto(id, amount) {
-            const c = CRYPTO.find(cr => cr.id === id);
-            if (!c || (game.crypto[id]?.amount || 0) < amount) { showToast('❌ Не хватает монет!'); return; }
-            game.balance += c.price * amount * 0.995;
-            game.crypto[id].amount -= amount;
-            showToast(`✅ Продано ${amount} ${c.symbol}`);
-            saveGame(); updateUI(); renderCryptoList();
+
+        function openCryptoModal() {
+            document.getElementById('cryptoModal').classList.add('active');
         }
-        function openCryptoExchange() { document.getElementById('cryptoModal').classList.add('active'); renderCryptoList(); }
-        function closeCryptoModal() { document.getElementById('cryptoModal').classList.remove('active'); }
-        let cryptoTab = 'main';
-        function switchCryptoTab(tab) {
-            cryptoTab = tab;
-            ['cryptoTabMain','cryptoTabExclusive','cryptoTabSell'].forEach(id => { document.getElementById(id).style.background='rgba(255,255,255,0.05)'; document.getElementById(id).style.color='#fff'; });
-            const active = document.getElementById(tab==='main'?'cryptoTabMain':tab==='exclusive'?'cryptoTabExclusive':'cryptoTabSell');
-            active.style.background='var(--gold-gradient)'; active.style.color='#1a1a2e';
-            renderCryptoList();
-        }
-        function renderCryptoList() {
-            const list = document.getElementById('cryptoList');
-            const search = document.getElementById('cryptoSearch').value.toLowerCase();
-            list.innerHTML = '';
-            let items = CRYPTO;
-            if (cryptoTab === 'sell') items = CRYPTO.filter(c => (game.crypto[c.id]?.amount || 0) > 0);
-            items = items.filter(c => c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search));
-            if (!items.length) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>'; return; }
-            items.forEach(c => {
-                const amount = game.crypto[c.id]?.amount || 0;
-                const div = document.createElement('div');
-                div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border);';
-                div.innerHTML = `
-                    <img src="${c.icon}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">
-                    <div style="flex:1;"><div style="font-weight:600;font-size:14px;">${c.name}</div><div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount>0?amount.toFixed(2)+' шт.':''}</div></div>
-                    ${cryptoTab==='sell'&&amount>0?`<button class="btn-red" onclick="sellCrypto('${c.id}',1)">Продать</button>`:cryptoTab!=='sell'?`<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}',1)">Купить</button>`:''}
-                `;
-                list.appendChild(div);
-            });
+
+        function closeCryptoModal() {
+            document.getElementById('cryptoModal').classList.remove('active');
         }
 
         // ============================================================
@@ -2158,7 +1719,8 @@
             document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
             const btn = document.querySelector(`.footer button[data-screen="${screenId}"]`);
             if (btn) btn.classList.add('active');
-            if (screenId === 'menu-screen') { updateLevelCircle(); renderDistrictsCircle(); }
+
+            if (screenId === 'menu-screen') { updateLevelCircle(); renderDistricts(); }
             if (screenId === 'resources-screen') renderResources();
             if (screenId === 'quests-screen') renderQuests();
             if (screenId === 'profile-screen') updateProfileUI();
@@ -2176,15 +1738,18 @@
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 2500);
         }
+
         function saveGame() {
-            localStorage.setItem('novaraCitySave', JSON.stringify({
+            const data = {
                 balance: game.balance, coins: game.coins, crystals: game.crystals,
                 xp: game.xp, level: game.level, reputation: game.reputation,
                 resources: game.resources, buildings: game.buildings, credit: game.credit,
                 crypto: game.crypto, quests: game.quests, lastOnline: game.lastOnline,
                 earned: game.earned, builtCount: game.builtCount
-            }));
+            };
+            localStorage.setItem('novaraCitySave', JSON.stringify(data));
         }
+
         function loadGame() {
             const raw = localStorage.getItem('novaraCitySave');
             if (!raw) return false;
@@ -2194,14 +1759,16 @@
                 if (!game.buildings) game.buildings = [];
                 game.buildings.forEach(b => { if (!b.status) b.status = 'built'; });
                 return true;
-            } catch (e) { return false; }
+            } catch (e) {
+                return false;
+            }
         }
 
         // ============================================================
         // АВТОМАТИЧЕСКИЕ ЗАДАЧИ
         // ============================================================
         function autoGather() {
-            RESOURCES.forEach(r => addResource(r.id, 0.1));
+            RESOURCES.forEach(r => { addResource(r.id, 0.1); });
             const income = getTotalIncome() / 60;
             if (income > 0) { game.balance += income; game.earned += income; }
             updateQuests();
@@ -2209,40 +1776,41 @@
             updateUI();
         }
 
+        function updateCryptoPrices() {
+            // Заглушка
+        }
+
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         function init() {
             const savedLang = localStorage.getItem('lang');
-            if (savedLang && LANG[savedLang]) lang = savedLang;
-            else { document.getElementById('langModal').classList.add('active'); return; }
-            currentLang = LANG[lang];
+            if (savedLang && (savedLang === 'en' || savedLang === 'ru')) {
+                lang = savedLang;
+            }
 
-            if (!loadGame()) {
+            const loaded = loadGame();
+            if (!loaded) {
                 RESOURCES.forEach(r => { game.resources[r.id] = 10; });
                 generateQuests();
-                initCrypto();
                 saveGame();
             } else {
                 const diff = (Date.now() - game.lastOnline) / 1000;
                 if (diff > 60) {
-                    const income = getTotalIncome() / 60 * Math.min(diff / 60, 60);
-                    if (income > 0) { game.balance += income; game.earned += income; showToast(`💰 Офлайн-доход: +${Math.round(income)}$`); }
+                    const minutes = Math.min(diff / 60, 60);
+                    const income = getTotalIncome() / 60 * minutes;
+                    if (income > 0) { game.balance += income; game.earned += income; showToast(`💰 Офлайн-доход: +${Math.round(income)} монет`); }
                 }
                 game.lastOnline = Date.now();
-                if (!game.quests || !game.quests.length) generateQuests();
-                initCrypto();
+                if (!game.quests || game.quests.length === 0) generateQuests();
                 saveGame();
             }
 
             updateUI();
-            renderDistrictsCircle();
+            renderDistricts();
             renderResources();
             renderQuests();
 
-            document.getElementById('creditAmountSlider').oninput = updateCreditSliders;
-            document.getElementById('creditTermSlider').oninput = updateCreditSliders;
-            document.getElementById('cryptoSearch').oninput = renderCryptoList;
             document.getElementById('playerName').onchange = function() { localStorage.setItem('playerName', this.value); };
 
             setInterval(autoGather, 5000);
