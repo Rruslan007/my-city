@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Novara City</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0a0e1a;
             --bg-secondary: #1a1f2f;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --gold: #ffd700;
             --gold-gradient: linear-gradient(135deg, #f7971e, #ffd200);
             --green: #00c853;
@@ -46,7 +48,7 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: var(--glass-shadow);
         }
 
         .btn-gold {
@@ -166,96 +168,160 @@
             right: 0;
             bottom: 64px;
             overflow-y: auto;
-            padding: 0;
+            padding: 16px;
+            padding-bottom: 20px;
         }
 
         .screen.active {
             display: block;
         }
 
-        /* === МЕНЮ === */
-        #menu-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/menu.png') center/cover no-repeat;
-            overflow: hidden !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+        .screen::-webkit-scrollbar {
+            width: 4px;
         }
 
-        .districts-container {
-            position: relative;
-            width: 100%;
-            flex: 1;
+        .screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .screen::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .lang-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .lang-modal.active {
             display: flex;
-            align-items: flex-end;
-            padding-bottom: 80px;
+        }
+
+        .lang-modal .box {
+            background: linear-gradient(135deg, #00c853, #ffeb3b);
+            padding: 30px 24px;
+            border-radius: 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .lang-modal .box h2 {
+            color: #1a1a2e;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .lang-modal .box .btn-lang {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fff;
+            color: #1a1a2e;
+        }
+
+        /* === МЕНЮ === */
+        #menu-screen {
+            background-image: url('https://rruslan007.github.io/novara-city-images/effects/menu.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+            top: 0;
+            bottom: 64px;
+            overflow-y: auto !important;
+            overflow-x: hidden;
         }
 
         .districts-grid {
-            position: relative;
-            width: 100%;
-            height: 100%;
             display: flex;
             flex-wrap: wrap;
-            align-items: flex-end;
             justify-content: center;
-            gap: 20px 30px;
-            padding: 0 20px;
-            padding-bottom: 10px;
+            align-items: flex-start;
+            padding: 45% 8px 90px 8px;
+            gap: 10px 5px;
+            min-height: 100%;
         }
 
         .district-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 80px;
+            width: 30%;
+            max-width: 110px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .district-item:active {
+            transform: scale(0.95);
         }
 
         .district-circle {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             background-size: cover;
             background-position: center;
-            border: 2px solid var(--gold);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-            cursor: pointer;
+            background-repeat: no-repeat;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
             animation: pulse 2s infinite ease-in-out;
-            position: relative;
-            z-index: 1;
+            transition: var(--transition);
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
+            0% { transform: scale(1); }
             50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .district-name {
+        .district-label {
             background: rgba(10, 14, 26, 0.9);
-            border: 1px solid var(--gold);
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            padding: 2px 8px;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 3px 6px;
+            margin-top: -2px;
             font-size: 10px;
+            font-weight: 700;
             color: var(--gold);
+            width: 100%;
             text-align: center;
-            font-weight: 600;
-            width: 70px;
-            margin-top: -1px;
-            z-index: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 2;
         }
 
-        .level-circle-wrapper {
-            position: absolute;
-            bottom: 70px;
-            right: 20px;
+        .level-wrapper {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 10;
+            gap: 4px;
         }
 
         .level-circle-svg {
@@ -286,24 +352,25 @@
             font-size: 18px;
             font-weight: 800;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
             pointer-events: none;
         }
 
-        .level-label {
-            font-size: 11px;
-            font-weight: 700;
+        .level-sub {
             color: #fff;
-            margin-top: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-weight: 700;
+            font-size: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            text-align: center;
         }
 
         /* === КАРТА === */
         #map-screen {
-            background: #2d4a22;
-            border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden;
             padding: 0;
+            top: 0;
+            overflow: hidden;
+            background: #2d4a22;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         #map-screen .map-header {
@@ -325,7 +392,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
             color: var(--text-primary);
@@ -350,6 +417,7 @@
             bottom: 0;
             overflow: auto;
             -webkit-overflow-scrolling: touch;
+            perspective: 600px;
         }
 
         .map-scroll-container::-webkit-scrollbar {
@@ -357,11 +425,22 @@
             height: 2px;
         }
 
+        .map-scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .map-scroll-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
         .map-world {
             width: 3000px;
             height: 3000px;
             background: #4a7c3f;
             position: relative;
+            transform: rotateX(15deg);
+            transform-origin: top center;
         }
 
         .map-road-h {
@@ -371,6 +450,7 @@
             left: 0;
             width: 100%;
         }
+
         .map-road-h::after {
             content: '';
             position: absolute;
@@ -380,6 +460,7 @@
             height: 10px;
             background: repeating-linear-gradient(90deg, #ffeb3b 0px, #ffeb3b 30px, transparent 30px, transparent 50px);
         }
+
         .map-road-v {
             position: absolute;
             width: 120px;
@@ -387,6 +468,7 @@
             top: 0;
             height: 100%;
         }
+
         .map-road-v::after {
             content: '';
             position: absolute;
@@ -405,17 +487,24 @@
             align-items: center;
             justify-content: center;
             z-index: 2;
+            transition: background 0.2s;
             cursor: pointer;
             overflow: hidden;
         }
 
-        .map-plot img.plot-building-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
+        .map-plot:hover {
+            background: #6aac5a;
+        }
+
+        .map-plot.built {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid #7cfc00;
+        }
+
+        .map-plot.demolishing {
+            background: #2a4a1a;
         }
 
         .map-btn-plus {
@@ -431,9 +520,13 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             transition: var(--transition);
             z-index: 3;
+        }
+
+        .map-btn-plus:hover {
+            transform: scale(1.1);
         }
 
         .map-bottom-stats {
@@ -447,7 +540,7 @@
             gap: 4px;
         }
 
-        .compact-box {
+        .map-bottom-stats .compact-box {
             background: rgba(10, 14, 26, 0.7);
             backdrop-filter: blur(6px);
             border-radius: 8px;
@@ -458,7 +551,17 @@
             align-items: center;
         }
 
-        .xp-bar {
+        .map-bottom-stats .compact-box .lbl {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .map-bottom-stats .compact-box .val {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .map-bottom-stats .xp-bar {
             width: 100%;
             height: 4px;
             background: rgba(255, 255, 255, 0.1);
@@ -466,14 +569,15 @@
             overflow: hidden;
             margin-top: 2px;
         }
-        .xp-bar .fill {
+
+        .map-bottom-stats .xp-bar .fill {
             height: 100%;
             background: var(--gold-gradient);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
 
-        /* === МОДАЛКИ === */
+        /* === ОКНО СТРОИТЕЛЬСТВА === */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -501,11 +605,11 @@
             width: 100%;
             max-height: 85vh;
             border-top: 1px solid var(--glass-border);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
             animation: slideUp 0.3s ease;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            position: relative;
         }
 
         @keyframes slideUp {
@@ -517,7 +621,7 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             color: var(--text-secondary);
             font-size: 20px;
@@ -544,8 +648,19 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             overflow-y: auto;
+            overflow-x: hidden;
             padding-right: 4px;
             flex: 1;
+            overscroll-behavior: contain;
+        }
+
+        .build-grid::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .build-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
 
         .build-card {
@@ -554,63 +669,107 @@
             padding: 12px;
             border: 1px solid var(--glass-border);
             text-align: center;
+            position: relative;
         }
 
-        /* === БАНК, РЕСУРСЫ, КВЕСТЫ, ПРОФИЛЬ === */
+        .build-card .limit {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 6px;
+        }
+
+        .build-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1a1f2f;
+        }
+
+        .build-card .bname {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 6px 0 4px;
+        }
+
+        .build-card .price {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .build-card .price img {
+            width: 14px;
+            height: 14px;
+        }
+
+        .build-card .btn-gold {
+            font-size: 12px;
+            padding: 6px 12px;
+            width: auto;
+        }
+
+        /* === ОКНО ИНФОРМАЦИИ О ЗДАНИИ === */
+        .modal-box-info {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 380px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-box-info .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* === БАНК === */
         #bank-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.png') center/cover no-repeat;
+            background-image: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             padding: 16px;
-            padding-top: 60px;
+            top: 0;
+            padding-top: 80px;
+        }
+
+        .screen-title {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--text-primary);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        #bank-screen .bank-accordion-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-        }
-
-        #resources-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/res_fon.png') center/cover no-repeat;
-            padding: 16px;
-            padding-top: 40px;
-        }
-
-        #quests-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/quests.png') center/cover no-repeat;
-            padding: 16px;
-            padding-top: 40px;
-        }
-
-        #profile-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/profile_fon.png') center/cover no-repeat;
-            padding: 16px;
-            padding-top: 40px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-weight: 700;
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 12px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .resource-card {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-        }
-
-        .resource-card img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
+            gap: 12px;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
         .accordion {
@@ -619,6 +778,7 @@
             overflow: hidden;
             background: rgba(10, 14, 26, 0.7);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .accordion .header {
@@ -627,6 +787,29 @@
             justify-content: space-between;
             padding: 14px 16px;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .accordion .header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion .header .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .accordion .header .arrow {
+            font-size: 18px;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .accordion .header .arrow.open {
+            transform: rotate(180deg);
         }
 
         .accordion .body {
@@ -650,161 +833,492 @@
             font-size: 14px;
         }
 
-        .quest-section-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gold);
-            margin: 8px 0 4px;
+        .bank-row .label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        /* Разное */
+        .bank-row .label img {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* === РЕСУРСЫ === */
+        #resources-screen {
+            background-image: url('https://rruslan007.github.io/novara-city-images/effects/res_fon.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding-top: 80px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .resource-card img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .resource-card .rname {
+            font-size: 11px;
+            margin: 4px 0;
+            color: var(--text-secondary);
+        }
+
+        .resource-card .ramount {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .resource-card .btn-green {
+            font-size: 10px;
+            padding: 4px 8px;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* === КВЕСТЫ === */
+        #quests-screen {
+            background-image: url('https://rruslan007.github.io/novara-city-images/effects/quests.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding-top: 80px;
+        }
+
+        .quest-section {
+            margin-bottom: 20px;
+        }
+
+        .quest-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .quest-item {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .quest-item .qheader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-item .qheader .qtitle {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .quest-item .qheader .qreward {
+            color: var(--gold);
+            font-size: 13px;
+        }
+
+        .quest-item .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .quest-item .progress-bar .fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .quest-item .qstatus {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* === ПРОФИЛЬ === */
+        #profile-screen {
+            background-image: url('https://rruslan007.github.io/novara-city-images/effects/profile_fon.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding-top: 80px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--gold);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .profile-stats .stat {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .profile-stats .stat .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .profile-stats .stat .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
         .text-gold { color: var(--gold); }
         .text-green { color: var(--green); }
         .text-red { color: var(--red); }
         .text-center { text-align: center; }
         .mt-8 { margin-top: 8px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mt-12 { margin-top: 12px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .gap-8 { gap: 8px; }
+
+        .coin-icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        @media (min-width: 480px) {
+            .resource-grid { max-width: 420px; }
+        }
+
+        @media (min-width: 768px) {
+            body { max-width: 500px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
+            .footer { max-width: 500px; left: 50%; transform: translateX(-50%); }
+            .screen { max-width: 500px; left: 50%; transform: translateX(-50%); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Языковая модалка -->
-    <div class="lang-modal" id="langModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
-        <div style="background:linear-gradient(135deg, #00c853, #ffeb3b); padding:30px; border-radius:24px; text-align:center;">
-            <h2 style="color:#1a1a2e;">Выберите язык</h2>
-            <button onclick="setLang('en')" style="display:block; width:100%; margin:8px 0; padding:14px; border:none; border-radius:14px; font-size:18px; cursor:pointer;">🇬🇧 English</button>
-            <button onclick="setLang('ru')" style="display:block; width:100%; margin:8px 0; padding:14px; border:none; border-radius:14px; font-size:18px; cursor:pointer;">🇷🇺 Русский</button>
+    <!-- ===== ЯЗЫКОВАЯ МОДАЛКА ===== -->
+    <div class="lang-modal" id="langModal">
+        <div class="box">
+            <h2 id="langTitle">Choose Language / Выберите язык</h2>
+            <button class="btn-lang" onclick="setLang('en')">🇬🇧 English</button>
+            <button class="btn-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
         </div>
     </div>
 
-    <!-- Меню -->
+    <!-- ===== МЕНЮ ===== -->
     <div class="screen active" id="menu-screen">
-        <div class="districts-container">
-            <div class="districts-grid" id="districtsGrid"></div>
-            <div class="level-circle-wrapper">
-                <svg class="level-circle-svg" viewBox="0 0 56 56">
-                    <circle class="level-circle-bg" cx="28" cy="28" r="22"></circle>
-                    <circle class="level-circle-progress" id="levelProgressCircle" cx="28" cy="28" r="22" stroke-dasharray="138.23"></circle>
-                </svg>
-                <div class="level-circle-text" id="menuLevelCircleText">1</div>
-                <div class="level-label">Уровень</div>
-            </div>
+        <div class="districts-grid" id="districtsContainer">
+            <!-- Генерируется скриптом -->
+        </div>
+        
+        <!-- Круг уровня -->
+        <div class="level-wrapper">
+            <svg class="level-circle-svg" viewBox="0 0 56 56">
+                <circle class="level-circle-bg" cx="28" cy="28" r="22"></circle>
+                <circle class="level-circle-progress" id="levelProgressCircle" cx="28" cy="28" r="22" stroke-dasharray="138.23" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="level-circle-text" id="menuLevelCircleText">1</div>
+            <div class="level-sub">Уровень</div>
         </div>
     </div>
 
-    <!-- Карта -->
+    <!-- ===== КАРТА ===== -->
     <div class="screen" id="map-screen">
         <div class="map-header">
-            <button class="back-btn" onclick="showScreen('menu-screen')">← Назад</button>
+            <button class="back-btn" onclick="showScreen('menu-screen')">
+                <span id="mapBack">← Назад</span>
+            </button>
             <span class="district-title" id="mapTitle">Район</span>
         </div>
+        
         <div class="map-scroll-container" id="mapScrollContainer">
-            <div class="map-world" id="mapWorld"></div>
+            <div class="map-world" id="mapWorld">
+                <!-- Генерируется скриптом -->
+            </div>
         </div>
-        <div class="map-bottom-stats">
-            <div class="compact-box"><span>⭐ LVL <span id="mapLvlBottom">1</span></span><span>Репутация: <span class="text-gold" id="mapReputationBottom">0</span></span></div>
-            <div class="compact-box" style="flex-direction:column;">
-                <div style="display:flex; justify-content:space-between; font-size:10px;"><span id="mapXpLabelBottom">0/100 XP</span></div>
+
+        <div class="map-bottom-stats" id="mapBottomStats">
+            <div class="compact-box">
+                <span><span class="lbl">⭐ LVL </span><span class="val" id="mapLvlBottom">1</span></span>
+                <span><span class="lbl">Репутация: </span><span class="val text-gold" id="mapReputationBottom">0</span></span>
+            </div>
+            <div class="compact-box" style="flex-direction:column;padding:4px 12px 6px;">
+                <div style="width:100%;display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);">
+                    <span id="mapXpLabelBottom">0 / 100 XP</span>
+                </div>
                 <div class="xp-bar"><div class="fill" id="mapXpFillBottom" style="width:0%"></div></div>
             </div>
         </div>
     </div>
 
-    <!-- Банк -->
+    <!-- ===== БАНК ===== -->
     <div class="screen" id="bank-screen">
-        <div class="section-title">БАНК</div>
-        <div class="accordion"><div class="header" onclick="toggleAccordion(this)"><span>🏦 Мой банк</span><span>▼</span></div><div class="body open"><div class="bank-row"><span>💰 Баланс</span><span id="bankBalanceDisplay">1000</span></div><div class="bank-row"><span>💎 Кристаллы</span><span id="bankCrystalsDisplay">50</span></div></div></div>
-        <div class="accordion"><div class="header" onclick="toggleAccordion(this)"><span>💳 Кредит</span><span>▼</span></div><div class="body"><div id="creditInfo">Нет кредитов</div><button class="btn-gold mt-8" id="takeCreditBtn" onclick="openCreditModal()">Взять кредит</button></div></div>
-        <div class="accordion"><div class="header" onclick="toggleAccordion(this)"><span>🪙 Крипто</span><span>▼</span></div><div class="body"><button class="btn-gold" onclick="openCryptoModal()">Биржа</button></div></div>
-        <div class="accordion"><div class="header" onclick="toggleAccordion(this)"><span>📊 Доходы/расходы</span><span>▼</span></div><div class="body"><div class="bank-row"><span>📈 Доходы</span><span class="text-green"><span id="bankIncome">0</span>/мин <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;height:14px;"></span></div><div class="bank-row"><span>📉 Расходы</span><span class="text-red"><span id="bankExpense">0</span>/мин <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;height:14px;"></span></div></div></div>
-    </div>
-
-    <!-- Ресурсы -->
-    <div class="screen" id="resources-screen">
-        <div class="section-title">РЕСУРСЫ</div>
-        <div class="resource-grid" id="resourceGrid"></div>
-    </div>
-
-    <!-- Квесты -->
-    <div class="screen" id="quests-screen">
-        <div class="section-title">КВЕСТЫ</div>
-        <div class="quest-section-title">📋 Ежедневные квесты</div>
-        <div id="dailyQuests"></div>
-        <div class="quest-section-title">🌱 Квесты новичков</div>
-        <div id="beginnerQuests"></div>
-    </div>
-
-    <!-- Профиль -->
-    <div class="screen" id="profile-screen">
-        <div class="section-title">ПРОФИЛЬ</div>
-        <div style="text-align:center;">
-            <div style="width:80px;height:80px;border-radius:50%;background:var(--glass-bg);border:2px solid var(--gold);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:40px;">👤</div>
-            <input id="playerName" placeholder="Имя" style="margin-top:8px;padding:6px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;text-align:center;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:12px;">
-                <div class="resource-card"><div>Уровень</div><div class="text-gold" id="profileLevel">1</div></div>
-                <div class="resource-card"><div>Опыт</div><div id="profileXp">0</div></div>
-                <div class="resource-card"><div>Репутация</div><div class="text-gold" id="profileReputation">0</div></div>
-                <div class="resource-card"><div>Построено</div><div id="profileBuildings">0</div></div>
+        <span class="screen-title">Банк</span>
+        <div class="bank-accordion-wrapper">
+            <div class="accordion">
+                <div class="header" onclick="toggleAccordion(this)">
+                    <div class="left"><span>🏦 Мой банк</span></div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="body open">
+                    <div class="bank-row">
+                        <div class="label"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" class="coin-icon" onerror="this.style.display='none'"> Баланс</div>
+                        <span id="bankBalanceDisplay">1000</span>
+                    </div>
+                    <div class="bank-row">
+                        <span>💎 Кристаллы</span><span id="bankCrystalsDisplay">50</span>
+                    </div>
+                </div>
             </div>
-            <button class="btn-gold mt-8" onclick="openLangModal()">🌐 Сменить язык</button>
+
+            <div class="accordion">
+                <div class="header" onclick="toggleAccordion(this)">
+                    <div class="left"><span>💳 Кредит</span></div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="body" id="creditBody">
+                    <!-- Генерируется скриптом -->
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="header" onclick="toggleAccordion(this)">
+                    <div class="left"><span>📊 Доходы и расходы</span></div>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="body">
+                    <div class="bank-row">
+                        <span>📈 Доходы</span>
+                        <span class="text-green">
+                            <span id="bankIncome">0</span>/мин 
+                            <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" class="coin-icon" onerror="this.style.display='none'">
+                        </span>
+                    </div>
+                    <div class="bank-row">
+                        <span>📉 Расходы</span>
+                        <span class="text-red">
+                            <span id="bankExpense">0</span>/мин 
+                            <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" class="coin-icon" onerror="this.style.display='none'">
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Футер -->
-    <div class="footer">
-        <button onclick="showScreen('bank-screen')" data-screen="bank-screen"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_1.png"><span class="label">Bank</span></button>
-        <button onclick="showScreen('resources-screen')" data-screen="resources-screen"><img src="https://rruslan007.github.io/novara-city-images/logo/resources_icon.png"><span class="label">Res</span></button>
-        <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active"><img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png"><span class="label">Home</span></button>
-        <button onclick="showScreen('quests-screen')" data-screen="quests-screen"><img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png"><span class="label">Quests</span></button>
-        <button onclick="showScreen('profile-screen')" data-screen="profile-screen"><img src="https://rruslan007.github.io/novara-city-images/logo/profile_icon.png"><span class="label">Profile</span></button>
+    <!-- ===== РЕСУРСЫ ===== -->
+    <div class="screen" id="resources-screen">
+        <div class="resource-grid" id="resourceGrid"></div>
     </div>
 
-    <!-- Модалки -->
-    <div class="modal-overlay" id="buildModal"><div class="modal-box-build"><button class="close-btn" onclick="closeBuildModal()">✕</button><h2>Строительство</h2><div class="build-grid" id="buildModalList"></div></div></div>
-    <div class="modal-overlay" id="buildingInfoModal" style="align-items:center;"><div style="background:var(--bg-secondary); border-radius:24px; padding:24px; max-width:380px; text-align:center; position:relative;"><button style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--red); font-size:24px; cursor:pointer;" onclick="closeBuildingInfo()">✕</button><img id="infoBuildingImg" style="width:80px;height:80px;border-radius:12px;"><h3 id="infoBuildingName"></h3><div>⚡ <span id="infoEnergy"></span>/час</div><div>⭐ Репутация: <span id="infoReputation"></span></div><div style="font-size:11px;color:var(--text-secondary);" id="infoBuiltDate"></div><button class="btn-gold mt-8" onclick="demolishBuilding()">Снести</button></div></div>
+    <!-- ===== КВЕСТЫ ===== -->
+    <div class="screen" id="quests-screen">
+        <span class="screen-title">Квесты</span>
+        <div id="questsList"></div>
+    </div>
 
-    <div id="toast" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); padding:10px 20px; border-radius:12px; z-index:9999; opacity:0; transition:opacity 0.3s; pointer-events:none;"></div>
+    <!-- ===== ПРОФИЛЬ ===== -->
+    <div class="screen" id="profile-screen">
+        <span class="screen-title">Профиль</span>
+        <div class="profile-avatar">👤</div>
+        <div style="text-align:center;margin-bottom:12px;">
+            <input type="text" id="playerName" placeholder="Ваше имя" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;padding:8px 14px;color:#fff;width:100%;max-width:250px;font-size:16px;text-align:center;">
+        </div>
+        <div class="profile-stats">
+            <div class="stat"><div class="label">Уровень</div><div class="value" id="profileLevel">1</div></div>
+            <div class="stat"><div class="label">Опыт</div><div class="value" id="profileXp">0</div></div>
+            <div class="stat"><div class="label">Репутация</div><div class="value text-gold" id="profileReputation">0</div></div>
+            <div class="stat"><div class="label">Построено</div><div class="value" id="profileBuildings">0</div></div>
+            <div class="stat"><div class="label">Заработано</div><div class="value" id="profileEarned">0</div></div>
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+            <button class="btn-gold" onclick="openLangModal()" style="width:auto;padding:8px 24px;">🌐 Сменить язык</button>
+        </div>
+        <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-secondary);">
+            <span id="profileTime">В игре: 0 мин</span>
+        </div>
+    </div>
+
+    <!-- ===== ФУТЕР ===== -->
+    <div class="footer" id="footer">
+        <button onclick="showScreen('bank-screen')" data-screen="bank-screen">
+            <span style="font-size:24px;">🏦</span>
+            <span class="label">Банк</span>
+        </button>
+        <button onclick="showScreen('resources-screen')" data-screen="resources-screen">
+            <span style="font-size:24px;">📦</span>
+            <span class="label">Ресурсы</span>
+        </button>
+        <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
+            <span style="font-size:24px;">🏠</span>
+            <span class="label">Меню</span>
+        </button>
+        <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
+            <span style="font-size:24px;">📋</span>
+            <span class="label">Квесты</span>
+        </button>
+        <button onclick="showScreen('profile-screen')" data-screen="profile-screen">
+            <span style="font-size:24px;">👤</span>
+            <span class="label">Профиль</span>
+        </button>
+    </div>
+
+    <!-- ===== ОКНО СТРОИТЕЛЬСТВА ===== -->
+    <div class="modal-overlay" id="buildModal">
+        <div class="modal-box-build">
+            <button class="close-btn" onclick="closeBuildModal()">✕</button>
+            <h2 id="buildModalTitle">Строительство</h2>
+            <div class="build-grid" id="buildModalList"></div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:10px 20px;border-radius:12px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--glass-border);color:#fff;white-space:nowrap;"></div>
 
     <script>
-        // Упрощённый движок
-        const LANG = { ru: {}, en: {} };
-        let lang = 'ru';
-        let currentLang = LANG[lang];
-        function t(key) { return currentLang[key] || key; }
-        function setLang(l) { lang = l; currentLang = LANG[lang]; localStorage.setItem('lang', lang); document.getElementById('langModal').style.display = 'none'; updateUI(); }
-        function openLangModal() { document.getElementById('langModal').style.display = 'flex'; }
+        // ============================================================
+        // ЛОКАЛИЗАЦИЯ
+        // ============================================================
+        const LANG = {
+            en: {
+                bank: "Bank", resources: "Resources", quests: "Quests", profile: "Profile",
+                back: "Back", level: "Level", balance: "Balance", crystals: "Crystals",
+                credit: "Credit", income: "Income", expense: "Expenses",
+                takeCredit: "Take Credit", repay: "Repay", noCredit: "No active credits",
+                dailyQuests: "Daily Quests", beginnerQuests: "Beginner Quests",
+                buildQuest: "Build 1 building", levelQuest: "Reach level 2",
+                changeLang: "Change language", inGame: "In game",
+                district1: "Suburb", district2: "Village", district3: "Residential",
+                district4: "Midtown", district5: "Commercial", district6: "Park",
+                district7: "Port", district8: "Industrial", district9: "Tech Park"
+            },
+            ru: {
+                bank: "Банк", resources: "Ресурсы", quests: "Квесты", profile: "Профиль",
+                back: "Назад", level: "Уровень", balance: "Баланс", crystals: "Кристаллы",
+                credit: "Кредит", income: "Доходы", expense: "Расходы",
+                takeCredit: "Взять кредит", repay: "Выплатить", noCredit: "Нет активных кредитов",
+                dailyQuests: "Ежедневные квесты", beginnerQuests: "Квесты новичков",
+                buildQuest: "Построй 1 здание", levelQuest: "Достигни уровня 2",
+                changeLang: "Сменить язык", inGame: "В игре",
+                district1: "Пригород", district2: "Деревня", district3: "Жилой район",
+                district4: "Центр", district5: "Торговый район", district6: "Парк",
+                district7: "Порт", district8: "Промзона", district9: "Технопарк"
+            }
+        };
 
+        let lang = 'ru';
+        let currentLang = {};
+
+        function setLang(l) {
+            lang = l;
+            currentLang = LANG[lang];
+            localStorage.setItem('lang', lang);
+            document.getElementById('langModal').classList.remove('active');
+            updateUI();
+            showToast('🌐 ' + (lang === 'ru' ? 'Язык изменён' : 'Language changed'));
+        }
+
+        function t(key) {
+            return (currentLang && currentLang[key]) ? currentLang[key] : key;
+        }
+
+        function openLangModal() {
+            document.getElementById('langModal').classList.add('active');
+        }
+
+        // ============================================================
+        // ДАННЫЕ
+        // ============================================================
         const BASE_URL = 'https://rruslan007.github.io/novara-city-images/';
+        const MONETA_ICON = BASE_URL + 'effects/moneta.PNG';
+
         const DISTRICTS = [
-            { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', name: 'Пригород' },
-            { id: 'countryside', icon: BASE_URL + 'districts/malii_poselok.png', name: 'Посёлок' },
-            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', name: 'Жилой' },
-            { id: 'midtown', icon: BASE_URL + 'districts/elita_poselok.png', name: 'Элитный' },
-            { id: 'commercial', icon: BASE_URL + 'districts/torgovii_raion.png', name: 'Торговый' },
-            { id: 'park', icon: BASE_URL + 'districts/park.png', name: 'Парк' },
-            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', name: 'Портовый' },
-            { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', name: 'Промзона' },
-            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', name: 'Офисный' }
+            { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', key: 'district1' },
+            { id: 'village', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district2' },
+            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3' },
+            { id: 'midtown', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district4' },
+            { id: 'commercial', icon: BASE_URL + 'districts/torgovii_raion.png', key: 'district5' },
+            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6' },
+            { id: 'port', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7' },
+            { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', key: 'district8' },
+            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', key: 'district9' }
         ];
 
         const RESOURCES = [
-            { id: 'oil', name: 'Нефть', icon: BASE_URL + 'resources/oil_icon.png' },
-            { id: 'gas', name: 'Газ', icon: BASE_URL + 'resources/gas.png' },
-            { id: 'wood', name: 'Дерево', icon: BASE_URL + 'resources/wood_icon.png' },
-            { id: 'energy', name: 'Энергия', icon: BASE_URL + 'resources/energy_icon.png' },
-            { id: 'food', name: 'Еда', icon: BASE_URL + 'resources/wheat_icon.png' },
-            { id: 'gold', name: 'Золото', icon: BASE_URL + 'resources/gold_icon.png' }
+            { id: 'wood', name: 'Древесина', icon: '🪵', amount: 10, max: 1000 },
+            { id: 'stone', name: 'Камень', icon: '🪨', amount: 10, max: 1000 },
+            { id: 'food', name: 'Еда', icon: '🍎', amount: 10, max: 1000 },
+            { id: 'energy', name: 'Энергия', icon: '⚡', amount: 10, max: 1000 },
+            { id: 'gold', name: 'Золото', icon: '🪙', amount: 10, max: 1000 },
+            { id: 'oil', name: 'Нефть', icon: '🛢️', amount: 10, max: 1000 }
         ];
 
         const BUILDINGS = [
-            { id: 'house', name: 'Дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, income: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb','countryside','residential'] },
-            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, income: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial','midtown'] }
+            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, allowedDistricts: ['suburb', 'village', 'residential', 'midtown'] },
+            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, maxCount: 10, demolishCost: 60, allowedDistricts: ['commercial', 'midtown', 'residential', 'park'] },
+            { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, maxCount: 12, demolishCost: 40, allowedDistricts: ['industrial', 'village', 'residential'] },
+            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, maxCount: 3, demolishCost: 500, allowedDistricts: ['industrial', 'port'] },
+            { id: 'office', name: 'Офис', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, maxCount: 8, demolishCost: 180, allowedDistricts: ['techpark', 'midtown', 'commercial'] }
         ];
 
+        // ============================================================
+        // СОСТОЯНИЕ ИГРЫ
+        // ============================================================
         let game = {
-            balance: 1000, crystals: 50, xp: 0, level: 1, reputation: 0,
-            resources: {}, buildings: [], credit: null, crypto: {}, earned: 0, builtCount: 0,
-            quests: []
+            balance: 1000,
+            coins: 500,
+            crystals: 50,
+            xp: 0,
+            level: 1,
+            reputation: 0,
+            resources: {},
+            buildings: [],
+            credit: null,
+            quests: [],
+            lastOnline: Date.now(),
+            earned: 0,
+            builtCount: 0
         };
 
         let currentDistrictId = null;
@@ -812,289 +1326,484 @@
         let demolishTarget = null;
 
         function getLevelXp(level) { return level * 100 + 50; }
-        function getTotalXp(level) { let t = 0; for (let i = 1; i < level; i++) t += getLevelXp(i); return t; }
+        function getTotalXp(level) { let total = 0; for (let i = 1; i < level; i++) total += getLevelXp(i); return total; }
+        function getXpForLevel(level) { return getLevelXp(level); }
         function getXpProgress() {
-            const current = getLevelXp(game.level);
-            const total = getTotalXp(game.level);
-            return Math.min((game.xp - total) / current, 1);
+            const currentLevelXp = getXpForLevel(game.level);
+            const totalXp = getTotalXp(game.level);
+            const progress = game.xp - totalXp;
+            return Math.min(progress / currentLevelXp, 1);
         }
 
         function addXp(amount) {
             game.xp += amount;
-            let needed = getLevelXp(game.level);
+            let needed = getXpForLevel(game.level);
             let total = getTotalXp(game.level);
             while (game.xp >= total + needed) {
                 game.level++;
-                needed = getLevelXp(game.level);
+                needed = getXpForLevel(game.level);
                 total = getTotalXp(game.level);
                 game.crystals += 5;
                 game.balance += 10;
-                showToast(`🎉 Уровень ${game.level}!`);
+                showToast(`🎉 Уровень ${game.level} достигнут!`);
             }
             saveGame();
             updateUI();
         }
 
+        function addReputation(amount) { game.reputation += amount; saveGame(); updateUI(); }
+        function getResourceAmount(id) { return game.resources[id] || 0; }
+        function addResource(id, amount) {
+            const max = RESOURCES.find(r => r.id === id)?.max || 1000;
+            game.resources[id] = Math.min((game.resources[id] || 0) + amount, max);
+            saveGame(); renderResources(); updateUI();
+        }
+        function spendResource(id, amount) {
+            if ((game.resources[id] || 0) < amount) return false;
+            game.resources[id] -= amount;
+            saveGame(); renderResources(); updateUI();
+            return true;
+        }
+        function canAfford(resources) {
+            for (let [id, amount] of Object.entries(resources)) {
+                if ((game.resources[id] || 0) < amount) return false;
+            }
+            return true;
+        }
         function getTotalIncome() {
-            return game.buildings.filter(b => b.status !== 'demolishing').reduce((sum, b) => sum + (BUILDINGS.find(bd => bd.id === b.id)?.income || 0), 0);
+            let income = 0;
+            for (let b of game.buildings) {
+                const data = BUILDINGS.find(d => d.id === b.id);
+                if (data && b.status !== 'demolishing') income += data.income * (b.level || 1);
+            }
+            return income;
         }
 
-        function renderDistricts() {
-            const grid = document.getElementById('districtsGrid');
-            grid.innerHTML = '';
-            DISTRICTS.forEach(d => {
+        // ============================================================
+        // ОТРИСОВКА МЕНЮ
+        // ============================================================
+        function renderDistrictsCircle() {
+            const container = document.getElementById('districtsContainer');
+            container.innerHTML = '';
+            
+            DISTRICTS.forEach((d, index) => {
                 const item = document.createElement('div');
                 item.className = 'district-item';
-                item.innerHTML = `<div class="district-circle" style="background-image:url(${d.icon})" onclick="openMap('${d.id}','${d.name}')"></div><div class="district-name">${d.name}</div>`;
-                grid.appendChild(item);
+                item.innerHTML = `
+                    <div class="district-circle" style="background-image: url('${d.icon}');"></div>
+                    <div class="district-label">${t(d.key)}</div>
+                `;
+                item.onclick = () => openMap(d.id, t(d.key));
+                container.appendChild(item);
             });
         }
 
+        function updateLevelCircle() {
+            const progress = getXpProgress();
+            const circle = document.getElementById('levelProgressCircle');
+            const radius = 22;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (progress * circumference);
+            circle.style.strokeDashoffset = offset;
+            document.getElementById('menuLevelCircleText').textContent = game.level;
+        }
+
+        // ============================================================
+        // ОТРИСОВКА КАРТЫ
+        // ============================================================
         function openMap(districtId, name) {
             currentDistrictId = districtId;
             document.getElementById('mapTitle').textContent = name;
             renderMap(districtId);
             showScreen('map-screen');
             const container = document.getElementById('mapScrollContainer');
-            setTimeout(() => { container.scrollLeft = (3000 - container.clientWidth) / 2; container.scrollTop = (3000 - container.clientHeight) / 2; }, 100);
+            setTimeout(() => {
+                container.scrollLeft = (3000 - container.clientWidth) / 2;
+                container.scrollTop = (3000 - container.clientHeight) / 2;
+            }, 100);
+            updateMapUI();
         }
 
         function renderMap(districtId) {
             const world = document.getElementById('mapWorld');
             world.innerHTML = '';
-            const size = 3000, road = 120, plot = 300;
-            for (let x = 0; x <= size; x += plot + road) {
-                const h = document.createElement('div'); h.className = 'map-road-h'; h.style.top = (x - road/2) + 'px'; world.appendChild(h);
+            const worldSize = 3000;
+            const roadWidth = 120;
+            const plotSize = 280;
+
+            for (let x = 0; x <= worldSize; x += plotSize + roadWidth) {
+                const hRoad = document.createElement('div');
+                hRoad.className = 'map-road-h';
+                hRoad.style.top = (x - roadWidth/2) + 'px';
+                world.appendChild(hRoad);
             }
-            for (let y = 0; y <= size; y += plot + road) {
-                const v = document.createElement('div'); v.className = 'map-road-v'; v.style.left = (y - road/2) + 'px'; world.appendChild(v);
+            for (let y = 0; y <= worldSize; y += plotSize + roadWidth) {
+                const vRoad = document.createElement('div');
+                vRoad.className = 'map-road-v';
+                vRoad.style.left = (y - roadWidth/2) + 'px';
+                world.appendChild(vRoad);
             }
-            let count = 0;
-            for (let x = road/2; x < size - road/2; x += plot + road) {
-                for (let y = road/2; y < size - road/2; y += plot + road) {
-                    const p = document.createElement('div');
-                    p.className = 'map-plot';
-                    p.style.left = x + 'px';
-                    p.style.top = y + 'px';
-                    p.style.width = plot + 'px';
-                    p.style.height = plot + 'px';
-                    const pid = `plot_${count}`;
-                    const building = game.buildings.find(b => b.plotId === pid && b.districtId === districtId);
-                    if (building && building.status !== 'demolishing') {
-                        const bData = BUILDINGS.find(b => b.id === building.id);
-                        if (bData) {
-                            const img = document.createElement('img');
-                            img.className = 'plot-building-img';
-                            img.src = bData.icon;
-                            img.onerror = () => { img.style.display = 'none'; p.innerHTML = '🏢'; };
-                            p.appendChild(img);
+
+            let plotCounter = 0;
+            for (let x = roadWidth/2 + 10; x < worldSize - roadWidth/2 - 10; x += plotSize + roadWidth) {
+                for (let y = roadWidth/2 + 10; y < worldSize - roadWidth/2 - 10; y += plotSize + roadWidth) {
+                    const plot = document.createElement('div');
+                    plot.className = 'map-plot';
+                    plot.style.left = x + 'px';
+                    plot.style.top = y + 'px';
+                    plot.style.width = plotSize + 'px';
+                    plot.style.height = plotSize + 'px';
+                    const plotId = `plot_${plotCounter}`;
+                    plot.dataset.plotId = plotId;
+
+                    const existingBuilding = game.buildings.find(b => b.plotId === plotId && b.districtId === districtId);
+
+                    if (existingBuilding) {
+                        if (existingBuilding.status === 'demolishing') {
+                            plot.classList.add('demolishing');
+                            const remaining = Math.max(0, existingBuilding.demolishStart + existingBuilding.demolishTime - Date.now());
+                            const sec = Math.ceil(remaining / 1000);
+                            plot.innerHTML = `<div style="text-align:center;color:#fff;font-size:12px;">
+                                <div style="background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;">⏳ ${sec}с</div>
+                            </div>`;
+                        } else {
+                            const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
+                            plot.classList.add('built');
+                            if (bData) {
+                                plot.style.backgroundImage = `url('${bData.icon}')`;
+                            }
+                            plot.innerHTML = '';
+                            plot.onclick = () => showToast('🏢 ' + (bData ? bData.name : 'Здание'));
                         }
-                        p.onclick = () => openBuildingInfo(building);
-                    } else if (building && building.status === 'demolishing') {
-                        const rem = Math.max(0, building.demolishStart + building.demolishTime - Date.now());
-                        p.innerHTML = `<div style="text-align:center;color:#fff;"><div style="background:rgba(0,0,0,0.7);padding:4px;border-radius:4px;">⏳ ${Math.ceil(rem/1000)}с</div><div style="color:var(--red);font-size:10px;">Снос</div></div>`;
                     } else {
                         const btn = document.createElement('div');
                         btn.className = 'map-btn-plus';
                         btn.textContent = '+';
-                        btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, pid); };
-                        p.appendChild(btn);
+                        btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, plotId); };
+                        plot.appendChild(btn);
                     }
-                    world.appendChild(p);
-                    count++;
+                    world.appendChild(plot);
+                    plotCounter++;
                 }
             }
         }
 
+        function updateMapUI() {
+            const progress = getXpProgress();
+            document.getElementById('mapLvlBottom').textContent = game.level;
+            const totalXp = getTotalXp(game.level);
+            const currentXp = game.xp - totalXp;
+            const neededXp = getXpForLevel(game.level);
+            document.getElementById('mapXpLabelBottom').textContent = `${Math.round(currentXp)} / ${neededXp} XP`;
+            document.getElementById('mapXpFillBottom').style.width = `${progress * 100}%`;
+            document.getElementById('mapReputationBottom').textContent = game.reputation;
+        }
+
+        // ============================================================
+        // СТРОИТЕЛЬСТВО
+        // ============================================================
         function openBuildModal(districtId, plotId) {
             currentDistrictId = districtId;
             currentPlotId = plotId;
-            const list = document.getElementById('buildModalList');
-            list.innerHTML = '';
-            BUILDINGS.filter(b => b.allowedDistricts.includes(districtId)).forEach(b => {
-                const built = game.buildings.filter(gb => gb.id === b.id).length;
+            document.getElementById('buildModal').classList.add('active');
+            renderBuildModalList(districtId);
+        }
+        function closeBuildModal() {
+            document.getElementById('buildModal').classList.remove('active');
+            currentDistrictId = null;
+            currentPlotId = null;
+        }
+        function renderBuildModalList(districtId) {
+            const container = document.getElementById('buildModalList');
+            container.innerHTML = '';
+            const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
+            if (availableBuildings.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
+                return;
+            }
+            availableBuildings.forEach(b => {
+                const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
+                const maxCount = b.maxCount || 999;
+                const canBuildMore = builtCount < maxCount;
+                const hasResources = canAfford(b.resources) && game.balance >= b.cost;
                 const card = document.createElement('div');
                 card.className = 'build-card';
-                card.innerHTML = `<div style="font-size:10px;color:var(--text-secondary);">${built}/${b.maxCount}</div><img src="${b.icon}" style="width:60px;height:60px;border-radius:8px;"><div style="font-weight:700;">${b.name}</div><div>💰 ${b.cost}</div><button class="btn-gold" ${built >= b.maxCount || game.balance < b.cost ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">Построить</button>`;
-                list.appendChild(card);
+                card.innerHTML = `
+                    <div class="limit">Доступно: ${builtCount}/${maxCount}</div>
+                    <img src="${b.icon}" alt="${b.name}" onerror="this.textContent='🏢'">
+                    <div class="bname">${b.name}</div>
+                    <div class="price"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.style.display='none'"> ${b.cost}</div>
+                    <button class="btn-gold" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
+                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
+                    </button>
+                `;
+                container.appendChild(card);
             });
-            document.getElementById('buildModal').classList.add('active');
         }
-
-        function closeBuildModal() { document.getElementById('buildModal').classList.remove('active'); }
-
-        function buildOnPlot(id) {
-            const b = BUILDINGS.find(b => b.id === id);
-            if (!b || game.balance < b.cost) return;
-            const built = game.buildings.filter(gb => gb.id === id).length;
-            if (built >= b.maxCount) return;
-            game.balance -= b.cost;
-            game.buildings.push({ id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
+        function buildOnPlot(buildingId) {
+            const building = BUILDINGS.find(b => b.id === buildingId);
+            if (!building || !currentDistrictId || currentPlotId === null) return;
+            const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
+            if (builtCount >= building.maxCount) { showToast('❌ Достигнут лимит таких зданий в городе!'); return; }
+            if (!canAfford(building.resources)) { showToast('❌ Не хватает ресурсов!'); return; }
+            if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= building.cost;
+            for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
+            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
             game.builtCount++;
-            addXp(b.xp || 2);
-            game.reputation += b.reputation;
-            showToast(`✅ ${b.name} построен!`);
+            addXp(building.xp);
+            addReputation(building.reputation);
+            showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
             saveGame();
             closeBuildModal();
             renderMap(currentDistrictId);
             updateUI();
         }
 
-        function openBuildingInfo(building) {
-            const b = BUILDINGS.find(b => b.id === building.id);
-            if (!b) return;
-            document.getElementById('infoBuildingImg').src = b.icon;
-            document.getElementById('infoBuildingName').textContent = b.name;
-            document.getElementById('infoEnergy').textContent = b.energyUse || 0;
-            document.getElementById('infoReputation').textContent = b.reputation || 0;
-            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
-            demolishTarget = building;
-            document.getElementById('buildingInfoModal').classList.add('active');
-        }
-
-        function closeBuildingInfo() { document.getElementById('buildingInfoModal').classList.remove('active'); demolishTarget = null; }
-
-        function demolishBuilding() {
-            if (!demolishTarget || !confirm('Снести здание?')) return;
-            demolishTarget.status = 'demolishing';
-            demolishTarget.demolishStart = Date.now();
-            demolishTarget.demolishTime = 5000;
-            showToast('🏗️ Снос начат!');
-            saveGame();
-            closeBuildingInfo();
-            renderMap(demolishTarget.districtId);
-        }
-
-        function checkDemolish() {
-            const now = Date.now();
-            game.buildings = game.buildings.filter(b => {
-                if (b.status === 'demolishing' && now - b.demolishStart >= b.demolishTime) {
-                    showToast('🏚️ Здание снесено');
-                    return false;
-                }
-                return true;
-            });
-        }
-
+        // ============================================================
+        // РЕСУРСЫ, КВЕСТЫ, ПРОФИЛЬ
+        // ============================================================
         function renderResources() {
             const grid = document.getElementById('resourceGrid');
             grid.innerHTML = '';
             RESOURCES.forEach(r => {
+                const amount = getResourceAmount(r.id);
                 const card = document.createElement('div');
                 card.className = 'resource-card';
-                card.innerHTML = `<img src="${r.icon}"><div>${r.name}</div><div class="text-gold">${Math.round(game.resources[r.id] || 0)}</div>`;
+                card.innerHTML = `
+                    <div style="font-size:32px;">${r.icon}</div>
+                    <div class="rname">${r.name}</div>
+                    <div class="ramount">${Math.round(amount)}</div>
+                    <button class="btn-green" onclick="mineResource('${r.id}')">⛏️ Добыть</button>
+                `;
                 grid.appendChild(card);
             });
         }
+        function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
 
-        function toggleAccordion(header) {
-            const body = header.nextElementSibling;
-            const arrow = header.querySelector('span:last-child');
-            body.classList.toggle('open');
-            arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+        function renderQuests() {
+            const container = document.getElementById('questsList');
+            container.innerHTML = `
+                <div class="quest-section">
+                    <h3>${t('dailyQuests')}</h3>
+                    <div class="quest-item">
+                        <div class="qheader"><span class="qtitle">${t('buildQuest')} (${game.buildings.filter(b => b.status === 'built').length}/1)</span><span class="qreward">+50 XP</span></div>
+                        <div class="progress-bar"><div class="fill" style="width:${Math.min(game.buildings.filter(b => b.status === 'built').length * 100, 100)}%"></div></div>
+                        <div class="qstatus">${game.buildings.filter(b => b.status === 'built').length >= 1 ? '✅ Выполнено' : 'В процессе'}</div>
+                    </div>
+                </div>
+                <div class="quest-section">
+                    <h3>${t('beginnerQuests')}</h3>
+                    <div class="quest-item">
+                        <div class="qheader"><span class="qtitle">${t('levelQuest')} (${game.level}/2)</span><span class="qreward">+80 XP</span></div>
+                        <div class="progress-bar"><div class="fill" style="width:${game.level >= 2 ? 100 : game.level * 50}%"></div></div>
+                        <div class="qstatus">${game.level >= 2 ? '✅ Выполнено' : 'В процессе'}</div>
+                    </div>
+                </div>
+            `;
         }
 
+        function updateProfileUI() {
+            document.getElementById('profileLevel').textContent = game.level;
+            document.getElementById('profileXp').textContent = game.xp;
+            document.getElementById('profileReputation').textContent = game.reputation;
+            document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
+            document.getElementById('profileEarned').textContent = Math.round(game.earned);
+            document.getElementById('profileTime').textContent = `${t('inGame')}: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
+            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+        }
+
+        // ============================================================
+        // БАНК, КРЕДИТЫ
+        // ============================================================
+        function toggleAccordion(header) {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            body.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
         function updateBankUI() {
             document.getElementById('bankBalanceDisplay').textContent = Math.round(game.balance);
             document.getElementById('bankCrystalsDisplay').textContent = game.crystals;
-            document.getElementById('bankIncome').textContent = getTotalIncome();
+            
+            const creditBody = document.getElementById('creditBody');
             if (game.credit) {
-                const rem = game.credit.amount - game.credit.paid;
-                const timeLeft = Math.max(0, game.credit.term - Math.floor((Date.now() - game.credit.takenAt) / 86400000));
-                document.getElementById('creditInfo').innerHTML = `<div class="bank-row"><span>💰 Сумма</span><span>${game.credit.amount} <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;"></span></div><div class="bank-row"><span>⏳ Осталось</span><span>${rem} <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:14px;"></span></div><div class="bank-row"><span>📅 Срок</span><span>${timeLeft} дн.</span></div><button class="btn-gold mt-8" onclick="repayCredit()">Выплатить</button>`;
-                document.getElementById('takeCreditBtn').style.display = 'none';
+                const remaining = game.credit.amount - game.credit.paid;
+                const timeLeft = Math.max(0, game.credit.end - Date.now());
+                const hoursLeft = Math.ceil(timeLeft / 3600000);
+                creditBody.innerHTML = `
+                    <div style="border:1px solid var(--glass-border);border-radius:10px;padding:10px;margin:4px 0;">
+                        <div class="bank-row"><span>💰 Сумма</span><span>${game.credit.amount} <img src="${MONETA_ICON}" class="coin-icon" onerror="this.style.display='none'"></span></div>
+                        <div class="bank-row"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
+                        <div class="bank-row"><span>⏳ Осталось времени</span><span>${hoursLeft} ч.</span></div>
+                        <div class="bank-row"><span>✅ Выплачено</span><span>${game.credit.paid} <img src="${MONETA_ICON}" class="coin-icon" onerror="this.style.display='none'"></span></div>
+                        <div class="bank-row"><span>💳 Остаток</span><span class="text-red">${remaining} <img src="${MONETA_ICON}" class="coin-icon" onerror="this.style.display='none'"></span></div>
+                        <div style="text-align:center;margin-top:8px;"><button class="btn-gold" onclick="repayCredit()" style="width:auto;padding:6px 20px;">${t('repay')}</button></div>
+                    </div>`;
             } else {
-                document.getElementById('creditInfo').innerHTML = 'Нет кредитов';
-                document.getElementById('takeCreditBtn').style.display = 'block';
+                creditBody.innerHTML = `
+                    <div style="color:var(--text-secondary);text-align:center;padding:10px;">${t('noCredit')}</div>
+                    <div style="text-align:center;"><button class="btn-gold" onclick="takeCredit()" style="width:auto;padding:6px 20px;">${t('takeCredit')}</button></div>
+                `;
             }
+            
+            document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
+            document.getElementById('bankExpense').textContent = '0';
         }
-
-        function openCreditModal() {
-            const amount = prompt('Сумма кредита (макс. 1000):', '500');
-            const term = Math.min(2, parseInt(prompt('Срок (макс. 2 дня):', '1')));
-            if (amount && term && !game.credit) {
-                game.credit = { amount: parseInt(amount), term, rate: 10, paid: 0, takenAt: Date.now() };
-                game.balance += parseInt(amount);
-                showToast('💰 Кредит взят!');
-                saveGame();
-                updateUI();
-            }
+        function takeCredit() {
+            if (game.credit) { showToast('❌ Уже есть активный кредит!'); return; }
+            game.credit = {
+                amount: 500,
+                rate: 10,
+                paid: 0,
+                takenAt: Date.now(),
+                end: Date.now() + (2 * 24 * 3600000) // 2 дня
+            };
+            game.balance += 500;
+            showToast(`💰 Кредит 500 взят!`);
+            saveGame(); updateUI();
         }
-
         function repayCredit() {
             if (!game.credit) return;
-            const pay = Math.min(game.balance, game.credit.amount - game.credit.paid);
-            game.balance -= pay;
-            game.credit.paid += pay;
-            if (game.credit.paid >= game.credit.amount) game.credit = null;
-            showToast('✅ Выплата произведена');
-            saveGame();
+            const remaining = game.credit.amount - game.credit.paid;
+            const payAmount = Math.min(remaining, game.balance);
+            if (payAmount <= 0) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= payAmount;
+            game.credit.paid += payAmount;
+            if (game.credit.paid >= game.credit.amount) {
+                game.credit = null;
+                showToast('🎉 Кредит погашен!');
+            } else {
+                showToast(`✅ Выплачено ${payAmount}`);
+            }
+            saveGame(); updateUI();
+        }
+
+        // ============================================================
+        // НАВИГАЦИЯ
+        // ============================================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.footer button[data-screen="${screenId}"]`);
+            if (btn) btn.classList.add('active');
+            if (screenId === 'menu-screen') { updateLevelCircle(); renderDistrictsCircle(); }
+            if (screenId === 'resources-screen') renderResources();
+            if (screenId === 'quests-screen') renderQuests();
+            if (screenId === 'profile-screen') updateProfileUI();
+            if (screenId === 'bank-screen') updateBankUI();
+        }
+
+        // ============================================================
+        // TOAST И СОХРАНЕНИЕ
+        // ============================================================
+        let toastTimeout;
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            toast.textContent = text;
+            toast.style.opacity = 1;
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 2500);
+        }
+        function saveGame() {
+            localStorage.setItem('novaraCitySave', JSON.stringify({
+                balance: game.balance, coins: game.coins, crystals: game.crystals,
+                xp: game.xp, level: game.level, reputation: game.reputation,
+                resources: game.resources, buildings: game.buildings, credit: game.credit,
+                quests: game.quests, lastOnline: game.lastOnline,
+                earned: game.earned, builtCount: game.builtCount
+            }));
+        }
+        function loadGame() {
+            const raw = localStorage.getItem('novaraCitySave');
+            if (!raw) return false;
+            try {
+                const data = JSON.parse(raw);
+                Object.assign(game, data);
+                if (!game.buildings) game.buildings = [];
+                game.buildings.forEach(b => { if (!b.status) b.status = 'built'; });
+                if (!game.resources) game.resources = {};
+                return true;
+            } catch (e) { return false; }
+        }
+
+        // ============================================================
+        // АВТОМАТИЧЕСКИЕ ЗАДАЧИ
+        // ============================================================
+        function autoGather() {
+            const income = getTotalIncome() / 60;
+            if (income > 0) { game.balance += income; game.earned += income; }
             updateUI();
         }
 
+        function checkDemolishCompletion() {
+            const now = Date.now();
+            let changed = false;
+            game.buildings = game.buildings.filter(b => {
+                if (b.status === 'demolishing' && now - b.demolishStart >= b.demolishTime) {
+                    changed = true;
+                    return false;
+                }
+                return true;
+            });
+            if (changed && currentDistrictId) renderMap(currentDistrictId);
+        }
+
+        // ============================================================
+        // UPDATE UI
+        // ============================================================
         function updateUI() {
             updateBankUI();
-            renderResources();
             updateLevelCircle();
+            if (document.getElementById('map-screen').classList.contains('active')) updateMapUI();
+            if (document.getElementById('profile-screen').classList.contains('active')) updateProfileUI();
+            if (document.getElementById('quests-screen').classList.contains('active')) renderQuests();
         }
 
-        function updateLevelCircle() {
-            const circle = document.getElementById('levelProgressCircle');
-            const r = 22;
-            const circ = 2 * Math.PI * r;
-            circle.style.strokeDashoffset = circ - (getXpProgress() * circ);
-            document.getElementById('menuLevelCircleText').textContent = game.level;
-        }
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`.footer button[data-screen="${id}"]`);
-            if (btn) btn.classList.add('active');
-            if (id === 'menu-screen') renderDistricts();
-            if (id === 'bank-screen') updateBankUI();
-            if (id === 'resources-screen') renderResources();
-        }
-
-        function showToast(text) {
-            const t = document.getElementById('toast');
-            t.textContent = text;
-            t.style.opacity = 1;
-            clearTimeout(t._t);
-            t._t = setTimeout(() => t.style.opacity = 0, 2500);
-        }
-
-        function saveGame() {
-            localStorage.setItem('novaraSave', JSON.stringify(game));
-        }
-
-        function loadGame() {
-            const raw = localStorage.getItem('novaraSave');
-            if (raw) Object.assign(game, JSON.parse(raw));
-        }
-
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
         function init() {
-            loadGame();
-            if (!game.buildings) game.buildings = [];
-            game.buildings.forEach(b => { if (!b.status) b.status = 'built'; });
-            RESOURCES.forEach(r => { if (!game.resources[r.id]) game.resources[r.id] = 10; });
-            renderDistricts();
-            renderResources();
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang && LANG[savedLang]) lang = savedLang;
+            else { document.getElementById('langModal').classList.add('active'); return; }
+            currentLang = LANG[lang];
+
+            if (!loadGame()) {
+                RESOURCES.forEach(r => { game.resources[r.id] = 10; });
+                saveGame();
+            } else {
+                const diff = (Date.now() - game.lastOnline) / 1000;
+                if (diff > 60) {
+                    const income = getTotalIncome() / 60 * Math.min(diff / 60, 60);
+                    if (income > 0) { game.balance += income; game.earned += income; showToast(`💰 Офлайн-доход: +${Math.round(income)}`); }
+                }
+                game.lastOnline = Date.now();
+                if (!game.resources) game.resources = {};
+                saveGame();
+            }
+
             updateUI();
-            showScreen('menu-screen');
+            renderDistrictsCircle();
+            renderResources();
+            renderQuests();
+
+            document.getElementById('playerName').onchange = function() { localStorage.setItem('playerName', this.value); };
+
+            setInterval(autoGather, 5000);
+            setInterval(checkDemolishCompletion, 1000);
             setInterval(() => {
-                const income = getTotalIncome() / 60;
-                if (income > 0) game.balance += income;
-                RESOURCES.forEach(r => game.resources[r.id] = (game.resources[r.id] || 0) + 0.1);
-                checkDemolish();
                 saveGame();
                 updateUI();
-            }, 5000);
+            }, 30000);
+
+            showScreen('menu-screen');
+            updateLevelCircle();
+            showToast('🏙️ Добро пожаловать в Novara City!');
         }
 
         document.addEventListener('DOMContentLoaded', init);
-        document.getElementById('langModal').addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
     </script>
 </body>
 </html>
