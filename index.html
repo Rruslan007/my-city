@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -257,344 +258,1022 @@
             position: relative;
             width: 100%;
             height: 100%;
-            /* Используем соотношение сторон фона 1080:1920 = 9:16 */
             max-width: 100%;
             overflow: hidden;
-        }
-
-        /* Контейнер для кнопок районов с абсолютным позиционированием */
-        .districts-absolute-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Этот контейнер будет масштабироваться под размер экрана */
-        }
-
-        /* Обёртка для сохранения пропорций */
-        .districts-wrapper {
-            position: relative;
-            width: 100%;
-            /* padding-top: 177.78% = 1920/1080 * 100% */
-            padding-top: 177.78%;
-        }
-
-        .districts-inner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .district-btn-circle {
-            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            background: rgba(10, 14, 26, 0.85);
-            border: 3px solid var(--gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Новые кнопки меню */
+        .menu-btn-wide {
+            width: 100%;
+            max-width: 400px;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 0 !important;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
             transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .menu-btn-wide img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+        .menu-btn-wide.btn-city {
+            background: #00c853;
+        }
+        .menu-btn-wide.btn-store {
+            background: #fbc02d;
+            color: #1a1a2e;
+        }
+        .menu-btn-wide.btn-store img {
+            filter: none;
+        }
+        .menu-btn-wide:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .menu-btn-half-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .menu-btn-half {
+            flex: 1;
+            padding: 14px 8px;
+            border: none;
+            border-radius: 0 !important;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+        }
+        .menu-btn-half img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+        .menu-btn-half.btn-complaints {
+            background: #d50000;
+        }
+        .menu-btn-half.btn-settings {
+            background: #78909c;
+        }
+        .menu-btn-half:hover {
+            transform: scale(1.02);
+        }
+
+        /* Город (пункт) */
+        #city-screen {
+            background: #b2d8a8;
+            background: linear-gradient(145deg, #b2d8a8, #8fc77d, #a8d08d);
+            background-size: 200% 200%;
+            animation: chameleon 8s ease-in-out infinite alternate;
+            padding: 16px;
+            top: 0;
+            bottom: 64px;
+        }
+        @keyframes chameleon {
+            0% { background: #b2d8a8; }
+            50% { background: #9bc78a; }
+            100% { background: #c5e0b5; }
+        }
+
+        #city-screen .city-title {
             text-align: center;
-            /* Размер круга: 90px на фоне 1080px = ~8.33% */
-            width: 8.33%;
-            /* padding-top для сохранения круга: высота = ширина */
-            padding-top: 0;
-            /* Используем aspect-ratio или зададим высоту через JS/CSS calc */
-            /* Вместо этого зададим фиксированный размер в vw */
-            width: 16vw;
-            height: 16vw;
-            max-width: 90px;
-            max-height: 90px;
-            min-width: 60px;
-            min-height: 60px;
-            transform: translate(-50%, -50%);
-            z-index: 5;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2e1a;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.3);
         }
 
-        .district-btn-circle:hover {
-            transform: translate(-50%, -50%) scale(1.08);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
         }
-
-        .district-btn-circle:active {
-            transform: translate(-50%, -50%) scale(0.95);
+        .city-item {
+            aspect-ratio: 1 / 1.2;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
+            position: relative;
+            gap: 4px;
         }
-
-        .district-btn-circle img {
-            width: 50%;
-            height: 50%;
+        .city-item.locked {
+            background: rgba(0,0,0,0.6);
+            color: #888;
+        }
+        .city-item.locked .lock-icon {
+            font-size: 28px;
+        }
+        .city-item.locked .level-req {
+            font-size: 12px;
+            font-weight: 700;
+            color: #aaa;
+        }
+        .city-item.unlocked {
+            background: #111;
+            border-color: var(--gold);
+            cursor: pointer;
+        }
+        .city-item.unlocked .open-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .city-item.unlocked .open-btn:hover {
+            transform: scale(1.05);
+        }
+        .city-item .district-icon {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid var(--gold);
+            animation: pulse 2s ease-in-out infinite;
             background: #1a1f2f;
         }
-
-        .district-btn-circle .dname {
-            font-size: clamp(8px, 1.4vw, 12px);
-            margin-top: 4px;
-            color: var(--gold);
-            font-weight: 700;
-            line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-
-        /* Координаты для каждого района (в % от 1080x1920) */
-        .district-btn-circle.pos-1 { top: 21.88%; left: 37.04%; }  /* (400, 420) */
-        .district-btn-circle.pos-2 { top: 22.92%; left: 62.96%; }  /* (680, 440) */
-        .district-btn-circle.pos-3 { top: 29.17%; left: 37.96%; }  /* (410, 560) */
-        .district-btn-circle.pos-4 { top: 28.65%; left: 62.96%; }  /* (680, 550) */
-        .district-btn-circle.pos-5 { top: 36.46%; left: 37.04%; }  /* (400, 700) */
-        .district-btn-circle.pos-6 { top: 35.42%; left: 60.19%; }  /* (650, 680) */
-        .district-btn-circle.pos-7 { top: 42.71%; left: 35.19%; }  /* (380, 820) */
-        .district-btn-circle.pos-8 { top: 41.15%; left: 58.33%; }  /* (630, 790) */
-        .district-btn-circle.pos-9 { top: 47.92%; left: 55.56%; }  /* (600, 920) */
-
-        .level-circle-wrapper {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            z-index: 10;
-        }
-
-        .level-circle-svg {
-            transform: rotate(-90deg);
-            width: 56px;
-            height: 56px;
-        }
-
-        .level-circle-bg {
-            fill: rgba(0, 0, 0, 0.6);
-            stroke: rgba(255, 255, 255, 0.1);
-            stroke-width: 4;
-        }
-
-        .level-circle-progress {
-            fill: none;
-            stroke: #00c853;
-            stroke-width: 4;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .level-circle-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 18px;
-            font-weight: 800;
+        .city-item .district-name {
+            font-size: 12px;
+            font-weight: 600;
             color: #fff;
+            margin-top: 4px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            pointer-events: none;
         }
-
-        /* === КАРТА === */
-        #map-screen {
-            padding: 0;
-            top: 0;
-            overflow: hidden;
-            background: #2d4a22;
-            border: 1px solid rgba(255,255,255,0.1);
+        .city-item.coming-soon {
+            background: #000;
+            border-color: #555;
         }
-
-        #map-screen .map-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            background: rgba(10, 14, 26, 0.9);
-            backdrop-filter: blur(8px);
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--glass-border);
+        .city-item.coming-soon .soon-icon {
+            font-size: 32px;
+            color: #ffeb3b;
         }
-
-        #map-screen .map-header .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--text-primary);
+        .city-item.coming-soon .soon-label {
             font-size: 14px;
-            padding: 6px 12px;
-            cursor: pointer;
-        }
-
-        #map-screen .map-header .back-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
-        #map-screen .map-header .district-title {
-            font-size: 18px;
             font-weight: 700;
-            color: var(--text-primary);
-            flex: 1;
-            text-align: center;
+            color: #fff;
+            margin-top: 4px;
         }
 
-        .map-scroll-container {
-            position: absolute;
-            top: 50px;
+        /* Окно выбора района */
+        .district-select-modal {
+            display: none;
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-
-        .map-scroll-container::-webkit-scrollbar {
-            width: 2px;
-            height: 2px;
+        .district-select-modal.active {
+            display: flex;
         }
-
-        .map-scroll-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .map-scroll-container::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-        }
-
-        .map-world {
-            width: 3000px;
-            height: 3000px;
-            background: #4a7c3f;
+        .district-select-box {
+            background: #1a1f2f;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 20px 16px;
+            border: 1px solid var(--glass-border);
             position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
         }
-
-        .map-road-h {
+        .district-select-box .close-btn {
             position: absolute;
-            height: 120px;
-            background: #3a3a3a;
-            left: 0;
-            width: 100%;
-        }
-        .map-road-h::after {
-            content: '';
-            position: absolute;
-            top: 55px;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: repeating-linear-gradient(90deg, #ffeb3b 0px, #ffeb3b 30px, transparent 30px, transparent 50px);
-        }
-        .map-road-v {
-            position: absolute;
-            width: 120px;
-            background: #3a3a3a;
-            top: 0;
-            height: 100%;
-        }
-        .map-road-v::after {
-            content: '';
-            position: absolute;
-            left: 55px;
-            top: 0;
-            width: 10px;
-            height: 100%;
-            background: repeating-linear-gradient(180deg, #ffeb3b 0px, #ffeb3b 30px, transparent 30px, transparent 50px);
-        }
-
-        .map-plot {
-            position: absolute;
-            background: #5a9c4a;
-            border: 2px solid #7cfc00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            transition: background 0.2s;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 24px;
             cursor: pointer;
         }
-        .map-plot:hover {
-            background: #6aac5a;
+        .district-select-box .select-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
         }
-        .map-plot.built {
-            background: #3a6a2a;
+        .district-select-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
-        .map-plot.demolishing {
-            background: #2a4a1a;
-        }
-
-        .map-btn-plus {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #1a3a6a;
-            border: 3px solid var(--gold);
-            color: var(--gold);
-            font-size: 28px;
-            font-weight: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .district-select-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px 4px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             transition: var(--transition);
-            z-index: 3;
+            font-weight: 600;
+            font-size: 12px;
+            color: #fff;
         }
-        .map-btn-plus:hover {
-            transform: scale(1.1);
+        .district-select-item:hover {
+            background: rgba(255,215,0,0.15);
+            border-color: var(--gold);
+        }
+        .district-select-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 4px;
         }
 
-        .map-bottom-stats {
+        /* Магазин */
+        #shop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #shop-modal.active {
+            display: flex;
+        }
+        .shop-box {
+            background: #6a1b9a;
+            border: 4px solid #fbc02d;
+            border-radius: 16px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 16px 12px;
+        }
+        .shop-box .close-btn {
             position: absolute;
-            bottom: 10px;
-            left: 16px;
-            right: 16px;
-            z-index: 10;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .shop-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0 8px 0;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+        .shop-header .shop-title-wrap {
+            background: rgba(0,0,0,0.4);
+            border-radius: 30px;
+            padding: 6px 20px;
+            flex: 1;
+            text-align: center;
+        }
+        .shop-header .shop-title-wrap h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        .shop-balances {
             display: flex;
             flex-direction: column;
             gap: 4px;
+            flex-shrink: 0;
         }
-        .map-bottom-stats .compact-box {
-            background: rgba(10, 14, 26, 0.7);
-            backdrop-filter: blur(6px);
-            border-radius: 8px;
-            padding: 6px 12px;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .map-bottom-stats .compact-box .lbl {
-            font-size: 10px;
-            color: var(--text-secondary);
-        }
-        .map-bottom-stats .compact-box .val {
+        .shop-balances .bal-item {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 2px 12px;
             font-size: 12px;
             font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
         }
-        .map-bottom-stats .xp-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
+        .shop-balances .bal-item img {
+            width: 16px;
+            height: 16px;
+        }
+        .shop-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-top: 8px;
+        }
+        .shop-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .shop-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
             border-radius: 4px;
-            overflow: hidden;
+        }
+        .shop-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .shop-section .section-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .shop-section .section-title img {
+            width: 24px;
+            height: 24px;
+        }
+        .shop-items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .shop-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 6px 4px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .shop-item .item-badge {
+            font-size: 8px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--red);
+            padding: 0 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .shop-item .item-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .shop-item .item-amount img {
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+        }
+        .shop-item .item-price {
+            font-size: 10px;
+            color: #ffeb3b;
+            font-weight: 600;
+        }
+        .shop-item .item-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
             margin-top: 2px;
         }
-        .map-bottom-stats .xp-bar .fill {
+        .shop-item .item-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .shop-item .item-btn.timer {
+            background: #555;
+            color: #fff;
+        }
+        .shop-item.green-item {
+            border-color: #00c853;
+        }
+        .shop-item.green-item .item-badge {
+            background: #00c853;
+        }
+        .shop-item.blue-item {
+            border-color: #2196f3;
+        }
+        .shop-item.discount {
+            border-color: #ff1744;
+            position: relative;
+        }
+        .shop-item.discount .discount-tag {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff1744;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        .shop-exchanger {
+            margin-top: 4px;
+        }
+        .shop-exchanger .exchanger-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .shop-exchanger .exchanger-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--gold);
+        }
+        .shop-exchanger .exchanger-row .num-display {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-weight: 700;
+            font-size: 18px;
+            min-width: 60px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .shop-exchanger .exchanger-row .num-display.active {
+            border-color: var(--gold);
+            background: rgba(255,215,0,0.2);
+        }
+        .shop-exchanger .exchanger-result {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
+        /* Промокод */
+        .promo-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 4px;
+        }
+        .promo-section .promo-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .promo-section .promo-row {
+            display: flex;
+            gap: 8px;
+        }
+        .promo-section .promo-row input {
+            flex: 1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 14px;
+        }
+        .promo-section .promo-row button {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .promo-error {
+            font-size: 12px;
+            color: #ff1744;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Настройки, Жалобы */
+        .modal-settings, .modal-complaints {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-settings.active, .modal-complaints.active {
+            display: flex;
+        }
+        .settings-box, .complaints-box {
+            background: #f5f0e8;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 3px solid #1a3a6a;
+            position: relative;
+        }
+        .settings-box .modal-header, .complaints-box .modal-header {
+            background: #1a3a6a;
+            padding: 12px 16px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #1a3a6a;
+        }
+        .settings-box .modal-header h2, .complaints-box .modal-header h2 {
+            color: #fff;
+            font-size: 20px;
+            margin: 0;
+        }
+        .settings-box .modal-header .close-btn, .complaints-box .modal-header .close-btn {
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 26px;
+            cursor: pointer;
+        }
+        .settings-box .modal-body, .complaints-box .modal-body {
+            padding: 16px;
+            color: #1a1a2e;
+        }
+        .settings-box .modal-body .subtitle {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .settings-box .modal-body .center-text {
+            text-align: center;
+            margin: 8px 0;
+        }
+        .settings-box .modal-body .btn-change-lang {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        .complaints-box .modal-body textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Футер для города */
+        .footer-city {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--glass-border);
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
+            height: 64px;
+        }
+        .footer-city.active {
+            display: flex;
+        }
+        .footer-city button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 9px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 2px 6px;
+            min-width: 48px;
+        }
+        .footer-city button img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: grayscale(0.6) brightness(0.7);
+            transition: var(--transition);
+        }
+        .footer-city button.active img {
+            filter: drop-shadow(0 0 10px gold) brightness(1);
+        }
+        .footer-city button.active {
+            color: var(--gold);
+        }
+
+        /* Затемнение */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 0.5s ease;
+        }
+        .fade-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Убрал круги районов и круг опыта в меню */
+        .district-btn-circle, .level-circle-wrapper {
+            display: none !important;
+        }
+
+        /* Затемнение для ресурсов, квестов, профиля */
+        .glass-dark {
+            background: rgba(0,0,0,0.4) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Объединенный блок опыта и репутации */
+        .xp-rep-bar {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 4px 12px 8px 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 0 auto 8px auto;
+            max-width: 300px;
+        }
+        .xp-rep-bar .top-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .xp-rep-bar .top-row .rep {
+            color: var(--gold);
+        }
+        .xp-rep-bar .xp-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .xp-rep-bar .xp-track .fill {
             height: 100%;
             background: var(--gold-gradient);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
 
-        /* === ОКНО СТРОИТЕЛЬСТВА === */
+        /* Карта: исправление сдвига */
+        .map-world {
+            width: 100%;
+            height: 100%;
+            min-height: 3000px;
+            background: #4a7c3f;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        .map-world .map-road-h, .map-world .map-road-v {
+            background: #3a3a3a;
+            position: absolute;
+        }
+        .map-world .map-road-h {
+            height: 60px;
+            left: 0;
+            width: 100%;
+        }
+        .map-world .map-road-h::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, #fff 0px, #fff 20px, transparent 20px, transparent 30px);
+        }
+        .map-world .map-road-v {
+            width: 60px;
+            top: 0;
+            height: 100%;
+        }
+        .map-world .map-road-v::after {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: repeating-linear-gradient(180deg, #fff 0px, #fff 20px, transparent 20px, transparent 30px);
+        }
+        /* Убираем линии на перекрестках */
+        .map-world .map-road-h.cross, .map-world .map-road-v.cross {
+            background: #4a7c3f;
+        }
+        .map-world .map-road-h.cross::after, .map-world .map-road-v.cross::after {
+            display: none;
+        }
+
+        /* Заголовки в банке, ресурсах, квестах, профиле */
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            padding: 8px 0 12px 0;
+            margin: 0;
+        }
+
+        /* Квесты */
+        .quests-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quest-category {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+        }
+        .quest-category .cat-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .quest-category .cat-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .quest-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            position: relative;
+        }
+        .quest-item.completed {
+            opacity: 0.5;
+            background: rgba(0,0,0,0.3);
+        }
+        .quest-item .q-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+        }
+        .quest-item .q-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin: 4px 0;
+        }
+        .quest-item .q-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 4px 0;
+            position: relative;
+        }
+        .quest-item .q-progress .fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .quest-item .q-progress .p-text {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+        }
+        .quest-item .q-reward {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        .quest-item .q-btn {
+            display: block;
+            width: 100%;
+            padding: 4px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .quest-item .q-btn.gold {
+            background: var(--gold-gradient);
+            color: #1a1a2e;
+        }
+        .quest-item .q-btn.gray {
+            background: #555;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        .quest-item .q-done {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: #00c853;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 16px;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        .quest-item .q-done .check {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00c853;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            font-size: 14px;
+        }
+
+        /* Окно подтверждения */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 900;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .confirm-overlay.active {
+            display: flex;
+        }
+        .confirm-box {
+            background: #1a1f2f;
+            border-radius: 16px;
+            max-width: 360px;
+            width: 100%;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .confirm-box .confirm-header {
+            background: #1a3a6a;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+        }
+        .confirm-box .confirm-header .close-btn {
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .confirm-box .confirm-body {
+            padding: 16px;
+            color: #fff;
+            text-align: center;
+        }
+        .confirm-box .confirm-actions {
+            display: flex;
+            gap: 0;
+            border-top: 1px solid var(--glass-border);
+        }
+        .confirm-box .confirm-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .confirm-box .confirm-actions .btn-cancel {
+            background: #555;
+            color: #fff;
+        }
+        .confirm-box .confirm-actions .btn-confirm {
+            background: var(--gold-gradient);
+            color: #1a1a2e;
+        }
+
+        /* Исправления */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -609,534 +1288,8 @@
             align-items: flex-end;
             padding: 20px;
         }
-
         .modal-overlay.active {
             display: flex;
-        }
-
-        .modal-box-build {
-            background: var(--bg-primary);
-            border-radius: 24px 24px 0 0;
-            padding: 20px 16px 30px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 85vh;
-            border-top: 1px solid var(--glass-border);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
-            animation: slideUp 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .modal-box-build .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            font-size: 20px;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .modal-box-build h2 {
-            margin-bottom: 16px;
-            color: var(--text-primary);
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .build-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            overflow-y: auto;
-            padding-right: 4px;
-            flex: 1;
-        }
-
-        .build-grid::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .build-grid::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-        }
-
-        .build-card {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px;
-            border: 1px solid var(--glass-border);
-            text-align: center;
-            position: relative;
-        }
-
-        .build-card .limit {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-bottom: 6px;
-        }
-
-        .build-card img {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #1a1f2f;
-        }
-
-        .build-card .bname {
-            font-size: 13px;
-            font-weight: 700;
-            margin: 6px 0 4px;
-        }
-
-        .build-card .price {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        .build-card .price img {
-            width: 14px;
-            height: 14px;
-        }
-
-        .build-card .btn-gold {
-            font-size: 12px;
-            padding: 6px 12px;
-            width: auto;
-        }
-        .build-card .btn-gold.building {
-            background: var(--blue);
-            color: #fff;
-            font-size: 11px;
-        }
-
-        /* === ОКНО ИНФОРМАЦИИ О ЗДАНИИ === */
-        .modal-box-info {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 24px;
-            max-width: 380px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            text-align: center;
-        }
-
-        .modal-box-info .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
-            border: none;
-            color: var(--red);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .modal-box-info img {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            object-fit: cover;
-            margin-bottom: 12px;
-        }
-
-        .modal-box-info .info-row {
-            font-size: 13px;
-            margin: 6px 0;
-            color: var(--text-secondary);
-        }
-
-        .modal-box-info .info-row span {
-            color: var(--text-primary);
-        }
-
-        .modal-box-info .built-date {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-top: 8px;
-        }
-
-        .modal-box-info .btn-gold.demolish {
-            margin-top: 12px;
-        }
-
-        /* === ОКНО ПОДТВЕРЖДЕНИЯ СНОСА === */
-        .modal-confirm {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 600;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-confirm.active {
-            display: flex;
-        }
-
-        .confirm-box {
-            background: #1a3a6a;
-            border-radius: 16px;
-            max-width: 340px;
-            width: 100%;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
-
-        .confirm-box .confirm-header {
-            background: #1e447a;
-            padding: 14px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .confirm-box .confirm-body {
-            padding: 16px 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 13px;
-        }
-
-        .confirm-box .confirm-body .cost {
-            font-size: 11px;
-            margin-top: 4px;
-            color: var(--text-secondary);
-        }
-
-        .confirm-box .confirm-actions {
-            display: flex;
-            gap: 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .confirm-box .confirm-actions button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .confirm-box .confirm-actions .btn-cancel {
-            background: #1e447a;
-            color: #fff;
-        }
-
-        .confirm-box .confirm-actions .btn-confirm {
-            background: var(--gold-gradient);
-            color: #1a1a2e;
-        }
-        .confirm-box .confirm-actions .btn-confirm:disabled {
-            background: #555;
-            color: #fff;
-            cursor: not-allowed;
-        }
-        .confirm-box .confirm-actions .btn-confirm:disabled + .error-text {
-            display: block;
-        }
-        .error-text {
-            display: none;
-            color: var(--red);
-            font-size: 10px;
-            text-align: center;
-            padding: 4px;
-        }
-
-        /* === БАНК === */
-        #bank-screen {
-            background: url('https://rruslan007.github.io/novara-city-images/effects/bank_fon.PNG') center/cover no-repeat;
-            padding: 16px;
-            top: 0;
-            padding-top: 100px;
-        }
-
-        #bank-screen .bank-accordion-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 420px;
-            margin: 0 auto;
-        }
-
-        .accordion {
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            overflow: hidden;
-            background: rgba(10, 14, 26, 0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        .accordion .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .accordion .header:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion .header .left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .accordion .header .left img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
-
-        .accordion .header .arrow {
-            font-size: 18px;
-            transition: var(--transition);
-            color: var(--text-secondary);
-        }
-
-        .accordion .header .arrow.open {
-            transform: rotate(180deg);
-        }
-
-        .accordion .body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-            padding: 0 16px;
-        }
-
-        .accordion .body.open {
-            max-height: 600px;
-            padding: 0 16px 16px;
-            overflow-y: auto;
-        }
-
-        .accordion .body::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .accordion .body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        .bank-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            font-size: 14px;
-        }
-
-        .bank-row .label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .bank-row .label img {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* === РЕСУРСЫ === */
-        .resource-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .resource-card {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-        }
-
-        .resource-card img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-
-        .resource-card .rname {
-            font-size: 12px;
-            margin: 4px 0;
-            color: var(--text-secondary);
-        }
-
-        .resource-card .ramount {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gold);
-        }
-
-        /* === КВЕСТЫ === */
-        .quest-item {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .quest-item .qheader {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .quest-item .qheader .qtitle {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .quest-item .qheader .qreward {
-            color: var(--gold);
-            font-size: 13px;
-        }
-
-        .quest-item .progress-bar {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            margin-top: 6px;
-            overflow: hidden;
-        }
-
-        .quest-item .progress-bar .fill {
-            height: 100%;
-            background: var(--gold-gradient);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .quest-item .qstatus {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        /* === ПРОФИЛЬ === */
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            border: 2px solid var(--gold);
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .profile-stats .stat {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .profile-stats .stat .label {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .profile-stats .stat .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gold);
-        }
-
-        /* === МОДАЛКА === */
-        .modal-box {
-            background: var(--bg-secondary);
-            border-radius: 24px;
-            padding: 24px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            position: relative;
-        }
-
-        .modal-box .close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
-            border: none;
-            color: var(--red);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .text-gold { color: var(--gold); }
-        .text-green { color: var(--green); }
-        .text-red { color: var(--red); }
-        .text-center { text-align: center; }
-        .mt-8 { margin-top: 8px; }
-        .mb-8 { margin-bottom: 8px; }
-        .mt-12 { margin-top: 12px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .gap-8 { gap: 8px; }
-
-        @media (min-width: 480px) {
-            .resource-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (min-width: 768px) {
-            body { max-width: 500px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); }
-            .footer { max-width: 500px; left: 50%; transform: translateX(-50%); }
-            .screen { max-width: 500px; left: 50%; transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -1154,68 +1307,75 @@
     <!-- ===== МЕНЮ ===== -->
     <div class="screen active" id="menu-screen">
         <div class="overlay">
-            <div class="districts-wrapper">
-                <div class="districts-inner" id="districtsContainer">
-                    <!-- Кнопки районов генерируются скриптом -->
-                </div>
-            </div>
-            
-            <!-- Круг уровня -->
-            <div class="level-circle-wrapper">
-                <svg class="level-circle-svg" viewBox="0 0 56 56">
-                    <circle class="level-circle-bg" cx="28" cy="28" r="22"></circle>
-                    <circle class="level-circle-progress" id="levelProgressCircle" cx="28" cy="28" r="22" stroke-dasharray="138.23" stroke-dashoffset="0"></circle>
-                </svg>
-                <div class="level-circle-text" id="menuLevelCircleText">1</div>
+            <button class="menu-btn-wide btn-city" onclick="openCity()">
+                <span>Город</span>
+                <img src="https://rruslan007.github.io/novara-city-images/logo/city_icon.png" alt="city">
+            </button>
+            <button class="menu-btn-wide btn-store" onclick="openShop()">
+                <span>Магазин</span>
+                <img src="https://rruslan007.github.io/novara-city-images/logo/store.png" alt="store">
+            </button>
+            <div class="menu-btn-half-row">
+                <button class="menu-btn-half btn-complaints" onclick="openComplaints()">
+                    <img src="https://rruslan007.github.io/novara-city-images/logo/nevs_icon.png" alt="complaints">
+                    <span>Жалобы</span>
+                </button>
+                <button class="menu-btn-half btn-settings" onclick="openSettings()">
+                    <img src="https://rruslan007.github.io/novara-city-images/logo/settings.png" alt="settings">
+                    <span>Настройки</span>
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- ===== ГОРОД (ПУНКТ) ===== -->
+    <div class="screen" id="city-screen">
+        <div class="city-title">Выберите район:</div>
+        <div class="city-grid" id="cityGrid"></div>
+    </div>
+
     <!-- ===== КАРТА ===== -->
     <div class="screen" id="map-screen">
-        <div class="map-header">
-            <button class="back-btn" onclick="showScreen('menu-screen')">
-                <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back" onerror="this.style.display='none'">
+        <div class="map-header" style="position:absolute;top:0;left:0;right:0;z-index:10;background:rgba(10,14,26,0.9);backdrop-filter:blur(8px);padding:8px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--glass-border);">
+            <button class="back-btn" onclick="goBackFromMap()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:#fff;font-size:14px;padding:6px 12px;cursor:pointer;">
+                <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back" style="width:20px;height:20px;">
                 <span id="mapBack">←</span>
             </button>
-            <span class="district-title" id="mapTitle">Район</span>
+            <span class="district-title" id="mapTitle" style="font-size:18px;font-weight:700;flex:1;text-align:center;">Район</span>
         </div>
-        
-        <div class="map-scroll-container" id="mapScrollContainer">
-            <div class="map-world" id="mapWorld">
-                <!-- Генерируется скриптом -->
-            </div>
+        <div class="map-scroll-container" id="mapScrollContainer" style="position:absolute;top:50px;left:0;right:0;bottom:0;overflow:auto;">
+            <div class="map-world" id="mapWorld"></div>
         </div>
-
-        <div class="map-bottom-stats" id="mapBottomStats">
-            <div class="compact-box">
-                <span><span class="lbl">⭐ LVL </span><span class="val" id="mapLvlBottom">1</span></span>
-                <span><span class="lbl">Репутация: </span><span class="val text-gold" id="mapReputationBottom">0</span></span>
+        <div class="map-bottom-stats" style="position:absolute;bottom:10px;left:16px;right:16px;z-index:10;display:flex;flex-direction:column;gap:4px;">
+            <div class="compact-box" style="background:rgba(10,14,26,0.7);backdrop-filter:blur(6px);border-radius:8px;padding:6px 12px;border:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;">
+                <span><span class="lbl" style="font-size:10px;color:var(--text-secondary);">⭐ LVL </span><span class="val" id="mapLvlBottom" style="font-size:12px;font-weight:600;">1</span></span>
+                <span><span class="lbl" style="font-size:10px;color:var(--text-secondary);">Репутация: </span><span class="val text-gold" id="mapReputationBottom" style="font-size:12px;font-weight:600;color:var(--gold);">0</span></span>
             </div>
-            <div class="compact-box" style="flex-direction:column;padding:4px 12px 6px;">
+            <div class="compact-box" style="background:rgba(10,14,26,0.7);backdrop-filter:blur(6px);border-radius:8px;padding:4px 12px 6px;border:1px solid var(--glass-border);flex-direction:column;">
                 <div style="width:100%;display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);">
                     <span id="mapXpLabelBottom">0 / 100 XP</span>
                 </div>
-                <div class="xp-bar"><div class="fill" id="mapXpFillBottom" style="width:0%"></div></div>
+                <div class="xp-bar" style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-top:2px;"><div class="fill" id="mapXpFillBottom" style="height:100%;background:var(--gold-gradient);border-radius:4px;transition:width 0.5s ease;width:0%;"></div></div>
             </div>
         </div>
     </div>
 
     <!-- ===== БАНК ===== -->
     <div class="screen" id="bank-screen">
-        <div class="bank-accordion-wrapper">
-            <div class="accordion">
-                <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_icon.png" alt="bank" onerror="this.textContent='🏦'"> <span id="bankMyBank">Мой банк</span></div>
-                    <span class="arrow">▼</span>
+        <div class="page-title" id="bankTitle">Банк</div>
+        <div class="bank-accordion-wrapper" style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto;">
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_icon.png" alt="bank" style="width:24px;height:24px;"> <span id="bankMyBank">Мой банк</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
                 </div>
-                <div class="body open">
+                <div class="body open" style="max-height:600px;padding:0 16px 16px;overflow-y:auto;">
                     <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankMyBankTitle">Мой банк</div>
-                    <div class="bank-row">
-                        <div class="label"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;" onerror="this.textContent='💰'"> Баланс</div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
+                        <div class="label" style="display:flex;align-items:center;gap:6px;"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;"> Баланс</div>
                         <span id="bankBalanceDisplay">1000</span>
                     </div>
-                    <div class="bank-row">
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
                         <span>💎 Кристаллы</span><span id="bankCrystalsDisplay">50</span>
                     </div>
                     <div style="margin-top:12px;text-align:center;">
@@ -1223,13 +1383,12 @@
                     </div>
                 </div>
             </div>
-
-            <div class="accordion">
-                <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/credit_icon.png" alt="credit" onerror="this.textContent='💳'"> <span id="bankCredit">Кредит</span></div>
-                    <span class="arrow">▼</span>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/credit_icon.png" alt="credit" style="width:24px;height:24px;"> <span id="bankCredit">Кредит</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
                 </div>
-                <div class="body">
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
                     <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankCreditTitle">Кредит</div>
                     <div id="creditInfo"><span style="color:var(--text-secondary);">Нет активных кредитов</span></div>
                     <div style="text-align:center;margin-top:12px;" id="creditBtnWrapper">
@@ -1237,29 +1396,27 @@
                     </div>
                 </div>
             </div>
-
-            <div class="accordion">
-                <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/crypto_icon.png" alt="crypto" onerror="this.textContent='🪙'"> <span id="bankCrypto">Криптовалюта</span></div>
-                    <span class="arrow">▼</span>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/crypto_icon.png" alt="crypto" style="width:24px;height:24px;"> <span id="bankCrypto">Криптовалюта</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
                 </div>
-                <div class="body">
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
                     <div id="cryptoPortfolio"><span style="color:var(--text-secondary);">У вас нет криптовалют</span></div>
                     <div style="text-align:center;margin-top:12px;">
                         <button class="btn-gold" onclick="openCryptoExchange()" style="width:auto;padding:6px 20px;">🚀 Биржа</button>
                     </div>
                 </div>
             </div>
-
-            <div class="accordion">
-                <div class="header" onclick="toggleAccordion(this)">
-                    <div class="left"><img src="https://rruslan007.github.io/novara-city-images/logo/income_and_expence_icon.png" alt="stats" onerror="this.textContent='📊'"> <span id="bankStats">Доходы и расходы</span></div>
-                    <span class="arrow">▼</span>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/income_and_expence_icon.png" alt="stats" style="width:24px;height:24px;"> <span id="bankStats">Доходы и расходы</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
                 </div>
-                <div class="body">
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
                     <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankStatsTitle">Доходы и расходы</div>
-                    <div class="bank-row"><span>📈 Доходы</span><span class="text-green" id="bankIncome">0</span></div>
-                    <div class="bank-row"><span>📉 Расходы</span><span class="text-red" id="bankExpense">0</span></div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📈 Доходы</span><span class="text-green" id="bankIncome">0</span></div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📉 Расходы</span><span class="text-red" id="bankExpense">0</span></div>
                 </div>
             </div>
         </div>
@@ -1267,102 +1424,205 @@
 
     <!-- ===== РЕСУРСЫ ===== -->
     <div class="screen" id="resources-screen">
-        <div class="resource-grid" id="resourceGrid"></div>
+        <div class="page-title" id="resourcesTitle">Ресурсы</div>
+        <div class="resource-grid" id="resourceGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
     </div>
 
     <!-- ===== КВЕСТЫ ===== -->
     <div class="screen" id="quests-screen">
-        <div id="questsList"></div>
+        <div class="page-title" id="questsTitle">Квесты</div>
+        <div class="quests-container" id="questsList"></div>
     </div>
 
     <!-- ===== ПРОФИЛЬ ===== -->
     <div class="screen" id="profile-screen">
-        <div class="profile-avatar">👤</div>
+        <div class="page-title" id="profileTitle">Профиль</div>
+        <div class="profile-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--glass-bg);border:2px solid var(--gold);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:40px;">👤</div>
         <div style="text-align:center;margin-bottom:12px;">
             <input type="text" id="playerName" placeholder="Ваше имя" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;padding:8px 14px;color:#fff;width:100%;max-width:250px;font-size:16px;text-align:center;">
         </div>
-        <div class="profile-stats">
-            <div class="stat"><div class="label">Уровень</div><div class="value" id="profileLevel">1</div></div>
-            <div class="stat"><div class="label">Опыт</div><div class="value" id="profileXp">0</div></div>
-            <div class="stat"><div class="label">Репутация</div><div class="value text-gold" id="profileReputation">0</div></div>
-            <div class="stat"><div class="label">Построено</div><div class="value" id="profileBuildings">0</div></div>
-            <div class="stat"><div class="label">Заработано</div><div class="value" id="profileEarned">0</div></div>
-            <div class="stat"><div class="label">Крипто-активы</div><div class="value" id="profileCryptoVal">0</div></div>
+        <div class="profile-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Уровень</div><div class="value" id="profileLevel" style="font-size:18px;font-weight:700;color:var(--gold);">1</div></div>
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Опыт</div><div class="value" id="profileXp" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Репутация</div><div class="value text-gold" id="profileReputation" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Построено</div><div class="value" id="profileBuildings" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Заработано</div><div class="value" id="profileEarned" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Крипто-активы</div><div class="value" id="profileCryptoVal" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
         </div>
-        <div style="text-align:center;margin-top:12px;">
-            <button class="btn-gold" onclick="openLangModal()" style="width:auto;padding:8px 24px;">🌐 Сменить язык</button>
-        </div>
-        <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-secondary);">
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">
             <span id="profileTime">В игре: 0 мин</span>
         </div>
     </div>
 
-    <!-- ===== ФУТЕР ===== -->
+    <!-- ===== ФУТЕР ОСНОВНОЙ ===== -->
     <div class="footer" id="footer">
         <button onclick="showScreen('bank-screen')" data-screen="bank-screen">
-            <img src="https://rruslan007.github.io/novara-city-images/logo/bank_1.png" alt="Bank" onerror="this.textContent='💰'">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/bank_1.png" alt="Bank">
             <span class="label" id="footerBank">Bank</span>
         </button>
         <button onclick="showScreen('resources-screen')" data-screen="resources-screen">
-            <img src="https://rruslan007.github.io/novara-city-images/logo/resources_icon.png" alt="Resources" onerror="this.textContent='📦'">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/resources_icon.png" alt="Resources">
             <span class="label" id="footerResources">Resources</span>
         </button>
         <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
-            <img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png" alt="Home" onerror="this.textContent='🏠'">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png" alt="Home">
             <span class="label" id="footerHome">Home</span>
         </button>
         <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
-            <img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png" alt="Quests" onerror="this.textContent='📋'">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png" alt="Quests">
             <span class="label" id="footerQuests">Quests</span>
         </button>
         <button onclick="showScreen('profile-screen')" data-screen="profile-screen">
-            <img src="https://rruslan007.github.io/novara-city-images/logo/profile_icon.png" alt="Profile" onerror="this.textContent='👤'">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/profile_icon.png" alt="Profile">
             <span class="label" id="footerProfile">Profile</span>
         </button>
     </div>
 
+    <!-- ===== ФУТЕР ГОРОДА ===== -->
+    <div class="footer-city" id="footerCity">
+        <button onclick="goBackFromMap()" data-action="back" class="active">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back">
+            <span class="label">Назад</span>
+        </button>
+        <button onclick="showToast('Совет: стройте здания для дохода')" data-action="sovet">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/sovet_icon.png" alt="sovet">
+            <span class="label">Совет</span>
+        </button>
+        <button onclick="showToast('Ивент: удвоение дохода на 1 час!')" data-action="event">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/nevs_icon.png" alt="event">
+            <span class="label">Ивент</span>
+        </button>
+    </div>
+
+    <!-- ===== ОКНО ВЫБОРА РАЙОНА ===== -->
+    <div class="district-select-modal" id="districtSelectModal">
+        <div class="district-select-box">
+            <button class="close-btn" onclick="closeDistrictSelect()">✕</button>
+            <div class="select-title">Выберите район</div>
+            <div class="district-select-grid" id="districtSelectGrid"></div>
+        </div>
+    </div>
+
+    <!-- ===== МАГАЗИН (ОКНО) ===== -->
+    <div id="shop-modal">
+        <div class="shop-box">
+            <button class="close-btn" onclick="closeShop()">✕</button>
+            <div class="shop-header">
+                <div class="shop-title-wrap"><h2>Магазин</h2></div>
+                <div class="shop-balances">
+                    <div class="bal-item"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" id="shopBalCoinsImg"> <span id="shopBalCoins">1000</span></div>
+                    <div class="bal-item">💎 <span id="shopBalCrystals">50</span></div>
+                </div>
+            </div>
+            <div class="shop-scroll" id="shopScroll">
+                <!-- NOVARA COIN -->
+                <div class="shop-section">
+                    <div class="section-title"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG"> NOVARA COIN</div>
+                    <div class="shop-items-grid" id="shopCoinItems"></div>
+                </div>
+                <!-- NOVARA DIAMONDS -->
+                <div class="shop-section">
+                    <div class="section-title">💎 NOVARA DIAMONDS</div>
+                    <div class="shop-items-grid" id="shopDiamondItems"></div>
+                </div>
+                <!-- Обменник -->
+                <div class="shop-section shop-exchanger">
+                    <div class="section-title">🔄 Обменник</div>
+                    <div style="font-size:12px;font-style:italic;color:#ddd;">Обменяйте кристаллы на монеты по курсу</div>
+                    <div style="font-weight:700;font-size:14px;color:var(--gold);">1 кристалл = 100 монет</div>
+                    <div class="exchanger-row">
+                        <button class="btn-gold" style="width:auto;padding:4px 12px;font-size:16px;" onclick="adjustExchange(-10)">−</button>
+                        <span class="num-display" id="exchangerAmount" onclick="enableExchangeInput()">0</span>
+                        <button class="btn-gold" style="width:auto;padding:4px 12px;font-size:16px;" onclick="adjustExchange(10)">+</button>
+                    </div>
+                    <div class="exchanger-result" id="exchangerResult">0 кристаллов = 0 монет</div>
+                    <button class="btn-gold" onclick="openExchangeConfirm()" style="width:auto;padding:6px 20px;margin:0 auto;display:block;">Обменять</button>
+                </div>
+                <!-- Промокод -->
+                <div class="promo-section">
+                    <div class="promo-title">🎁 Промокод</div>
+                    <div style="font-size:12px;color:#ddd;">Введите промокод</div>
+                    <div class="promo-row">
+                        <input type="text" id="promoInput" placeholder="Введите промокод">
+                        <button onclick="applyPromo()">Применить</button>
+                    </div>
+                    <div class="promo-error" id="promoError">Промокод не найден или не действителен</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== НАСТРОЙКИ ===== -->
+    <div class="modal-settings" id="settingsModal">
+        <div class="settings-box">
+            <div class="modal-header">
+                <h2>Настройки</h2>
+                <button class="close-btn" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="subtitle">Язык</div>
+                <div class="center-text">Выбран: <span id="currentLangDisplay">Русский</span></div>
+                <button class="btn-change-lang" onclick="openLangModal()">Сменить язык</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЖАЛОБЫ ===== -->
+    <div class="modal-complaints" id="complaintsModal">
+        <div class="complaints-box">
+            <div class="modal-header">
+                <h2>Жалобы</h2>
+                <button class="close-btn" onclick="closeComplaints()">✕</button>
+            </div>
+            <div class="modal-body">
+                <textarea placeholder="Опишите вашу жалобу..."></textarea>
+                <button class="btn-gold" style="margin-top:8px;width:auto;padding:6px 20px;" onclick="showToast('Жалоба отправлена!')">Отправить</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== ОКНО СТРОИТЕЛЬСТВА ===== -->
     <div class="modal-overlay" id="buildModal">
-        <div class="modal-box-build" style="position:relative;">
-            <button class="close-btn" onclick="closeBuildModal()">✕</button>
-            <h2 id="buildModalTitle">Строительство</h2>
-            <div class="build-grid" id="buildModalList"></div>
+        <div class="modal-box-build" style="position:relative;background:var(--bg-primary);border-radius:24px 24px 0 0;padding:20px 16px 30px;max-width:420px;width:100%;max-height:85vh;border-top:1px solid var(--glass-border);box-shadow:0 -10px 40px rgba(0,0,0,0.8);animation:slideUp 0.3s ease;display:flex;flex-direction:column;">
+            <button class="close-btn" onclick="closeBuildModal()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text-secondary);font-size:20px;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;">✕</button>
+            <h2 id="buildModalTitle" style="margin-bottom:16px;color:#fff;font-size:18px;font-weight:700;text-align:center;">Строительство</h2>
+            <div class="build-grid" id="buildModalList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow-y:auto;padding-right:4px;flex:1;"></div>
         </div>
     </div>
 
     <!-- ===== ОКНО ИНФОРМАЦИИ О ЗДАНИИ ===== -->
     <div class="modal-overlay" id="buildingInfoModal" style="align-items:center;">
-        <div class="modal-box-info" style="position:relative;">
-            <button class="close-btn" onclick="closeBuildingInfo()">✕</button>
-            <img id="infoBuildingImg" src="" alt="building">
+        <div class="modal-box-info" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:380px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);text-align:center;">
+            <button class="close-btn" onclick="closeBuildingInfo()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <img id="infoBuildingImg" src="" alt="building" style="width:80px;height:80px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
             <h3 id="infoBuildingName" style="margin-bottom:8px;"></h3>
-            <div class="info-row">⚡ Электричество: <span id="infoEnergy">0</span>/час</div>
-            <div class="info-row">⭐ Репутация: <span id="infoReputation">0</span></div>
-            <div class="built-date" id="infoBuiltDate"></div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⚡ Электричество: <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⭐ Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
+            <div class="built-date" id="infoBuiltDate" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;"></div>
             <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
         </div>
     </div>
 
     <!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ СНОСА ===== -->
-    <div class="modal-confirm" id="demolishConfirm">
-        <div class="confirm-box">
-            <div class="confirm-header">⚠️ Снос здания</div>
-            <div class="confirm-body">
+    <div class="modal-confirm" id="demolishConfirm" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:600;justify-content:center;align-items:center;padding:20px;">
+        <div class="confirm-box" style="background:#1a3a6a;border-radius:16px;max-width:340px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+            <div class="confirm-header" style="background:#1e447a;padding:14px 20px;font-size:16px;font-weight:600;text-align:center;">⚠️ Снос здания</div>
+            <div class="confirm-body" style="padding:16px 20px;text-align:center;color:var(--text-secondary);font-size:13px;">
                 <p>Вы точно хотите снести данное здание?</p>
-                <p class="cost" id="demolishCostText">Стоимость сноса: 0 монет</p>
+                <p class="cost" id="demolishCostText" style="font-size:11px;margin-top:4px;color:var(--text-secondary);">Стоимость сноса: 0 монет</p>
             </div>
-            <div class="confirm-actions">
-                <button class="btn-cancel" onclick="closeDemolishConfirm()">Отмена</button>
-                <button class="btn-confirm" id="confirmDemolishBtn" onclick="confirmDemolish()">Подтвердить</button>
+            <div class="confirm-actions" style="display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.1);">
+                <button class="btn-cancel" onclick="closeDemolishConfirm()" style="flex:1;padding:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#1e447a;color:#fff;">Отмена</button>
+                <button class="btn-confirm" id="confirmDemolishBtn" onclick="confirmDemolish()" style="flex:1;padding:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:var(--gold-gradient);color:#1a1a2e;">Подтвердить</button>
             </div>
-            <div class="error-text" id="demolishError">Вам не хватает 0 монет</div>
+            <div class="error-text" id="demolishError" style="display:none;color:var(--red);font-size:10px;text-align:center;padding:4px;">Вам не хватает 0 монет</div>
         </div>
     </div>
 
     <!-- ===== КРИПТО-БИРЖА ===== -->
     <div class="modal-overlay" id="cryptoModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
-            <button class="close-btn" onclick="closeCryptoModal()">✕</button>
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeCryptoModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <h2 id="cryptoModalTitle" style="text-align:center;">📈 Биржа криптовалют</h2>
             <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
                 <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;" onclick="switchCryptoTab('main')" id="cryptoTabMain">Основные</button>
@@ -1376,22 +1636,22 @@
 
     <!-- ===== КРЕДИТ ===== -->
     <div class="modal-overlay" id="creditModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
-            <button class="close-btn" onclick="closeCreditModal()">✕</button>
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeCreditModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <h2 id="creditModalTitle" style="text-align:center;">💰 Взять кредит</h2>
             <div id="creditForm">
                 <div style="margin-bottom:8px;">
-                    <div class="flex-between"><span>Сумма: <span id="creditAmountDisplay">0</span></span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Сумма: <span id="creditAmountDisplay">0</span></span></div>
                     <input type="range" id="creditAmountSlider" min="0" max="1000" step="50" value="0" style="width:100%;">
                 </div>
                 <div style="margin-bottom:8px;">
-                    <div class="flex-between"><span>Срок: <span id="creditTermDisplay">7</span> дней</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Срок: <span id="creditTermDisplay">7</span> дней</span></div>
                     <input type="range" id="creditTermSlider" min="7" max="30" step="1" value="7" style="width:100%;">
                 </div>
                 <div style="margin-bottom:8px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;font-size:13px;">
-                    <div class="flex-between"><span>Процентная ставка:</span><span class="text-red" id="creditRateDisplay">0%</span></div>
-                    <div class="flex-between"><span>Итоговая сумма к выплате:</span><span id="creditTotalPayDisplay">0</span></div>
-                    <div class="flex-between"><span>Ежемесячный платеж:</span><span id="creditMonthlyPayDisplay">0</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Процентная ставка:</span><span class="text-red" id="creditRateDisplay">0%</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Итоговая сумма к выплате:</span><span id="creditTotalPayDisplay">0</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Ежемесячный платеж:</span><span id="creditMonthlyPayDisplay">0</span></div>
                 </div>
                 <button class="btn-gold" onclick="takeCredit()">Взять кредит</button>
             </div>
@@ -1404,8 +1664,8 @@
 
     <!-- ===== ВЫПЛАТА КРЕДИТА ===== -->
     <div class="modal-overlay" id="repayModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;">
-            <button class="close-btn" onclick="closeRepayModal()">✕</button>
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeRepayModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <h2 id="repayTitle" style="text-align:center;">💳 Выплата</h2>
             <div style="text-align:center;color:var(--text-secondary);font-size:14px;">Введите сумму для погашения</div>
             <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
@@ -1417,47 +1677,57 @@
                 <span>Баланс: <span id="repayBalance">0</span></span>
                 <span>Остаток: <span id="repayRemaining">0</span></span>
             </div>
-            <button class="btn-gold mt-8" id="repayBtn" onclick="confirmRepay()" disabled>Выплатить</button>
+            <button class="btn-gold mt-8" id="repayBtn" onclick="confirmRepay()" disabled style="margin-top:8px;">Выплатить</button>
         </div>
     </div>
+
+    <!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ ОБМЕНА ===== -->
+    <div class="confirm-overlay" id="exchangeConfirm">
+        <div class="confirm-box">
+            <div class="confirm-header">
+                <span>Подтверждение</span>
+                <button class="close-btn" onclick="closeExchangeConfirm()">✕</button>
+            </div>
+            <div class="confirm-body" id="exchangeConfirmText">Вы точно хотите обменять 0 кристаллов на 0 монет?</div>
+            <div class="confirm-actions">
+                <button class="btn-cancel" onclick="closeExchangeConfirm()">Отмена</button>
+                <button class="btn-confirm" onclick="confirmExchange()">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЗАТЕМНЕНИЕ ===== -->
+    <div class="fade-overlay" id="fadeOverlay"></div>
 
     <!-- ===== TOAST ===== -->
     <div id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:10px 20px;border-radius:12px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--glass-border);color:#fff;white-space:nowrap;"></div>
 
     <script>
         // ============================================================
-        // ЛОКАЛИЗАЦИЯ
+        // ЛОКАЛИЗАЦИЯ (упрощенная)
         // ============================================================
         const LANG = {
             en: {
-                appName: "Novara City", menu: "Menu", bank: "Bank", resources: "Resources", quests: "Quests", profile: "Profile",
-                back: "Back", level: "Level", exp: "XP", balance: "Balance", coins: "Coins", crystals: "Crystals",
-                myBank: "My Bank", money: "Money", replenish: "Replenish", credit: "Credit",
-                myCredit: "My Credit", noCredit: "No active credits", takeCredit: "Take Credit", crypto: "Cryptocurrency",
-                noCrypto: "You have no cryptocurrencies", exchange: "Exchange", stats: "Income & Expenses",
-                income: "Income", expense: "Expenses", changeLang: "Change language", inGame: "In game",
-                main: "Main", exclusive: "Exclusive", sell: "Sell", search: "Search...", buy: "Buy", sellBtn: "Sell",
-                close: "Close", ok: "OK", amount: "Amount", term: "Term", days: "days", percent: "Percent",
-                take: "Take", repay: "Repay", buildTitle: "Construction",
+                appName: "Novara City", bank: "Bank", resources: "Resources", quests: "Quests", profile: "Profile",
+                back: "Back", balance: "Balance", coins: "Coins", crystals: "Crystals", noCredit: "No active credits",
+                noCrypto: "You have no cryptocurrencies", income: "Income", expense: "Expenses",
+                bankMy: "My Bank", credit: "Credit", crypto: "Cryptocurrency", stats: "Income & Expenses",
+                settings: "Settings", complaints: "Complaints", city: "City", shop: "Shop",
+                language: "Language", selected: "Selected", changeLang: "Change language",
                 district1: "Suburb", district2: "Countryside", district3: "Residential", district4: "Midtown",
                 district5: "Commercial", district6: "Park", district7: "Transport Hub", district8: "Industrial",
-                district9: "Tech Park", district10: "Business Center", district11: "Premium Village"
+                district9: "Tech Park", coming: "Coming soon"
             },
             ru: {
-                appName: "Novara City", menu: "Меню", bank: "Банк", resources: "Ресурсы", quests: "Квесты", profile: "Профиль",
-                back: "Назад", level: "Уровень", exp: "Опыт", balance: "Баланс", coins: "Монеты", crystals: "Кристаллы",
-                myBank: "Мой банк", money: "Деньги", replenish: "Пополнение",
-                credit: "Кредит", myCredit: "Мой кредит", noCredit: "Нет активных кредитов", takeCredit: "Взять кредит",
-                crypto: "Криптовалюта", noCrypto: "У вас нет криптовалют", exchange: "Биржа",
-                stats: "Доходы и расходы", income: "Доходы", expense: "Расходы",
-                changeLang: "Сменить язык", inGame: "В игре",
-                main: "Основные", exclusive: "Эксклюзив", sell: "Продажа", search: "Поиск...", buy: "Купить",
-                sellBtn: "Продать", close: "Закрыть", ok: "ОК", amount: "Сумма", term: "Срок", days: "дней",
-                percent: "Процент", take: "Взять", repay: "Выплатить",
-                district1: "Обычный посёлок", district2: "Пригород", district3: "Жилой район",
-                district4: "Средний посёлок", district5: "Торговый район", district6: "Парк",
-                district7: "Транспортный хаб", district8: "Промышленная зона", district9: "Технопарк",
-                district10: "Деловой центр", district11: "Премиальный посёлок", buildTitle: "Строительство"
+                appName: "Novara City", bank: "Банк", resources: "Ресурсы", quests: "Квесты", profile: "Профиль",
+                back: "Назад", balance: "Баланс", coins: "Монеты", crystals: "Кристаллы", noCredit: "Нет активных кредитов",
+                noCrypto: "У вас нет криптовалют", income: "Доходы", expense: "Расходы",
+                bankMy: "Мой банк", credit: "Кредит", crypto: "Криптовалюта", stats: "Доходы и расходы",
+                settings: "Настройки", complaints: "Жалобы", city: "Город", shop: "Магазин",
+                language: "Язык", selected: "Выбран", changeLang: "Сменить язык",
+                district1: "Обычный посёлок", district2: "Пригород", district3: "Жилой район", district4: "Средний посёлок",
+                district5: "Торговый район", district6: "Парк", district7: "Транспортный хаб", district8: "Промышленная зона",
+                district9: "Технопарк", coming: "Скоро"
             }
         };
 
@@ -1470,39 +1740,33 @@
             localStorage.setItem('lang', lang);
             document.getElementById('langModal').classList.remove('active');
             updateUI();
-            showToast('🌐 Language changed');
+            showToast('🌐 Язык изменён');
         }
 
-        function t(key) {
-            return currentLang[key] || key;
-        }
+        function t(key) { return currentLang[key] || key; }
 
         function updateUI() {
-            document.getElementById('mapBack').textContent = t('back');
             document.getElementById('footerBank').textContent = t('bank');
             document.getElementById('footerResources').textContent = t('resources');
-            document.getElementById('footerHome').textContent = t('menu');
+            document.getElementById('footerHome').textContent = t('city');
             document.getElementById('footerQuests').textContent = t('quests');
             document.getElementById('footerProfile').textContent = t('profile');
-            document.getElementById('bankMyBank').textContent = t('myBank');
-            document.getElementById('bankMyBankTitle').textContent = t('myBank');
-            document.getElementById('bankReplenishBtn').textContent = t('replenish');
+            document.getElementById('bankMyBank').textContent = t('bankMy');
+            document.getElementById('bankMyBankTitle').textContent = t('bankMy');
+            document.getElementById('bankReplenishBtn').textContent = 'Пополнить';
             document.getElementById('bankCredit').textContent = t('credit');
             document.getElementById('bankCreditTitle').textContent = t('credit');
-            document.getElementById('bankTakeCredit').textContent = t('takeCredit');
+            document.getElementById('bankTakeCredit').textContent = 'Взять кредит';
             document.getElementById('bankCrypto').textContent = t('crypto');
             document.getElementById('bankStats').textContent = t('stats');
             document.getElementById('bankStatsTitle').textContent = t('stats');
-            document.getElementById('cryptoModalTitle').textContent = '📈 ' + t('exchange');
-            document.getElementById('cryptoTabMain').textContent = t('main');
-            document.getElementById('cryptoTabExclusive').textContent = t('exclusive');
-            document.getElementById('cryptoTabSell').textContent = t('sell');
-            document.getElementById('cryptoSearch').placeholder = t('search');
-            document.getElementById('creditModalTitle').textContent = '💰 ' + t('takeCredit');
-            document.getElementById('repayTitle').textContent = '💳 ' + t('repay');
-            document.getElementById('buildModalTitle').textContent = t('buildTitle');
-            renderDistrictsCircle();
-            renderResources();
+            document.getElementById('bankTitle').textContent = t('bank');
+            document.getElementById('resourcesTitle').textContent = t('resources');
+            document.getElementById('questsTitle').textContent = t('quests');
+            document.getElementById('profileTitle').textContent = t('profile');
+            document.getElementById('mapBack').textContent = t('back');
+            document.getElementById('currentLangDisplay').textContent = lang === 'ru' ? 'Русский' : 'English';
+            renderCityGrid();
             renderQuests();
             updateProfileUI();
             updateBankUI();
@@ -1514,29 +1778,29 @@
         const BASE_URL = 'https://rruslan007.github.io/novara-city-images/';
         const MONETA_ICON = BASE_URL + 'effects/moneta.PNG';
 
-        // Координаты центров кругов (в % от 1080x1920)
-        const DISTRICT_POSITIONS = [
-            { x: 37.04, y: 21.88 },  // 1. (400, 420)
-            { x: 62.96, y: 22.92 },  // 2. (680, 440)
-            { x: 37.96, y: 29.17 },  // 3. (410, 560)
-            { x: 62.96, y: 28.65 },  // 4. (680, 550)
-            { x: 37.04, y: 36.46 },  // 5. (400, 700)
-            { x: 60.19, y: 35.42 },  // 6. (650, 680)
-            { x: 35.19, y: 42.71 },  // 7. (380, 820)
-            { x: 58.33, y: 41.15 },  // 8. (630, 790)
-            { x: 55.56, y: 47.92 }   // 9. (600, 920)
+        const DISTRICTS_DATA = [
+            { id: 'suburb', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district1', level: 1 },
+            { id: 'countryside', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district2', level: 2 },
+            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3', level: 3 },
+            { id: 'midtown', icon: BASE_URL + 'districts/centre.png', key: 'district4', level: 4 },
+            { id: 'commercial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district5', level: 5 },
+            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6', level: 6 },
+            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7', level: 7 },
+            { id: 'industrial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district8', level: 8 },
+            { id: 'techpark', icon: BASE_URL + 'districts/oficini_raion.png', key: 'district9', level: 9 }
         ];
 
-        const DISTRICTS = [
-            { id: 'suburb', icon: BASE_URL + 'districts/prigorod.png', key: 'district1' },
-            { id: 'countryside', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district2' },
-            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3' },
-            { id: 'midtown', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district4' },
-            { id: 'commercial', icon: BASE_URL + 'districts/torgovii_raion.png', key: 'district5' },
-            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6' },
-            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7' },
-            { id: 'industrial', icon: BASE_URL + 'districts/promislenii_raion.png', key: 'district8' },
-            { id: 'techpark', icon: BASE_URL + 'districts/oficnii_raion.png', key: 'district9' }
+        // Список районов для выбора в окне (9 штук)
+        const DISTRICT_SELECT = [
+            { id: 'suburb', name: 'Обычный посёлок', icon: BASE_URL + 'districts/malii_poselok.png' },
+            { id: 'countryside', name: 'Пригород', icon: BASE_URL + 'districts/elita_poselok.png' },
+            { id: 'residential', name: 'Жилой район', icon: BASE_URL + 'districts/jiloi_raion.png' },
+            { id: 'midtown', name: 'Средний посёлок', icon: BASE_URL + 'districts/centre.png' },
+            { id: 'commercial', name: 'Торговый район', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'park', name: 'Парк', icon: BASE_URL + 'districts/park.png' },
+            { id: 'transport', name: 'Транспортный хаб', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'industrial', name: 'Промышленная зона', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'techpark', name: 'Технопарк', icon: BASE_URL + 'districts/oficini_raion.png' }
         ];
 
         const RESOURCES = [
@@ -1549,54 +1813,33 @@
         ];
 
         const BUILDINGS = [
-            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown', 'premium'] },
-            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'business'] },
-            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, maxCount: 10, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'business', 'residential', 'park'] },
+            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown'] },
+            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, maxCount: 10, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'residential', 'park'] },
             { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, maxCount: 12, demolishCost: 40, energyUse: 1, allowedDistricts: ['industrial', 'countryside', 'residential'] },
             { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, resources: { energy: 10 }, income: 10, xp: 4, time: 10, reputation: 5, maxCount: 5, demolishCost: 120, energyUse: 5, allowedDistricts: ['industrial', 'transport', 'suburb'] },
-            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 4, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
-            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrten.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, maxCount: 5, demolishCost: 150, energyUse: 3, allowedDistricts: ['residential', 'midtown', 'premium', 'suburb'] },
+            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 4, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrtjen.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, maxCount: 5, demolishCost: 150, energyUse: 3, allowedDistricts: ['residential', 'midtown', 'suburb'] },
             { id: 'pharmacy', name: 'Аптека', icon: BASE_URL + 'buildings_en/pharmacy.jpg', cost: 300, resources: { wood: 5 }, income: 7, xp: 3, time: 7, reputation: 5, maxCount: 6, demolishCost: 70, energyUse: 2, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, maxCount: 4, demolishCost: 250, energyUse: 6, allowedDistricts: ['commercial', 'business', 'midtown'] },
+            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, maxCount: 4, demolishCost: 250, energyUse: 6, allowedDistricts: ['commercial', 'midtown'] },
             { id: 'library', name: 'Библиотека', icon: BASE_URL + 'buildings_en/library.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 7, maxCount: 5, demolishCost: 100, energyUse: 2, allowedDistricts: ['midtown', 'residential', 'techpark'] },
-            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 2, demolishCost: 400, energyUse: 8, allowedDistricts: ['midtown', 'business', 'premium'] },
+            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 2, demolishCost: 400, energyUse: 8, allowedDistricts: ['midtown'] },
             { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18, reputation: 8, maxCount: 6, demolishCost: 300, energyUse: 5, allowedDistricts: ['residential', 'midtown', 'suburb'] },
-            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, maxCount: 8, demolishCost: 180, energyUse: 5, allowedDistricts: ['business', 'techpark', 'commercial'] },
+            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, maxCount: 8, demolishCost: 180, energyUse: 5, allowedDistricts: ['techpark', 'commercial'] },
             { id: 'gym', name: 'Спортзал', icon: BASE_URL + 'buildings_en/gym.jpg', cost: 400, resources: { wood: 10, energy: 5 }, income: 10, xp: 4, time: 10, reputation: 6, maxCount: 6, demolishCost: 120, energyUse: 3, allowedDistricts: ['commercial', 'residential', 'midtown'] },
-            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, maxCount: 6, demolishCost: 150, energyUse: 4, allowedDistricts: ['commercial', 'business', 'midtown', 'park'] },
-            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['commercial', 'business'] },
-            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 6, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, maxCount: 4, demolishCost: 350, energyUse: 8, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['business', 'techpark'] },
+            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, maxCount: 6, demolishCost: 150, energyUse: 4, allowedDistricts: ['commercial', 'midtown', 'park'] },
+            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['commercial'] },
+            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 6, allowedDistricts: ['midtown', 'park'] },
+            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, maxCount: 4, demolishCost: 350, energyUse: 8, allowedDistricts: ['midtown'] },
+            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['techpark'] },
             { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 20, maxCount: 2, demolishCost: 450, energyUse: 10, allowedDistricts: ['park', 'residential', 'midtown'] },
             { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, maxCount: 3, demolishCost: 500, energyUse: 20, allowedDistricts: ['industrial', 'transport'] },
-            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['commercial', 'business'] },
+            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['commercial'] },
             { id: 'university', name: 'Университет', icon: BASE_URL + 'buildings_en/university.jpg', cost: 1500, resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45, reputation: 30, maxCount: 2, demolishCost: 800, energyUse: 20, allowedDistricts: ['techpark', 'midtown'] },
-            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, maxCount: 1, demolishCost: 1000, energyUse: 30, allowedDistricts: ['park', 'business'] },
-            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, maxCount: 8, demolishCost: 200, energyUse: 3, allowedDistricts: ['premium', 'residential'] },
-            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, maxCount: 3, demolishCost: 120, energyUse: 2, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 7, allowedDistricts: ['premium', 'business'] },
-            { id: 'bike_station', name: 'Велостанция', icon: BASE_URL + 'buildings_en/bike_station.jpg', cost: 200, resources: { wood: 5 }, income: 4, xp: 2, time: 5, reputation: 3, maxCount: 10, demolishCost: 30, energyUse: 1, allowedDistricts: ['park', 'residential', 'transport'] },
-            { id: 'clothing_store', name: 'Магазин одежды', icon: BASE_URL + 'buildings_en/clothing_store.jpg', cost: 300, resources: { wood: 6, food: 3 }, income: 7, xp: 3, time: 7, reputation: 4, maxCount: 8, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown'] },
-            { id: 'high_school', name: 'Гимназия', icon: BASE_URL + 'buildings_en/high_school.jpg', cost: 550, resources: { wood: 15, energy: 8 }, income: 14, xp: 6, time: 14, reputation: 12, maxCount: 3, demolishCost: 220, energyUse: 5, allowedDistricts: ['residential', 'premium'] },
-            { id: 'museum', name: 'Музей', icon: BASE_URL + 'buildings_en/museum.jpg', cost: 500, resources: { wood: 12, energy: 8 }, income: 12, xp: 5, time: 12, reputation: 15, maxCount: 2, demolishCost: 200, energyUse: 4, allowedDistricts: ['midtown', 'business', 'park'] },
-            { id: 'market', name: 'Рынок', icon: BASE_URL + 'buildings_en/market.jpg', cost: 400, resources: { wood: 10, food: 10 }, income: 10, xp: 4, time: 10, reputation: 7, maxCount: 5, demolishCost: 100, energyUse: 3, allowedDistricts: ['commercial', 'countryside'] },
-            { id: 'club', name: 'Клуб', icon: BASE_URL + 'buildings_en/club.jpg', cost: 350, resources: { wood: 8, energy: 5 }, income: 8, xp: 3, time: 8, reputation: 6, maxCount: 5, demolishCost: 80, energyUse: 3, allowedDistricts: ['midtown', 'business'] },
-            { id: 'tech_park', name: 'Технопарк', icon: BASE_URL + 'buildings_en/tech_park.jpg', cost: 1000, resources: { wood: 20, energy: 25 }, income: 28, xp: 11, time: 28, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 15, allowedDistricts: ['techpark'] },
-            { id: 'medical_center', name: 'Медицинский центр', icon: BASE_URL + 'buildings_en/medical_center.jpg', cost: 900, resources: { wood: 20, energy: 15, food: 10 }, income: 24, xp: 10, time: 24, reputation: 18, maxCount: 3, demolishCost: 400, energyUse: 10, allowedDistricts: ['business', 'midtown', 'premium'] },
-            { id: 'incubator', name: 'Бизнес-инкубатор', icon: BASE_URL + 'buildings_en/business_incubator.jpg', cost: 600, resources: { wood: 15, energy: 15 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 8, allowedDistricts: ['techpark', 'business'] },
-            { id: 'water_park', name: 'Аквапарк', icon: BASE_URL + 'buildings_en/water_park.jpg', cost: 1000, resources: { wood: 25, energy: 20, food: 15 }, income: 28, xp: 11, time: 28, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['park', 'premium'] },
-            { id: 'expo', name: 'Выставочный павильон', icon: BASE_URL + 'buildings_en/exhibition_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 6, allowedDistricts: ['business', 'techpark'] },
-            { id: 'eco_hotel', name: 'Эко-отель', icon: BASE_URL + 'buildings_en/eco_hotel.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 22, xp: 9, time: 22, reputation: 18, maxCount: 3, demolishCost: 350, energyUse: 6, allowedDistricts: ['premium', 'park'] },
-            { id: 'botanical', name: 'Ботанический сад', icon: BASE_URL + 'buildings_en/botanical_garden.jpg', cost: 400, resources: { wood: 10, food: 15 }, income: 10, xp: 4, time: 10, reputation: 12, maxCount: 3, demolishCost: 150, energyUse: 3, allowedDistricts: ['park', 'suburb'] },
-            { id: 'sports_complex', name: 'Спорткомплекс', icon: BASE_URL + 'buildings_en/sports_complex.jpg', cost: 800, resources: { wood: 20, energy: 15 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 350, energyUse: 8, allowedDistricts: ['residential', 'park'] },
-            { id: 'concert_hall', name: 'Концертный зал', icon: BASE_URL + 'buildings_en/concert_hall.jpg', cost: 700, resources: { wood: 18, energy: 12 }, income: 18, xp: 7, time: 18, reputation: 18, maxCount: 2, demolishCost: 300, energyUse: 8, allowedDistricts: ['midtown', 'business'] },
-            { id: 'vertical_farm', name: 'Вертикальная ферма', icon: BASE_URL + 'buildings_en/vertical_farm.jpg', cost: 500, resources: { wood: 12, energy: 10, food: 20 }, income: 14, xp: 6, time: 14, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 8, allowedDistricts: ['industrial', 'techpark'] },
-            { id: 'logistics', name: 'Логистический центр', icon: BASE_URL + 'buildings_en/logistics_center.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 12, maxCount: 3, demolishCost: 400, energyUse: 12, allowedDistricts: ['transport', 'industrial'] },
-            { id: 'rd_center', name: 'НИИ центр', icon: BASE_URL + 'buildings_en/R&D_center.jpg', cost: 1200, resources: { wood: 30, energy: 30 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 20, allowedDistricts: ['techpark'] },
-            { id: 'megamall', name: 'Крупный ТРЦ', icon: BASE_URL + 'buildings_en/megamall.jpg', cost: 2000, resources: { wood: 40, energy: 30, food: 20 }, income: 50, xp: 20, time: 40, reputation: 30, maxCount: 1, demolishCost: 1000, energyUse: 25, allowedDistricts: ['commercial', 'business'] },
-            { id: 'skyscraper', name: 'Высотный офис', icon: BASE_URL + 'buildings_en/skyscraper_office.jpg', cost: 2500, resources: { wood: 45, energy: 35, food: 15 }, income: 60, xp: 22, time: 45, reputation: 35, maxCount: 2, demolishCost: 1200, energyUse: 25, allowedDistricts: ['business'] },
-            { id: 'industrial_zone', name: 'Промышленная зона', icon: BASE_URL + 'buildings_en/industrial_zone.jpg', cost: 3000, resources: { wood: 50, energy: 40, food: 30 }, income: 70, xp: 25, time: 50, reputation: 25, maxCount: 1, demolishCost: 1500, energyUse: 30, allowedDistricts: ['industrial'] }
+            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, maxCount: 1, demolishCost: 1000, energyUse: 30, allowedDistricts: ['park'] },
+            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, maxCount: 8, demolishCost: 200, energyUse: 3, allowedDistricts: ['residential'] },
+            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, maxCount: 3, demolishCost: 120, energyUse: 2, allowedDistricts: ['midtown', 'park'] },
+            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 7, allowedDistricts: ['midtown'] }
         ];
 
         const CRYPTO = [
@@ -1632,12 +1875,21 @@
             quests: [],
             lastOnline: Date.now(),
             earned: 0,
-            builtCount: 0
+            builtCount: 0,
+            unlockedDistricts: ['suburb'],
+            cityItems: {} // для хранения выбранных районов для каждого слота
         };
+
+        // Инициализация cityItems для 12 слотов
+        for (let i = 0; i < 12; i++) {
+            game.cityItems[i] = { districtId: null, unlocked: false, selected: false };
+        }
+        game.cityItems[0].unlocked = true; // первый открыт сразу
 
         let currentDistrictId = null;
         let currentPlotId = null;
         let demolishTarget = null;
+        let exchangeAmount = 0;
 
         function getLevelXp(level) { return level * 100 + 50; }
         function getTotalXp(level) { let total = 0; for (let i = 1; i < level; i++) total += getLevelXp(i); return total; }
@@ -1660,9 +1912,20 @@
                 game.crystals += 5;
                 game.balance += 10;
                 showToast(`🎉 Уровень ${game.level} достигнут!`);
+                // Проверяем открытие районов
+                checkDistrictUnlocks();
             }
             saveGame();
             updateUI();
+        }
+
+        function checkDistrictUnlocks() {
+            DISTRICTS_DATA.forEach(d => {
+                if (game.level >= d.level && !game.unlockedDistricts.includes(d.id)) {
+                    game.unlockedDistricts.push(d.id);
+                    showToast(`🏙️ Район "${d.id}" открыт!`);
+                }
+            });
         }
 
         function addReputation(amount) { game.reputation += amount; saveGame(); updateUI(); }
@@ -1694,71 +1957,151 @@
         }
 
         // ============================================================
-        // ОТРИСОВКА МЕНЮ (АБСОЛЮТНОЕ ПОЗИЦИОНИРОВАНИЕ)
+        // ГОРОД - СЕТКА 12 РАЙОНОВ
         // ============================================================
-        function renderDistrictsCircle() {
-            const container = document.getElementById('districtsContainer');
-            container.innerHTML = '';
-            
-            DISTRICTS.forEach((d, index) => {
-                if (index >= DISTRICT_POSITIONS.length) return;
-                const pos = DISTRICT_POSITIONS[index];
-                const btn = document.createElement('div');
-                btn.className = 'district-btn-circle';
-                btn.style.left = pos.x + '%';
-                btn.style.top = pos.y + '%';
-                btn.innerHTML = `
-                    <img src="${d.icon}" alt="${t(d.key)}" onerror="this.style.display='none'">
-                    <span class="dname">${t(d.key)}</span>
-                `;
-                btn.onclick = () => openMap(d.id, t(d.key));
-                container.appendChild(btn);
+        function renderCityGrid() {
+            const grid = document.getElementById('cityGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 12; i++) {
+                const item = game.cityItems[i] || { districtId: null, unlocked: false, selected: false };
+                const div = document.createElement('div');
+                div.className = 'city-item';
+                if (i >= 9) {
+                    // Последние 3 - "Скоро"
+                    div.classList.add('coming-soon');
+                    div.innerHTML = `
+                        <div class="soon-icon">?</div>
+                        <div class="soon-label" style="font-weight:700;color:#fff;">СКОРО</div>
+                    `;
+                } else if (item.unlocked && item.selected && item.districtId) {
+                    // Выбранный район
+                    const dist = DISTRICT_SELECT.find(d => d.id === item.districtId);
+                    div.classList.add('unlocked');
+                    div.innerHTML = `
+                        <img src="${dist.icon}" class="district-icon" alt="${dist.name}">
+                        <div class="district-name">${dist.name}</div>
+                    `;
+                    div.onclick = () => openMapFromCity(item.districtId, dist.name);
+                } else if (item.unlocked) {
+                    // Открыт, но не выбран
+                    div.classList.add('unlocked');
+                    div.innerHTML = `
+                        <button class="open-btn" onclick="event.stopPropagation(); openDistrictSelect(${i})">Открыть</button>
+                    `;
+                } else {
+                    // Заблокирован
+                    div.classList.add('locked');
+                    const levelReq = i + 1; // для первых 9: 1-9
+                    div.innerHTML = `
+                        <div class="lock-icon">🔒</div>
+                        <div class="level-req">LVL ${levelReq}</div>
+                    `;
+                }
+                grid.appendChild(div);
+            }
+        }
+
+        function openDistrictSelect(slotIndex) {
+            const modal = document.getElementById('districtSelectModal');
+            modal.classList.add('active');
+            const grid = document.getElementById('districtSelectGrid');
+            grid.innerHTML = '';
+            // Показываем только доступные районы (уровень открыт)
+            const available = DISTRICT_SELECT.filter(d => game.unlockedDistricts.includes(d.id));
+            available.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'district-select-item';
+                div.innerHTML = `<img src="${d.icon}" alt="${d.name}">${d.name}`;
+                div.onclick = () => {
+                    game.cityItems[slotIndex].districtId = d.id;
+                    game.cityItems[slotIndex].selected = true;
+                    closeDistrictSelect();
+                    renderCityGrid();
+                    saveGame();
+                    showToast(`✅ Район "${d.name}" выбран!`);
+                };
+                grid.appendChild(div);
             });
+            if (available.length === 0) {
+                grid.innerHTML = '<div style="color:#fff;text-align:center;padding:20px;">Нет доступных районов. Повышайте уровень!</div>';
+            }
         }
 
-        function updateLevelCircle() {
-            const progress = getXpProgress();
-            const circle = document.getElementById('levelProgressCircle');
-            const radius = 22;
-            const circumference = 2 * Math.PI * radius;
-            const offset = circumference - (progress * circumference);
-            circle.style.strokeDashoffset = offset;
-            document.getElementById('menuLevelCircleText').textContent = game.level;
+        function closeDistrictSelect() {
+            document.getElementById('districtSelectModal').classList.remove('active');
         }
 
         // ============================================================
-        // ОТРИСОВКА КАРТЫ
+        // ОТКРЫТИЕ ГОРОДА (С АНИМАЦИЕЙ)
         // ============================================================
-        function openMap(districtId, name) {
+        function openCity() {
+            const overlay = document.getElementById('fadeOverlay');
+            overlay.classList.add('active');
+            setTimeout(() => {
+                showScreen('city-screen');
+                overlay.classList.remove('active');
+                // Показываем футер города
+                document.getElementById('footer').style.display = 'none';
+                document.getElementById('footerCity').classList.add('active');
+                renderCityGrid();
+                // Проверяем открытие районов по уровню
+                checkDistrictUnlocks();
+            }, 600);
+        }
+
+        // ============================================================
+        // КАРТА (СИСТЕМА ПОСТРОЕК)
+        // ============================================================
+        function openMapFromCity(districtId, name) {
             currentDistrictId = districtId;
             document.getElementById('mapTitle').textContent = name;
             renderMap(districtId);
             showScreen('map-screen');
+            // Скрываем футер города, показываем обычный (но пока оставим городской)
+            document.getElementById('footerCity').classList.remove('active');
+            document.getElementById('footer').style.display = 'flex';
             const container = document.getElementById('mapScrollContainer');
             setTimeout(() => {
-                container.scrollLeft = (3000 - container.clientWidth) / 2;
-                container.scrollTop = (3000 - container.clientHeight) / 2;
+                container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+                container.scrollTop = (container.scrollHeight - container.clientHeight) / 2;
             }, 100);
             updateMapUI();
+        }
+
+        function goBackFromMap() {
+            // Возврат в город
+            document.getElementById('footerCity').classList.add('active');
+            document.getElementById('footer').style.display = 'none';
+            showScreen('city-screen');
+            renderCityGrid();
         }
 
         function renderMap(districtId) {
             const world = document.getElementById('mapWorld');
             world.innerHTML = '';
             const worldSize = 3000;
-            const roadWidth = 120;
+            const roadWidth = 60;
             const plotSize = 280;
 
+            // Дороги горизонтальные
             for (let x = 0; x <= worldSize; x += plotSize + roadWidth) {
                 const hRoad = document.createElement('div');
                 hRoad.className = 'map-road-h';
                 hRoad.style.top = (x - roadWidth/2) + 'px';
+                // Проверяем пересечения с вертикальными
+                if (x % (plotSize + roadWidth) === 0) {
+                    hRoad.classList.add('cross');
+                }
                 world.appendChild(hRoad);
             }
+            // Дороги вертикальные
             for (let y = 0; y <= worldSize; y += plotSize + roadWidth) {
                 const vRoad = document.createElement('div');
                 vRoad.className = 'map-road-v';
                 vRoad.style.left = (y - roadWidth/2) + 'px';
+                if (y % (plotSize + roadWidth) === 0) {
+                    vRoad.classList.add('cross');
+                }
                 world.appendChild(vRoad);
             }
 
@@ -1773,26 +2116,31 @@
                     plot.style.height = plotSize + 'px';
                     const plotId = `plot_${plotCounter}`;
                     plot.dataset.plotId = plotId;
+                    plot.style.position = 'absolute';
+                    plot.style.background = '#5a9c4a';
+                    plot.style.border = '2px solid #7cfc00';
+                    plot.style.display = 'flex';
+                    plot.style.alignItems = 'center';
+                    plot.style.justifyContent = 'center';
+                    plot.style.zIndex = '2';
+                    plot.style.cursor = 'pointer';
 
                     const existingBuilding = game.buildings.find(b => b.plotId === plotId && b.districtId === districtId);
 
                     if (existingBuilding) {
                         if (existingBuilding.status === 'demolishing') {
-                            plot.classList.add('demolishing');
+                            plot.style.background = '#2a4a1a';
                             const remaining = Math.max(0, existingBuilding.demolishStart + existingBuilding.demolishTime - Date.now());
                             const sec = Math.ceil(remaining / 1000);
-                            plot.innerHTML = `<div style="text-align:center;color:#fff;font-size:12px;">
-                                <div style="background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;border:1px solid #555;">⏳ ${sec}с</div>
-                                <div style="color:var(--red);font-size:10px;margin-top:4px;">Решение властей:<br>снос здания</div>
-                            </div>`;
+                            plot.innerHTML = `<div style="text-align:center;color:#fff;font-size:12px;background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;border:1px solid #555;">⏳ ${sec}с</div>`;
                         } else {
-                            plot.classList.add('built');
+                            plot.style.background = '#3a6a2a';
                             plot.innerHTML = `<div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">🏢</div>`;
                             plot.onclick = () => openBuildingInfo(existingBuilding);
                         }
                     } else {
                         const btn = document.createElement('div');
-                        btn.className = 'map-btn-plus';
+                        btn.style.cssText = 'width:50px;height:50px;border-radius:50%;background:#1a3a6a;border:3px solid var(--gold);color:var(--gold);font-size:28px;font-weight:300;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.5);z-index:3;';
                         btn.textContent = '+';
                         btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, plotId); };
                         plot.appendChild(btn);
@@ -1843,12 +2191,13 @@
                 const hasResources = canAfford(b.resources) && game.balance >= b.cost;
                 const card = document.createElement('div');
                 card.className = 'build-card';
+                card.style.cssText = 'background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;border:1px solid var(--glass-border);text-align:center;position:relative;';
                 card.innerHTML = `
-                    <div class="limit">Доступно: ${builtCount}/${maxCount}</div>
-                    <img src="${b.icon}" alt="${b.name}" onerror="this.textContent='🏢'">
-                    <div class="bname">${b.name}</div>
-                    <div class="price"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
-                    <button class="btn-gold" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
+                    <div class="limit" style="font-size:10px;color:var(--text-secondary);font-weight:300;margin-bottom:6px;">Доступно: ${builtCount}/${maxCount}</div>
+                    <img src="${b.icon}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;background:#1a1f2f;" onerror="this.textContent='🏢'">
+                    <div class="bname" style="font-size:13px;font-weight:700;margin:6px 0 4px;color:#fff;">${b.name}</div>
+                    <div class="price" style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px;"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
+                    <button class="btn-gold" style="font-size:12px;padding:6px 12px;width:auto;" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
                         ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
                     </button>
                 `;
@@ -1898,9 +2247,9 @@
             document.getElementById('confirmDemolishBtn').disabled = game.balance < bData.demolishCost;
             document.getElementById('demolishError').textContent = `Вам не хватает ${bData.demolishCost - game.balance} монет`;
             document.getElementById('demolishError').style.display = game.balance < bData.demolishCost ? 'block' : 'none';
-            document.getElementById('demolishConfirm').classList.add('active');
+            document.getElementById('demolishConfirm').style.display = 'flex';
         }
-        function closeDemolishConfirm() { document.getElementById('demolishConfirm').classList.remove('active'); }
+        function closeDemolishConfirm() { document.getElementById('demolishConfirm').style.display = 'none'; }
         function confirmDemolish() {
             if (!demolishTarget) return;
             const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
@@ -1931,7 +2280,7 @@
         }
 
         // ============================================================
-        // РЕСУРСЫ, КВЕСТЫ, ПРОФИЛЬ
+        // РЕСУРСЫ
         // ============================================================
         function renderResources() {
             const grid = document.getElementById('resourceGrid');
@@ -1939,43 +2288,55 @@
             RESOURCES.forEach(r => {
                 const amount = getResourceAmount(r.id);
                 const card = document.createElement('div');
-                card.className = 'resource-card';
+                card.className = 'resource-card glass-dark';
+                card.style.cssText = 'border-radius:12px;padding:12px;text-align:center;border:1px solid var(--glass-border);';
                 card.innerHTML = `
-                    <img src="${r.icon}" alt="${r.name}" onerror="this.textContent='🛢️'">
-                    <div class="rname">${r.name}</div>
-                    <div class="ramount">${Math.round(amount)}</div>
-                    <button class="btn-green" onclick="mineResource('${r.id}')">⛏️ Добыть</button>
+                    <img src="${r.icon}" style="width:40px;height:40px;object-fit:contain;" onerror="this.textContent='🛢️'">
+                    <div class="rname" style="font-size:12px;margin:4px 0;color:var(--text-secondary);">${r.name}</div>
+                    <div class="ramount" style="font-size:18px;font-weight:700;color:var(--gold);">${Math.round(amount)}</div>
+                    <button class="btn-green" onclick="mineResource('${r.id}')" style="background:var(--green);border:none;color:#fff;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;">⛏️ Добыть</button>
                 `;
                 grid.appendChild(card);
             });
         }
         function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
+
+        // ============================================================
+        // КВЕСТЫ
+        // ============================================================
         function generateQuests() {
             const quests = [
-                { id: 'build3', title: 'Построй 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30 },
-                { id: 'earn500', title: 'Заработай 500$', target: 500, progress: 0, rewardXp: 40, rewardCoins: 20 },
-                { id: 'collect100', title: 'Собери 100 древесины', target: 100, progress: 0, rewardXp: 35, rewardCoins: 25, res: 'wood' },
-                { id: 'level2', title: 'Достигни 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 40 }
+                { id: 'build1', title: 'Постройте 1 здание', desc: 'Постройте первое здание в любом районе', target: 1, progress: 0, rewardXp: 20, rewardCoins: 10, rewardCrystals: 2, category: 'start' },
+                { id: 'build3', title: 'Город растёт', desc: 'Постройте 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30, rewardCrystals: 5, category: 'start' },
+                { id: 'level2', title: 'Новый уровень', desc: 'Достигните 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 40, rewardCrystals: 10, category: 'start' },
+                { id: 'income10', title: 'Стабильный доход', desc: 'Заработайте 10 монет за один сбор', target: 10, progress: 0, rewardXp: 30, rewardCoins: 15, rewardCrystals: 3, category: 'daily' },
+                { id: 'collect50', title: 'Запасы древесины', desc: 'Соберите 50 древесины', target: 50, progress: 0, rewardXp: 40, rewardCoins: 20, rewardCrystals: 5, category: 'daily', res: 'wood' },
+                { id: 'reputation20', title: 'Уважение в городе', desc: 'Наберите 20 репутации', target: 20, progress: 0, rewardXp: 60, rewardCoins: 30, rewardCrystals: 8, category: 'daily' },
+                { id: 'event_build5', title: 'Строительный бум', desc: 'Постройте 5 зданий за время ивента', target: 5, progress: 0, rewardXp: 100, rewardCoins: 50, rewardCrystals: 15, category: 'event', endDate: '2025-08-23' },
+                { id: 'event_income100', title: 'Золотая лихорадка', desc: 'Заработайте 100 монет за время ивента', target: 100, progress: 0, rewardXp: 120, rewardCoins: 60, rewardCrystals: 20, category: 'event', endDate: '2025-08-23' }
             ];
-            game.quests = quests.map(q => ({ ...q, progress: 0, completed: false }));
+            game.quests = quests.map(q => ({ ...q, progress: 0, completed: false, claimed: false }));
             saveGame(); renderQuests();
         }
+
         function updateQuests() {
             game.quests.forEach(q => {
                 if (q.completed) return;
+                if (q.id === 'build1') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
                 if (q.id === 'build3') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
                 if (q.id === 'level2' && game.level >= 2) q.progress = q.target;
-                if (q.id === 'earn500') q.progress = Math.min(game.earned, q.target);
-                if (q.id === 'collect100' && q.res) q.progress = Math.min(getResourceAmount(q.res), q.target);
+                if (q.id === 'income10') q.progress = Math.min(game.earned, q.target);
+                if (q.id === 'collect50' && q.res) q.progress = Math.min(getResourceAmount(q.res), q.target);
+                if (q.id === 'reputation20') q.progress = Math.min(game.reputation, q.target);
+                if (q.id === 'event_build5') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
+                if (q.id === 'event_income100') q.progress = Math.min(game.earned, q.target);
                 if (q.progress >= q.target && !q.completed) {
                     q.completed = true;
-                    addXp(q.rewardXp);
-                    game.coins += q.rewardCoins;
-                    showToast(`✅ Квест выполнен: ${q.title}! +${q.rewardXp} XP, +${q.rewardCoins} монет`);
                 }
             });
             saveGame(); renderQuests();
         }
+
         function renderQuests() {
             const container = document.getElementById('questsList');
             container.innerHTML = '';
@@ -1983,29 +2344,72 @@
                 container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
                 return;
             }
-            game.quests.forEach(q => {
+            const categories = ['start', 'daily', 'event'];
+            const catNames = { start: 'Начало', daily: 'Ежедневные квесты', event: 'Ивент' };
+            const catSubs = { start: '', daily: '', event: '(до 23 августа включительно)' };
+
+            categories.forEach(cat => {
+                const items = game.quests.filter(q => q.category === cat);
+                if (items.length === 0) return;
                 const div = document.createElement('div');
-                div.className = 'quest-item';
-                const progress = Math.min(q.progress / q.target, 1);
+                div.className = 'quest-category';
                 div.innerHTML = `
-                    <div class="qheader"><span class="qtitle">${q.title} ${q.completed ? '✅' : ''}</span><span class="qreward">+${q.rewardXp} XP +${q.rewardCoins} 🪙</span></div>
-                    <div class="progress-bar"><div class="fill" style="width:${progress * 100}%"></div></div>
-                    <div class="qstatus">${Math.round(q.progress)} / ${q.target} ${q.completed ? '(Выполнено!)' : ''}</div>
+                    <div class="cat-title">${catNames[cat]}</div>
+                    ${catSubs[cat] ? `<div class="cat-sub">${catSubs[cat]}</div>` : ''}
                 `;
+                // Сначала невыполненные, потом выполненные
+                const sorted = [...items].sort((a,b) => {
+                    if (a.completed && !b.completed) return 1;
+                    if (!a.completed && b.completed) return -1;
+                    return 0;
+                });
+                sorted.forEach(q => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'quest-item';
+                    if (q.completed && q.claimed) {
+                        itemDiv.classList.add('completed');
+                        itemDiv.innerHTML = `
+                            <div class="q-done"><span class="check">✓</span> ВЫПОЛНЕНО</div>
+                        `;
+                        itemDiv.style.cssText = 'background:rgba(0,0,0,0.3);border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--glass-border);position:relative;min-height:60px;';
+                        container.appendChild(itemDiv);
+                        return;
+                    }
+                    const progress = Math.min(q.progress / q.target, 1);
+                    const isComplete = q.progress >= q.target;
+                    const rewardText = [];
+                    if (q.rewardXp) rewardText.push(`${q.rewardXp} XP`);
+                    if (q.rewardCoins) rewardText.push(`${q.rewardCoins} 🪙`);
+                    if (q.rewardCrystals) rewardText.push(`${q.rewardCrystals} 💎`);
+                    itemDiv.innerHTML = `
+                        <div class="q-title">${q.title}</div>
+                        <div class="q-desc">${q.desc}</div>
+                        <div class="q-progress">
+                            <div class="fill" style="width:${progress * 100}%"></div>
+                            <span class="p-text">${Math.round(q.progress)} / ${q.target}</span>
+                        </div>
+                        <div class="q-reward">Награда: ${rewardText.join(' | ')}</div>
+                        ${isComplete && !q.claimed ? `<button class="q-btn gold" onclick="claimQuest('${q.id}')">Забрать</button>` :
+                         q.claimed ? `<button class="q-btn gray" disabled>Получено</button>` :
+                         `<button class="q-btn gray" disabled>Не выполнено</button>`}
+                    `;
+                    container.appendChild(itemDiv);
+                });
                 container.appendChild(div);
             });
         }
-        function updateProfileUI() {
-            document.getElementById('profileLevel').textContent = game.level;
-            document.getElementById('profileXp').textContent = game.xp;
-            document.getElementById('profileReputation').textContent = game.reputation;
-            document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
-            document.getElementById('profileEarned').textContent = Math.round(game.earned);
-            let totalCryptoVal = 0;
-            for(let key in game.crypto) { const c = CRYPTO.find(cr => cr.id === key); if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price; }
-            document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
-            document.getElementById('profileTime').textContent = `${t('inGame')}: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
-            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+
+        function claimQuest(id) {
+            const q = game.quests.find(q => q.id === id);
+            if (!q || !q.completed || q.claimed) return;
+            if (q.rewardXp) addXp(q.rewardXp);
+            if (q.rewardCoins) game.balance += q.rewardCoins;
+            if (q.rewardCrystals) game.crystals += q.rewardCrystals;
+            q.claimed = true;
+            showToast(`🎉 Награда получена!`);
+            saveGame();
+            renderQuests();
+            updateUI();
         }
 
         // ============================================================
@@ -2025,10 +2429,10 @@
                 const remaining = game.credit.amount - game.credit.paid;
                 document.getElementById('creditInfo').innerHTML = `
                     <div style="border:1px solid var(--glass-border);border-radius:10px;padding:10px;margin:4px 0;">
-                        <div class="bank-row"><span>💰 Сумма</span><span>${game.credit.amount}$</span></div>
-                        <div class="bank-row"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
-                        <div class="bank-row"><span>✅ Выплачено</span><span>${game.credit.paid}$</span></div>
-                        <div class="bank-row"><span>⏳ Остаток</span><span class="text-red">${remaining}$</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>💰 Сумма</span><span>${game.credit.amount}$</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>✅ Выплачено</span><span>${game.credit.paid}$</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>⏳ Остаток</span><span class="text-red">${remaining}$</span></div>
                         <div style="text-align:center;margin-top:8px;"><button class="btn-gold" onclick="openRepayModal()" style="width:auto;padding:6px 20px;">Выплатить</button></div>
                     </div>`;
                 creditBtnWrapper.style.display = 'none';
@@ -2038,6 +2442,18 @@
             }
             document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
             document.getElementById('bankExpense').textContent = '0';
+            // крипто портфель
+            const cryptoDiv = document.getElementById('cryptoPortfolio');
+            let hasCrypto = false;
+            let html = '';
+            for (let key in game.crypto) {
+                if (game.crypto[key]?.amount > 0) {
+                    hasCrypto = true;
+                    const c = CRYPTO.find(cr => cr.id === key);
+                    if (c) html += `<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;"><span>${c.symbol}</span><span>${game.crypto[key].amount.toFixed(2)}</span></div>`;
+                }
+            }
+            cryptoDiv.innerHTML = hasCrypto ? html : `<span style="color:var(--text-secondary);">${t('noCrypto')}</span>`;
         }
         function openCreditModal() {
             if (game.credit) { document.getElementById('creditForm').style.display = 'none'; document.getElementById('creditLock').style.display = 'block'; }
@@ -2099,7 +2515,272 @@
         }
         function confirmRepay() { const amount = parseInt(document.getElementById('repayAmount').value) || 0; if (amount > 0) repayCredit(amount); }
 
-        // Крипто
+        // ============================================================
+        // МАГАЗИН (ОКНО)
+        // ============================================================
+        let shopTimer = null;
+
+        function openShop() {
+            document.getElementById('shop-modal').classList.add('active');
+            updateShopUI();
+            renderShopItems();
+        }
+        function closeShop() {
+            document.getElementById('shop-modal').classList.remove('active');
+            if (shopTimer) clearInterval(shopTimer);
+        }
+
+        function updateShopUI() {
+            document.getElementById('shopBalCoins').textContent = Math.round(game.balance);
+            document.getElementById('shopBalCrystals').textContent = game.crystals;
+        }
+
+        function renderShopItems() {
+            // NOVARA COIN
+            const coinGrid = document.getElementById('shopCoinItems');
+            coinGrid.innerHTML = '';
+            const coinPacks = [
+                { id: 'coin_free', amount: 100, price: 0, free: true, cooldown: 300, discount: 0 },
+                { id: 'coin_500', amount: 500, price: 25, discount: 0 },
+                { id: 'coin_1000', amount: 1000, price: 45, discount: 10 },
+                { id: 'coin_2000', amount: 2000, price: 80, discount: 20 },
+                { id: 'coin_5000', amount: 5000, price: 180, discount: 25 },
+                { id: 'coin_10000', amount: 10000, price: 320, discount: 35 }
+            ];
+            coinPacks.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                if (p.free) div.classList.add('green-item');
+                if (p.discount > 0) div.classList.add('discount');
+                let badge = '';
+                if (p.free) badge = '<div class="item-badge">FREE!</div>';
+                if (p.discount > 0) badge = `<div class="discount-tag">-${p.discount}%</div>`;
+                const priceText = p.free ? 'Бесплатно' : `${p.price} ⭐`;
+                const btnText = p.free ? 'Взять' : 'Купить';
+                const isFreeAvailable = p.free ? checkFreeAvailable() : true;
+                div.innerHTML = `
+                    ${badge}
+                    <div class="item-amount">${p.amount} <img src="${MONETA_ICON}" style="width:14px;height:14px;"></div>
+                    <div class="item-price">${priceText}</div>
+                    <button class="item-btn" onclick="${p.free ? 'takeFreeCoins()' : `buyCoinPack(${p.amount}, ${p.price})`}" ${!isFreeAvailable ? 'disabled' : ''}>
+                        ${p.free ? (isFreeAvailable ? 'Взять' : `⏳ ${Math.floor((Date.now() - (game.lastFreeClaim || 0)) / 1000)}с`) : 'Купить'}
+                    </button>
+                `;
+                coinGrid.appendChild(div);
+            });
+
+            // NOVARA DIAMONDS
+            const diamondGrid = document.getElementById('shopDiamondItems');
+            diamondGrid.innerHTML = '';
+            const diamondPacks = [
+                { id: 'diamond_50', amount: 50, price: 30, discount: 0 },
+                { id: 'diamond_100', amount: 100, price: 55, discount: 5 },
+                { id: 'diamond_200', amount: 200, price: 100, discount: 10 },
+                { id: 'diamond_500', amount: 500, price: 220, discount: 20 },
+                { id: 'diamond_1000', amount: 1000, price: 400, discount: 30 },
+                { id: 'diamond_2500', amount: 2500, price: 900, discount: 40 }
+            ];
+            diamondPacks.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'shop-item blue-item';
+                if (p.discount > 0) div.classList.add('discount');
+                let badge = '';
+                if (p.discount > 0) badge = `<div class="discount-tag">-${p.discount}%</div>`;
+                div.innerHTML = `
+                    ${badge}
+                    <div class="item-amount">${p.amount} 💎</div>
+                    <div class="item-price">${p.price} ⭐</div>
+                    <button class="item-btn" onclick="buyDiamondPack(${p.amount}, ${p.price})">Купить</button>
+                `;
+                diamondGrid.appendChild(div);
+            });
+        }
+
+        let freeCooldown = 300000; // 5 минут
+        function checkFreeAvailable() {
+            if (!game.lastFreeClaim) return true;
+            return (Date.now() - game.lastFreeClaim) > freeCooldown;
+        }
+
+        function takeFreeCoins() {
+            if (!checkFreeAvailable()) { showToast('⏳ Подождите 5 минут'); return; }
+            game.balance += 100;
+            game.lastFreeClaim = Date.now();
+            showToast('✅ +100 монет бесплатно!');
+            saveGame();
+            updateShopUI();
+            renderShopItems();
+        }
+
+        function buyCoinPack(amount, price) {
+            // Имитация покупки за звезды - отправка в бота
+            showToast(`⭐ Покупка ${amount} монет за ${price} звёзд. Проверьте Telegram!`);
+            // Здесь будет интеграция с ботом
+        }
+
+        function buyDiamondPack(amount, price) {
+            showToast(`⭐ Покупка ${amount} кристаллов за ${price} звёзд. Проверьте Telegram!`);
+        }
+
+        // ============================================================
+        // ОБМЕННИК
+        // ============================================================
+        function adjustExchange(delta) {
+            const el = document.getElementById('exchangerAmount');
+            let val = parseInt(el.textContent) || 0;
+            val = Math.max(0, Math.min(game.crystals, val + delta));
+            el.textContent = val;
+            updateExchangeResult();
+        }
+
+        function updateExchangeResult() {
+            const val = parseInt(document.getElementById('exchangerAmount').textContent) || 0;
+            document.getElementById('exchangerResult').textContent = `${val} кристаллов = ${val * 100} монет`;
+        }
+
+        function enableExchangeInput() {
+            const el = document.getElementById('exchangerAmount');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = el.textContent;
+            input.style.cssText = 'width:80px;background:rgba(255,255,255,0.1);border:2px solid var(--gold);border-radius:8px;color:#fff;font-size:18px;font-weight:700;text-align:center;';
+            el.parentNode.replaceChild(input, el);
+            input.focus();
+            input.onblur = function() {
+                let val = parseInt(this.value) || 0;
+                val = Math.min(game.crystals, Math.max(0, val));
+                const span = document.createElement('span');
+                span.className = 'num-display';
+                span.textContent = val;
+                span.onclick = enableExchangeInput;
+                this.parentNode.replaceChild(span, this);
+                updateExchangeResult();
+            };
+            input.onkeydown = function(e) {
+                if (e.key === 'Enter') this.blur();
+            };
+        }
+
+        function openExchangeConfirm() {
+            const val = parseInt(document.getElementById('exchangerAmount').textContent) || 0;
+            if (val <= 0) { showToast('❌ Введите количество кристаллов'); return; }
+            if (val > game.crystals) { showToast('❌ Не хватает кристаллов'); return; }
+            document.getElementById('exchangeConfirmText').textContent = `Вы точно хотите обменять ${val} кристаллов на ${val * 100} монет?`;
+            document.getElementById('exchangeConfirm').classList.add('active');
+            exchangeAmount = val;
+        }
+
+        function closeExchangeConfirm() {
+            document.getElementById('exchangeConfirm').classList.remove('active');
+        }
+
+        function confirmExchange() {
+            if (exchangeAmount <= 0 || exchangeAmount > game.crystals) return;
+            game.crystals -= exchangeAmount;
+            game.balance += exchangeAmount * 100;
+            showToast(`✅ Обмен выполнен! +${exchangeAmount * 100} монет`);
+            saveGame();
+            closeExchangeConfirm();
+            updateShopUI();
+            renderShopItems();
+            document.getElementById('exchangerAmount').textContent = '0';
+            updateExchangeResult();
+        }
+
+        // ============================================================
+        // ПРОМОКОД
+        // ============================================================
+        const promoCodes = {
+            'novara2025': { coins: 500, crystals: 50, xp: 100 },
+            'welcome': { coins: 200, crystals: 20, xp: 50 },
+            'citybuilder': { coins: 300, crystals: 30, xp: 75 }
+        };
+        let usedPromoCodes = [];
+
+        function applyPromo() {
+            const input = document.getElementById('promoInput').value.trim().toLowerCase();
+            const errorEl = document.getElementById('promoError');
+            if (!input) { errorEl.style.display = 'block'; errorEl.textContent = 'Введите промокод'; return; }
+            if (usedPromoCodes.includes(input)) {
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Промокод уже использован';
+                return;
+            }
+            const promo = promoCodes[input];
+            if (!promo) {
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Промокод не найден или не действителен';
+                return;
+            }
+            errorEl.style.display = 'none';
+            // Награда
+            game.balance += promo.coins || 0;
+            game.crystals += promo.crystals || 0;
+            if (promo.xp) addXp(promo.xp);
+            usedPromoCodes.push(input);
+            saveGame();
+            showToast(`🎁 Промокод активирован! +${promo.coins||0} монет, +${promo.crystals||0} кристаллов`);
+            updateShopUI();
+            document.getElementById('promoInput').value = '';
+        }
+
+        // ============================================================
+        // НАСТРОЙКИ И ЖАЛОБЫ
+        // ============================================================
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+        function openComplaints() {
+            document.getElementById('complaintsModal').classList.add('active');
+        }
+        function closeComplaints() {
+            document.getElementById('complaintsModal').classList.remove('active');
+        }
+
+        // ============================================================
+        // НАВИГАЦИЯ
+        // ============================================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if (screenId === 'bank-screen') updateBankUI();
+            if (screenId === 'resources-screen') renderResources();
+            if (screenId === 'quests-screen') renderQuests();
+            if (screenId === 'profile-screen') updateProfileUI();
+            if (screenId === 'city-screen') renderCityGrid();
+            // Скрываем футер города если не город
+            if (screenId !== 'city-screen' && screenId !== 'map-screen') {
+                document.getElementById('footerCity').classList.remove('active');
+                document.getElementById('footer').style.display = 'flex';
+            }
+            if (screenId === 'menu-screen') {
+                document.getElementById('footerCity').classList.remove('active');
+                document.getElementById('footer').style.display = 'flex';
+            }
+        }
+
+        // ============================================================
+        // ПРОФИЛЬ
+        // ============================================================
+        function updateProfileUI() {
+            document.getElementById('profileLevel').textContent = game.level;
+            document.getElementById('profileXp').textContent = game.xp;
+            document.getElementById('profileReputation').textContent = game.reputation;
+            document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
+            document.getElementById('profileEarned').textContent = Math.round(game.earned);
+            let totalCryptoVal = 0;
+            for(let key in game.crypto) { const c = CRYPTO.find(cr => cr.id === key); if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price; }
+            document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
+            document.getElementById('profileTime').textContent = `В игре: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
+            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+        }
+
+        // ============================================================
+        // КРИПТО-БИРЖА
+        // ============================================================
         function initCrypto() { CRYPTO.forEach(c => { if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 }; }); }
         function updateCryptoPrices() { CRYPTO.forEach(c => { c.price = Math.max(0.01, c.price * (1 + (Math.random() - 0.48) * 0.05)); }); }
         function buyCrypto(id, amount) {
@@ -2142,27 +2823,11 @@
                 div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border);';
                 div.innerHTML = `
                     <img src="${c.icon}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">
-                    <div style="flex:1;"><div style="font-weight:600;font-size:14px;">${c.name}</div><div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount>0?amount.toFixed(2)+' шт.':''}</div></div>
-                    ${cryptoTab==='sell'&&amount>0?`<button class="btn-red" onclick="sellCrypto('${c.id}',1)">Продать</button>`:cryptoTab!=='sell'?`<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}',1)">Купить</button>`:''}
+                    <div style="flex:1;"><div style="font-weight:600;font-size:14px;color:#fff;">${c.name}</div><div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount>0?amount.toFixed(2)+' шт.':''}</div></div>
+                    ${cryptoTab==='sell'&&amount>0?`<button class="btn-red" onclick="sellCrypto('${c.id}',1)" style="background:var(--red);border:none;color:#fff;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;">Продать</button>`:cryptoTab!=='sell'?`<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}',1)">Купить</button>`:''}
                 `;
                 list.appendChild(div);
             });
-        }
-
-        // ============================================================
-        // НАВИГАЦИЯ
-        // ============================================================
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            document.querySelectorAll('.footer button').forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`.footer button[data-screen="${screenId}"]`);
-            if (btn) btn.classList.add('active');
-            if (screenId === 'menu-screen') { updateLevelCircle(); renderDistrictsCircle(); }
-            if (screenId === 'resources-screen') renderResources();
-            if (screenId === 'quests-screen') renderQuests();
-            if (screenId === 'profile-screen') updateProfileUI();
-            if (screenId === 'bank-screen') updateBankUI();
         }
 
         // ============================================================
@@ -2174,7 +2839,7 @@
             toast.textContent = text;
             toast.style.opacity = 1;
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 2500);
+            toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 3000);
         }
         function saveGame() {
             localStorage.setItem('novaraCitySave', JSON.stringify({
@@ -2182,7 +2847,11 @@
                 xp: game.xp, level: game.level, reputation: game.reputation,
                 resources: game.resources, buildings: game.buildings, credit: game.credit,
                 crypto: game.crypto, quests: game.quests, lastOnline: game.lastOnline,
-                earned: game.earned, builtCount: game.builtCount
+                earned: game.earned, builtCount: game.builtCount,
+                unlockedDistricts: game.unlockedDistricts,
+                cityItems: game.cityItems,
+                lastFreeClaim: game.lastFreeClaim,
+                usedPromoCodes: usedPromoCodes
             }));
         }
         function loadGame() {
@@ -2193,6 +2862,15 @@
                 Object.assign(game, data);
                 if (!game.buildings) game.buildings = [];
                 game.buildings.forEach(b => { if (!b.status) b.status = 'built'; });
+                if (!game.unlockedDistricts) game.unlockedDistricts = ['suburb'];
+                if (!game.cityItems) {
+                    game.cityItems = {};
+                    for (let i = 0; i < 12; i++) {
+                        game.cityItems[i] = { districtId: null, unlocked: false, selected: false };
+                    }
+                    game.cityItems[0].unlocked = true;
+                }
+                if (data.usedPromoCodes) usedPromoCodes = data.usedPromoCodes;
                 return true;
             } catch (e) { return false; }
         }
@@ -2222,6 +2900,9 @@
                 RESOURCES.forEach(r => { game.resources[r.id] = 10; });
                 generateQuests();
                 initCrypto();
+                // Первый район открыт
+                game.unlockedDistricts = ['suburb'];
+                game.cityItems[0] = { districtId: 'suburb', unlocked: true, selected: true };
                 saveGame();
             } else {
                 const diff = (Date.now() - game.lastOnline) / 1000;
@@ -2236,7 +2917,6 @@
             }
 
             updateUI();
-            renderDistrictsCircle();
             renderResources();
             renderQuests();
 
@@ -2251,11 +2931,10 @@
                 saveGame();
                 if(document.getElementById('map-screen').classList.contains('active')) updateMapUI();
                 if(document.getElementById('bank-screen').classList.contains('active')) updateBankUI();
-                updateLevelCircle();
+                if(document.getElementById('shop-modal').classList.contains('active')) { updateShopUI(); renderShopItems(); }
             }, 30000);
 
             showScreen('menu-screen');
-            updateLevelCircle();
             showToast('🏙️ Добро пожаловать в Novara City!');
         }
 
@@ -2263,3 +2942,4 @@
     </script>
 </body>
 </html>
+```
