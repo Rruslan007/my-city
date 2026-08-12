@@ -1,0 +1,2953 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Novara City</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #1a1f2f;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --gold: #ffd700;
+            --gold-gradient: linear-gradient(135deg, #f7971e, #ffd200);
+            --green: #00c853;
+            --red: #d50000;
+            --blue: #1a3a6a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --radius: 20px;
+            --transition: 0.3s ease;
+            --menu-bg-width: 1080;
+            --menu-bg-height: 1920;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 70px;
+            touch-action: manipulation;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .btn-gold {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-gold:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-gold:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-green {
+            background: var(--green);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .btn-red {
+            background: var(--red);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
+            height: 64px;
+        }
+
+        .footer button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 9px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 2px 6px;
+            min-width: 48px;
+        }
+
+        .footer button img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: grayscale(0.6) brightness(0.7);
+            transition: var(--transition);
+        }
+
+        .footer button.active img {
+            filter: drop-shadow(0 0 10px gold) brightness(1);
+        }
+
+        .footer button.active {
+            color: var(--gold);
+        }
+
+        .footer button .label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            opacity: 0.7;
+        }
+
+        .footer button.active .label {
+            opacity: 1;
+        }
+
+        .screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 64px;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 20px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .screen::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .screen::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .lang-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .lang-modal.active {
+            display: flex;
+        }
+
+        .lang-modal .box {
+            background: linear-gradient(135deg, #00c853, #ffeb3b);
+            padding: 30px 24px;
+            border-radius: 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .lang-modal .box h2 {
+            color: #1a1a2e;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .lang-modal .box .btn-lang {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fff;
+            color: #1a1a2e;
+        }
+
+        /* === МЕНЮ === */
+        #menu-screen {
+            background: url('https://rruslan007.github.io/novara-city-images/effects/menu.PNG') center/cover no-repeat;
+            background-size: cover;
+            background-position: center;
+            padding: 0;
+            top: 0;
+            bottom: 64px;
+            overflow: hidden !important;
+            position: relative;
+        }
+
+        #menu-screen .overlay {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Новые кнопки меню */
+        .menu-btn-wide {
+            width: 100%;
+            max-width: 400px;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 0 !important;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .menu-btn-wide img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+        .menu-btn-wide.btn-city {
+            background: #00c853;
+        }
+        .menu-btn-wide.btn-store {
+            background: #fbc02d;
+            color: #1a1a2e;
+        }
+        .menu-btn-wide.btn-store img {
+            filter: none;
+        }
+        .menu-btn-wide:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .menu-btn-half-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .menu-btn-half {
+            flex: 1;
+            padding: 14px 8px;
+            border: none;
+            border-radius: 0 !important;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+        }
+        .menu-btn-half img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+        .menu-btn-half.btn-complaints {
+            background: #d50000;
+        }
+        .menu-btn-half.btn-settings {
+            background: #78909c;
+        }
+        .menu-btn-half:hover {
+            transform: scale(1.02);
+        }
+
+        /* Город (пункт) */
+        #city-screen {
+            background: #b2d8a8;
+            background: linear-gradient(145deg, #b2d8a8, #8fc77d, #a8d08d);
+            background-size: 200% 200%;
+            animation: chameleon 8s ease-in-out infinite alternate;
+            padding: 16px;
+            top: 0;
+            bottom: 64px;
+        }
+        @keyframes chameleon {
+            0% { background: #b2d8a8; }
+            50% { background: #9bc78a; }
+            100% { background: #c5e0b5; }
+        }
+
+        #city-screen .city-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2e1a;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .city-item {
+            aspect-ratio: 1 / 1.2;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
+            position: relative;
+            gap: 4px;
+        }
+        .city-item.locked {
+            background: rgba(0,0,0,0.6);
+            color: #888;
+        }
+        .city-item.locked .lock-icon {
+            font-size: 28px;
+        }
+        .city-item.locked .level-req {
+            font-size: 12px;
+            font-weight: 700;
+            color: #aaa;
+        }
+        .city-item.unlocked {
+            background: #111;
+            border-color: var(--gold);
+            cursor: pointer;
+        }
+        .city-item.unlocked .open-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .city-item.unlocked .open-btn:hover {
+            transform: scale(1.05);
+        }
+        .city-item .district-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            animation: pulse 2s ease-in-out infinite;
+            background: #1a1f2f;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .city-item .district-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        .city-item.coming-soon {
+            background: #000;
+            border-color: #555;
+        }
+        .city-item.coming-soon .soon-icon {
+            font-size: 32px;
+            color: #ffeb3b;
+        }
+        .city-item.coming-soon .soon-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        /* Окно выбора района */
+        .district-select-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .district-select-modal.active {
+            display: flex;
+        }
+        .district-select-box {
+            background: #1a1f2f;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            padding: 20px 16px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .district-select-box .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--red);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .district-select-box .select-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+        .district-select-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .district-select-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px 4px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 12px;
+            color: #fff;
+        }
+        .district-select-item:hover {
+            background: rgba(255,215,0,0.15);
+            border-color: var(--gold);
+        }
+        .district-select-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 4px;
+        }
+
+        /* Магазин */
+        #shop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #shop-modal.active {
+            display: flex;
+        }
+        .shop-box {
+            background: #6a1b9a;
+            border: 4px solid #fbc02d;
+            border-radius: 16px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 16px 12px;
+        }
+        .shop-box .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .shop-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0 8px 0;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+        .shop-header .shop-title-wrap {
+            background: rgba(0,0,0,0.4);
+            border-radius: 30px;
+            padding: 6px 20px;
+            flex: 1;
+            text-align: center;
+        }
+        .shop-header .shop-title-wrap h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        .shop-balances {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .shop-balances .bal-item {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .shop-balances .bal-item img {
+            width: 16px;
+            height: 16px;
+        }
+        .shop-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-top: 8px;
+        }
+        .shop-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .shop-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+        }
+        .shop-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .shop-section .section-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .shop-section .section-title img {
+            width: 24px;
+            height: 24px;
+        }
+        .shop-items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        .shop-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 6px 4px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .shop-item .item-badge {
+            font-size: 8px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--red);
+            padding: 0 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .shop-item .item-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .shop-item .item-amount img {
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+        }
+        .shop-item .item-price {
+            font-size: 10px;
+            color: #ffeb3b;
+            font-weight: 600;
+        }
+        .shop-item .item-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2px;
+        }
+        .shop-item .item-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .shop-item .item-btn.timer {
+            background: #555;
+            color: #fff;
+        }
+        .shop-item.green-item {
+            border-color: #00c853;
+        }
+        .shop-item.green-item .item-badge {
+            background: #00c853;
+        }
+        .shop-item.blue-item {
+            border-color: #2196f3;
+        }
+        .shop-item.discount {
+            border-color: #ff1744;
+            position: relative;
+        }
+        .shop-item.discount .discount-tag {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff1744;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        .shop-exchanger {
+            margin-top: 4px;
+        }
+        .shop-exchanger .exchanger-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .shop-exchanger .exchanger-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--gold);
+        }
+        .shop-exchanger .exchanger-row .num-display {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-weight: 700;
+            font-size: 18px;
+            min-width: 60px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .shop-exchanger .exchanger-row .num-display.active {
+            border-color: var(--gold);
+            background: rgba(255,215,0,0.2);
+        }
+        .shop-exchanger .exchanger-result {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
+        /* Промокод */
+        .promo-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 4px;
+        }
+        .promo-section .promo-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .promo-section .promo-row {
+            display: flex;
+            gap: 8px;
+        }
+        .promo-section .promo-row input {
+            flex: 1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 14px;
+        }
+        .promo-section .promo-row button {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .promo-error {
+            font-size: 12px;
+            color: #ff1744;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Настройки, Жалобы */
+        .modal-settings, .modal-complaints {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-settings.active, .modal-complaints.active {
+            display: flex;
+        }
+        .settings-box, .complaints-box {
+            background: #f5f0e8;
+            border-radius: 16px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 3px solid #1a3a6a;
+            position: relative;
+        }
+        .settings-box .modal-header, .complaints-box .modal-header {
+            background: #1a3a6a;
+            padding: 12px 16px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #1a3a6a;
+        }
+        .settings-box .modal-header h2, .complaints-box .modal-header h2 {
+            color: #fff;
+            font-size: 20px;
+            margin: 0;
+        }
+        .settings-box .modal-header .close-btn, .complaints-box .modal-header .close-btn {
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 26px;
+            cursor: pointer;
+        }
+        .settings-box .modal-body, .complaints-box .modal-body {
+            padding: 16px;
+            color: #1a1a2e;
+        }
+        .settings-box .modal-body .subtitle {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .settings-box .modal-body .center-text {
+            text-align: center;
+            margin: 8px 0;
+        }
+        .settings-box .modal-body .btn-change-lang {
+            background: var(--gold-gradient);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        .complaints-box .modal-body textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        /* Футер для города */
+        .footer-city {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--glass-border);
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
+            height: 64px;
+        }
+        .footer-city.active {
+            display: flex;
+        }
+        .footer-city button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 9px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 2px 6px;
+            min-width: 48px;
+        }
+        .footer-city button img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: grayscale(0.6) brightness(0.7);
+            transition: var(--transition);
+        }
+        .footer-city button.active img {
+            filter: drop-shadow(0 0 10px gold) brightness(1);
+        }
+        .footer-city button.active {
+            color: var(--gold);
+        }
+
+        /* Затемнение */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 1s ease;
+        }
+        .fade-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Убрал круги районов и круг опыта в меню */
+        .district-btn-circle, .level-circle-wrapper {
+            display: none !important;
+        }
+
+        /* Затемнение для ресурсов, квестов, профиля */
+        .glass-dark {
+            background: rgba(0,0,0,0.4) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Объединенный блок опыта и репутации */
+        .xp-rep-bar {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 4px 12px 8px 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 0 auto 8px auto;
+            max-width: 300px;
+        }
+        .xp-rep-bar .top-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .xp-rep-bar .top-row .rep {
+            color: var(--gold);
+        }
+        .xp-rep-bar .xp-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .xp-rep-bar .xp-track .fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Карта: исправление сдвига — размер задаётся из JS под фактическую сетку,
+           чтобы не оставалось "лишней" зелёной травы и участков за пределами видимой области */
+        .map-world {
+            position: relative;
+            overflow: visible;
+            background: #4a7c3f;
+        }
+        .map-scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        .map-world .map-road-h, .map-world .map-road-v {
+            background: #3a3a3a;
+            position: absolute;
+        }
+        .map-world .map-road-h {
+            height: 60px;
+            left: 0;
+        }
+        .map-world .map-road-h::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, #fff 0px, #fff 20px, transparent 20px, transparent 30px);
+        }
+        .map-world .map-road-v {
+            width: 60px;
+            top: 0;
+        }
+        .map-world .map-road-v::after {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: repeating-linear-gradient(180deg, #fff 0px, #fff 20px, transparent 20px, transparent 30px);
+        }
+        /* Перекрёстки — отдельные плитки поверх дорог, без полос */
+        .map-world .map-intersection {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #3a3a3a;
+            z-index: 1;
+        }
+
+        /* Заголовки в банке, ресурсах, квестах, профиле */
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            padding: 8px 0 12px 0;
+            margin: 0;
+        }
+
+        /* Квесты */
+        .quests-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .quest-category {
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+        }
+        .quest-category .cat-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .quest-category .cat-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .quest-item {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            position: relative;
+        }
+        .quest-item.completed {
+            opacity: 0.5;
+            background: rgba(0,0,0,0.3);
+        }
+        .quest-item .q-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+        }
+        .quest-item .q-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin: 4px 0;
+        }
+        .quest-item .q-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 4px 0;
+            position: relative;
+        }
+        .quest-item .q-progress .fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .quest-item .q-progress .p-text {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+        }
+        .quest-item .q-reward {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        .quest-item .q-btn {
+            display: block;
+            width: 100%;
+            padding: 4px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+        .quest-item .q-btn.gold {
+            background: var(--gold-gradient);
+            color: #1a1a2e;
+        }
+        .quest-item .q-btn.gray {
+            background: #555;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        .quest-item .q-done {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: #00c853;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 16px;
+            border-radius: 20px;
+            pointer-events: none;
+        }
+        .quest-item .q-done .check {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00c853;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            font-size: 14px;
+        }
+
+        /* Окно подтверждения */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 900;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .confirm-overlay.active {
+            display: flex;
+        }
+        .confirm-box {
+            background: #1a1f2f;
+            border-radius: 16px;
+            max-width: 360px;
+            width: 100%;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .confirm-box .confirm-header {
+            background: #1a3a6a;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: #fff;
+        }
+        .confirm-box .confirm-header .close-btn {
+            background: none;
+            border: none;
+            color: #ff1744;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .confirm-box .confirm-body {
+            padding: 16px;
+            color: #fff;
+            text-align: center;
+        }
+        .confirm-box .confirm-actions {
+            display: flex;
+            gap: 0;
+            border-top: 1px solid var(--glass-border);
+        }
+        .confirm-box .confirm-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .confirm-box .confirm-actions .btn-cancel {
+            background: #555;
+            color: #fff;
+        }
+        .confirm-box .confirm-actions .btn-confirm {
+            background: var(--gold-gradient);
+            color: #1a1a2e;
+        }
+
+        /* Исправления */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ЯЗЫКОВАЯ МОДАЛКА ===== -->
+    <div class="lang-modal" id="langModal">
+        <div class="box">
+            <h2 id="langTitle">Choose Language / Выберите язык</h2>
+            <button class="btn-lang" onclick="setLang('en')">🇬🇧 English</button>
+            <button class="btn-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+        </div>
+    </div>
+
+    <!-- ===== МЕНЮ ===== -->
+    <div class="screen active" id="menu-screen">
+        <div class="overlay">
+            <button class="menu-btn-wide btn-city" onclick="openCity()">
+                <span>Город</span>
+                <img src="https://rruslan007.github.io/novara-city-images/logo/city_icon.png" alt="city">
+            </button>
+            <button class="menu-btn-wide btn-store" onclick="openShop()">
+                <span>Магазин</span>
+                <img src="https://rruslan007.github.io/novara-city-images/logo/store.png" alt="store">
+            </button>
+            <div class="menu-btn-half-row">
+                <button class="menu-btn-half btn-complaints" onclick="openComplaints()">
+                    <img src="https://rruslan007.github.io/novara-city-images/logo/nevs_icon.png" alt="complaints">
+                    <span>Жалобы</span>
+                </button>
+                <button class="menu-btn-half btn-settings" onclick="openSettings()">
+                    <img src="https://rruslan007.github.io/novara-city-images/logo/settings.png" alt="settings">
+                    <span>Настройки</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ГОРОД (ПУНКТ) ===== -->
+    <div class="screen" id="city-screen">
+        <div class="city-title">Выберите район:</div>
+        <div class="city-grid" id="cityGrid"></div>
+    </div>
+
+    <!-- ===== КАРТА ===== -->
+    <div class="screen" id="map-screen">
+        <div class="map-header" style="position:absolute;top:0;left:0;right:0;z-index:10;background:rgba(10,14,26,0.9);backdrop-filter:blur(8px);padding:8px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--glass-border);">
+            <button class="back-btn" onclick="goBackFromMap()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:#fff;font-size:14px;padding:6px 12px;cursor:pointer;">
+                <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back" style="width:20px;height:20px;">
+                <span id="mapBack">←</span>
+            </button>
+            <span class="district-title" id="mapTitle" style="font-size:18px;font-weight:700;flex:1;text-align:center;">Район</span>
+        </div>
+        <div class="map-scroll-container" id="mapScrollContainer" style="position:absolute;top:50px;left:0;right:0;bottom:0;overflow:auto;">
+            <div class="map-world" id="mapWorld"></div>
+        </div>
+        <div class="map-bottom-stats" style="position:absolute;bottom:10px;left:16px;right:16px;z-index:10;display:flex;flex-direction:column;gap:4px;">
+            <div class="compact-box" style="background:rgba(10,14,26,0.7);backdrop-filter:blur(6px);border-radius:8px;padding:6px 12px;border:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;">
+                <span><span class="lbl" style="font-size:10px;color:var(--text-secondary);">⭐ LVL </span><span class="val" id="mapLvlBottom" style="font-size:12px;font-weight:600;">1</span></span>
+                <span><span class="lbl" style="font-size:10px;color:var(--text-secondary);">Репутация: </span><span class="val text-gold" id="mapReputationBottom" style="font-size:12px;font-weight:600;color:var(--gold);">0</span></span>
+            </div>
+            <div class="compact-box" style="background:rgba(10,14,26,0.7);backdrop-filter:blur(6px);border-radius:8px;padding:4px 12px 6px;border:1px solid var(--glass-border);flex-direction:column;">
+                <div style="width:100%;display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary);">
+                    <span id="mapXpLabelBottom">0 / 100 XP</span>
+                </div>
+                <div class="xp-bar" style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-top:2px;"><div class="fill" id="mapXpFillBottom" style="height:100%;background:var(--gold-gradient);border-radius:4px;transition:width 0.5s ease;width:0%;"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== БАНК ===== -->
+    <div class="screen" id="bank-screen">
+        <div class="page-title" id="bankTitle">Банк</div>
+        <div class="bank-accordion-wrapper" style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto;">
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_icon.png" alt="bank" style="width:24px;height:24px;"> <span id="bankMyBank">Мой банк</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
+                </div>
+                <div class="body open" style="max-height:600px;padding:0 16px 16px;overflow-y:auto;">
+                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankMyBankTitle">Мой банк</div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
+                        <div class="label" style="display:flex;align-items:center;gap:6px;"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;"> Баланс</div>
+                        <span id="bankBalanceDisplay">1000</span>
+                    </div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
+                        <span>💎 Кристаллы</span><span id="bankCrystalsDisplay">50</span>
+                    </div>
+                    <div style="margin-top:12px;text-align:center;">
+                        <button class="btn-gold" id="bankReplenishBtn" onclick="showToast('💰 Пополнение в разработке')" style="width:auto;padding:6px 20px;">Пополнить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/credit_icon.png" alt="credit" style="width:24px;height:24px;"> <span id="bankCredit">Кредит</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
+                </div>
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
+                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankCreditTitle">Кредит</div>
+                    <div id="creditInfo"><span style="color:var(--text-secondary);">Нет активных кредитов</span></div>
+                    <div style="text-align:center;margin-top:12px;" id="creditBtnWrapper">
+                        <button class="btn-gold" id="bankTakeCredit" onclick="openCreditModal()" style="width:auto;padding:6px 20px;">Взять кредит</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/crypto_icon.png" alt="crypto" style="width:24px;height:24px;"> <span id="bankCrypto">Криптовалюта</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
+                </div>
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
+                    <div id="cryptoPortfolio"><span style="color:var(--text-secondary);">У вас нет криптовалют</span></div>
+                    <div style="text-align:center;margin-top:12px;">
+                        <button class="btn-gold" onclick="openCryptoExchange()" style="width:auto;padding:6px 20px;">🚀 Биржа</button>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
+                <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
+                    <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/income_and_expence_icon.png" alt="stats" style="width:24px;height:24px;"> <span id="bankStats">Доходы и расходы</span></div>
+                    <span class="arrow" style="font-size:18px;transition:var(--transition);color:var(--text-secondary);">▼</span>
+                </div>
+                <div class="body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 16px;">
+                    <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankStatsTitle">Доходы и расходы</div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📈 Доходы</span><span class="text-green" id="bankIncome">0</span></div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📉 Расходы</span><span class="text-red" id="bankExpense">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== РЕСУРСЫ ===== -->
+    <div class="screen" id="resources-screen">
+        <div class="page-title" id="resourcesTitle">Ресурсы</div>
+        <div class="resource-grid" id="resourceGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+    </div>
+
+    <!-- ===== КВЕСТЫ ===== -->
+    <div class="screen" id="quests-screen">
+        <div class="page-title" id="questsTitle">Квесты</div>
+        <div class="quests-container" id="questsList"></div>
+    </div>
+
+    <!-- ===== ПРОФИЛЬ ===== -->
+    <div class="screen" id="profile-screen">
+        <div class="page-title" id="profileTitle">Профиль</div>
+        <div class="profile-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--glass-bg);border:2px solid var(--gold);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:40px;">👤</div>
+        <div style="text-align:center;margin-bottom:12px;">
+            <input type="text" id="playerName" placeholder="Ваше имя" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;padding:8px 14px;color:#fff;width:100%;max-width:250px;font-size:16px;text-align:center;">
+        </div>
+        <div class="profile-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Уровень</div><div class="value" id="profileLevel" style="font-size:18px;font-weight:700;color:var(--gold);">1</div></div>
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Опыт</div><div class="value" id="profileXp" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Репутация</div><div class="value text-gold" id="profileReputation" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Построено</div><div class="value" id="profileBuildings" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Заработано</div><div class="value" id="profileEarned" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+            <div class="stat" style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;text-align:center;"><div class="label" style="font-size:11px;color:var(--text-secondary);">Крипто-активы</div><div class="value" id="profileCryptoVal" style="font-size:18px;font-weight:700;color:var(--gold);">0</div></div>
+        </div>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-secondary);">
+            <span id="profileTime">В игре: 0 мин</span>
+        </div>
+    </div>
+
+    <!-- ===== ФУТЕР ОСНОВНОЙ ===== -->
+    <div class="footer" id="footer">
+        <button onclick="showScreen('bank-screen')" data-screen="bank-screen">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/bank_1.png" alt="Bank">
+            <span class="label" id="footerBank">Bank</span>
+        </button>
+        <button onclick="showScreen('resources-screen')" data-screen="resources-screen">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/resources_icon.png" alt="Resources">
+            <span class="label" id="footerResources">Resources</span>
+        </button>
+        <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png" alt="Home">
+            <span class="label" id="footerHome">Home</span>
+        </button>
+        <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png" alt="Quests">
+            <span class="label" id="footerQuests">Quests</span>
+        </button>
+        <button onclick="showScreen('profile-screen')" data-screen="profile-screen">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/profile_icon.png" alt="Profile">
+            <span class="label" id="footerProfile">Profile</span>
+        </button>
+    </div>
+
+    <!-- ===== ФУТЕР ГОРОДА ===== -->
+    <div class="footer-city" id="footerCity">
+        <button onclick="goBackFromMap()" data-action="back" class="active">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/back.png" alt="back">
+            <span class="label">Назад</span>
+        </button>
+        <button onclick="showToast('Совет: стройте здания для дохода')" data-action="sovet">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/sovet_icon.png" alt="sovet">
+            <span class="label">Совет</span>
+        </button>
+        <button onclick="showToast('Ивент: удвоение дохода на 1 час!')" data-action="event">
+            <img src="https://rruslan007.github.io/novara-city-images/logo/nevs_icon.png" alt="event">
+            <span class="label">Ивент</span>
+        </button>
+    </div>
+
+    <!-- ===== ОКНО ВЫБОРА РАЙОНА ===== -->
+    <div class="district-select-modal" id="districtSelectModal">
+        <div class="district-select-box">
+            <button class="close-btn" onclick="closeDistrictSelect()">✕</button>
+            <div class="select-title">Выберите район</div>
+            <div class="district-select-grid" id="districtSelectGrid"></div>
+        </div>
+    </div>
+
+    <!-- ===== МАГАЗИН (ОКНО) ===== -->
+    <div id="shop-modal">
+        <div class="shop-box">
+            <button class="close-btn" onclick="closeShop()">✕</button>
+            <div class="shop-header">
+                <div class="shop-title-wrap"><h2>Магазин</h2></div>
+                <div class="shop-balances">
+                    <div class="bal-item"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" id="shopBalCoinsImg"> <span id="shopBalCoins">1000</span></div>
+                    <div class="bal-item">💎 <span id="shopBalCrystals">50</span></div>
+                </div>
+            </div>
+            <div class="shop-scroll" id="shopScroll">
+                <!-- NOVARA COIN -->
+                <div class="shop-section">
+                    <div class="section-title"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG"> NOVARA COIN</div>
+                    <div class="shop-items-grid" id="shopCoinItems"></div>
+                </div>
+                <!-- NOVARA DIAMONDS -->
+                <div class="shop-section">
+                    <div class="section-title">💎 NOVARA DIAMONDS</div>
+                    <div class="shop-items-grid" id="shopDiamondItems"></div>
+                </div>
+                <!-- Обменник -->
+                <div class="shop-section shop-exchanger">
+                    <div class="section-title">🔄 Обменник</div>
+                    <div style="font-size:12px;font-style:italic;color:#ddd;">Обменяйте кристаллы на монеты по курсу</div>
+                    <div style="font-weight:700;font-size:14px;color:var(--gold);">1 кристалл = 100 монет</div>
+                    <div class="exchanger-row">
+                        <button class="btn-gold" style="width:auto;padding:4px 12px;font-size:16px;" onclick="adjustExchange(-10)">−</button>
+                        <span class="num-display" id="exchangerAmount" onclick="enableExchangeInput()">0</span>
+                        <button class="btn-gold" style="width:auto;padding:4px 12px;font-size:16px;" onclick="adjustExchange(10)">+</button>
+                    </div>
+                    <div class="exchanger-result" id="exchangerResult">0 кристаллов = 0 монет</div>
+                    <button class="btn-gold" onclick="openExchangeConfirm()" style="width:auto;padding:6px 20px;margin:0 auto;display:block;">Обменять</button>
+                </div>
+                <!-- Промокод -->
+                <div class="promo-section">
+                    <div class="promo-title">🎁 Промокод</div>
+                    <div style="font-size:12px;color:#ddd;">Введите промокод</div>
+                    <div class="promo-row">
+                        <input type="text" id="promoInput" placeholder="Введите промокод">
+                        <button onclick="applyPromo()">Применить</button>
+                    </div>
+                    <div class="promo-error" id="promoError">Промокод не найден или не действителен</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== НАСТРОЙКИ ===== -->
+    <div class="modal-settings" id="settingsModal">
+        <div class="settings-box">
+            <div class="modal-header">
+                <h2>Настройки</h2>
+                <button class="close-btn" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="subtitle">Язык</div>
+                <div class="center-text">Выбран: <span id="currentLangDisplay">Русский</span></div>
+                <button class="btn-change-lang" onclick="openLangModal()">Сменить язык</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЖАЛОБЫ ===== -->
+    <div class="modal-complaints" id="complaintsModal">
+        <div class="complaints-box">
+            <div class="modal-header">
+                <h2>Жалобы</h2>
+                <button class="close-btn" onclick="closeComplaints()">✕</button>
+            </div>
+            <div class="modal-body">
+                <textarea placeholder="Опишите вашу жалобу..."></textarea>
+                <button class="btn-gold" style="margin-top:8px;width:auto;padding:6px 20px;" onclick="showToast('Жалоба отправлена!')">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОКНО СТРОИТЕЛЬСТВА ===== -->
+    <div class="modal-overlay" id="buildModal">
+        <div class="modal-box-build" style="position:relative;background:var(--bg-primary);border-radius:24px 24px 0 0;padding:20px 16px 30px;max-width:420px;width:100%;max-height:85vh;border-top:1px solid var(--glass-border);box-shadow:0 -10px 40px rgba(0,0,0,0.8);animation:slideUp 0.3s ease;display:flex;flex-direction:column;">
+            <button class="close-btn" onclick="closeBuildModal()" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);color:var(--text-secondary);font-size:20px;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;">✕</button>
+            <h2 id="buildModalTitle" style="margin-bottom:16px;color:#fff;font-size:18px;font-weight:700;text-align:center;">Строительство</h2>
+            <div class="build-grid" id="buildModalList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow-y:auto;padding-right:4px;flex:1;"></div>
+        </div>
+    </div>
+
+    <!-- ===== ОКНО ИНФОРМАЦИИ О ЗДАНИИ ===== -->
+    <div class="modal-overlay" id="buildingInfoModal" style="align-items:center;">
+        <div class="modal-box-info" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:380px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);text-align:center;">
+            <button class="close-btn" onclick="closeBuildingInfo()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <img id="infoBuildingImg" src="" alt="building" style="width:80px;height:80px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
+            <h3 id="infoBuildingName" style="margin-bottom:8px;"></h3>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⚡ Электричество: <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⭐ Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
+            <div class="built-date" id="infoBuiltDate" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;"></div>
+            <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
+        </div>
+    </div>
+
+    <!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ СНОСА ===== -->
+    <div class="modal-confirm" id="demolishConfirm" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:600;justify-content:center;align-items:center;padding:20px;">
+        <div class="confirm-box" style="background:#1a3a6a;border-radius:16px;max-width:340px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+            <div class="confirm-header" style="background:#1e447a;padding:14px 20px;font-size:16px;font-weight:600;text-align:center;">⚠️ Снос здания</div>
+            <div class="confirm-body" style="padding:16px 20px;text-align:center;color:var(--text-secondary);font-size:13px;">
+                <p>Вы точно хотите снести данное здание?</p>
+                <p class="cost" id="demolishCostText" style="font-size:11px;margin-top:4px;color:var(--text-secondary);">Стоимость сноса: 0 монет</p>
+            </div>
+            <div class="confirm-actions" style="display:flex;gap:0;border-top:1px solid rgba(255,255,255,0.1);">
+                <button class="btn-cancel" onclick="closeDemolishConfirm()" style="flex:1;padding:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#1e447a;color:#fff;">Отмена</button>
+                <button class="btn-confirm" id="confirmDemolishBtn" onclick="confirmDemolish()" style="flex:1;padding:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:var(--gold-gradient);color:#1a1a2e;">Подтвердить</button>
+            </div>
+            <div class="error-text" id="demolishError" style="display:none;color:var(--red);font-size:10px;text-align:center;padding:4px;">Вам не хватает 0 монет</div>
+        </div>
+    </div>
+
+    <!-- ===== КРИПТО-БИРЖА ===== -->
+    <div class="modal-overlay" id="cryptoModal" style="align-items:center;">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeCryptoModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <h2 id="cryptoModalTitle" style="text-align:center;">📈 Биржа криптовалют</h2>
+            <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
+                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;" onclick="switchCryptoTab('main')" id="cryptoTabMain">Основные</button>
+                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('exclusive')" id="cryptoTabExclusive">Эксклюзив</button>
+                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('sell')" id="cryptoTabSell">Продажа</button>
+            </div>
+            <input type="text" id="cryptoSearch" placeholder="🔍 Поиск..." style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;margin-bottom:8px;">
+            <div id="cryptoList" style="max-height:300px;overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <!-- ===== КРЕДИТ ===== -->
+    <div class="modal-overlay" id="creditModal" style="align-items:center;">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeCreditModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <h2 id="creditModalTitle" style="text-align:center;">💰 Взять кредит</h2>
+            <div id="creditForm">
+                <div style="margin-bottom:8px;">
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Сумма: <span id="creditAmountDisplay">0</span></span></div>
+                    <input type="range" id="creditAmountSlider" min="0" max="1000" step="50" value="0" style="width:100%;">
+                </div>
+                <div style="margin-bottom:8px;">
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Срок: <span id="creditTermDisplay">7</span> дней</span></div>
+                    <input type="range" id="creditTermSlider" min="7" max="30" step="1" value="7" style="width:100%;">
+                </div>
+                <div style="margin-bottom:8px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;font-size:13px;">
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Процентная ставка:</span><span class="text-red" id="creditRateDisplay">0%</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Итоговая сумма к выплате:</span><span id="creditTotalPayDisplay">0</span></div>
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Ежемесячный платеж:</span><span id="creditMonthlyPayDisplay">0</span></div>
+                </div>
+                <button class="btn-gold" onclick="takeCredit()">Взять кредит</button>
+            </div>
+            <div id="creditLock" style="display:none;text-align:center;padding:20px;">
+                <div style="font-size:48px;">🔒</div>
+                <div style="color:var(--text-secondary);">У вас уже есть активный кредит. Погасите его, чтобы взять новый.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВЫПЛАТА КРЕДИТА ===== -->
+    <div class="modal-overlay" id="repayModal" style="align-items:center;">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeRepayModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <h2 id="repayTitle" style="text-align:center;">💳 Выплата</h2>
+            <div style="text-align:center;color:var(--text-secondary);font-size:14px;">Введите сумму для погашения</div>
+            <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
+                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(-10)">−</button>
+                <input type="number" id="repayAmount" value="0" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--gold);background:rgba(255,255,255,0.05);color:#fff;font-size:18px;font-weight:700;text-align:center;">
+                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(10)">+</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);">
+                <span>Баланс: <span id="repayBalance">0</span></span>
+                <span>Остаток: <span id="repayRemaining">0</span></span>
+            </div>
+            <button class="btn-gold mt-8" id="repayBtn" onclick="confirmRepay()" disabled style="margin-top:8px;">Выплатить</button>
+        </div>
+    </div>
+
+    <!-- ===== ОКНО ПОДТВЕРЖДЕНИЯ ОБМЕНА ===== -->
+    <div class="confirm-overlay" id="exchangeConfirm">
+        <div class="confirm-box">
+            <div class="confirm-header">
+                <span>Подтверждение</span>
+                <button class="close-btn" onclick="closeExchangeConfirm()">✕</button>
+            </div>
+            <div class="confirm-body" id="exchangeConfirmText">Вы точно хотите обменять 0 кристаллов на 0 монет?</div>
+            <div class="confirm-actions">
+                <button class="btn-cancel" onclick="closeExchangeConfirm()">Отмена</button>
+                <button class="btn-confirm" onclick="confirmExchange()">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЗАТЕМНЕНИЕ ===== -->
+    <div class="fade-overlay" id="fadeOverlay"></div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:10px 20px;border-radius:12px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--glass-border);color:#fff;white-space:nowrap;"></div>
+
+    <script>
+        // ============================================================
+        // ЛОКАЛИЗАЦИЯ (упрощенная)
+        // ============================================================
+        const LANG = {
+            en: {
+                appName: "Novara City", bank: "Bank", resources: "Resources", quests: "Quests", profile: "Profile",
+                back: "Back", balance: "Balance", coins: "Coins", crystals: "Crystals", noCredit: "No active credits",
+                noCrypto: "You have no cryptocurrencies", income: "Income", expense: "Expenses",
+                bankMy: "My Bank", credit: "Credit", crypto: "Cryptocurrency", stats: "Income & Expenses",
+                settings: "Settings", complaints: "Complaints", city: "City", shop: "Shop",
+                language: "Language", selected: "Selected", changeLang: "Change language",
+                district1: "Suburb", district2: "Countryside", district3: "Residential", district4: "Midtown",
+                district5: "Commercial", district6: "Park", district7: "Transport Hub", district8: "Industrial",
+                district9: "Tech Park", coming: "Coming soon"
+            },
+            ru: {
+                appName: "Novara City", bank: "Банк", resources: "Ресурсы", quests: "Квесты", profile: "Профиль",
+                back: "Назад", balance: "Баланс", coins: "Монеты", crystals: "Кристаллы", noCredit: "Нет активных кредитов",
+                noCrypto: "У вас нет криптовалют", income: "Доходы", expense: "Расходы",
+                bankMy: "Мой банк", credit: "Кредит", crypto: "Криптовалюта", stats: "Доходы и расходы",
+                settings: "Настройки", complaints: "Жалобы", city: "Город", shop: "Магазин",
+                language: "Язык", selected: "Выбран", changeLang: "Сменить язык",
+                district1: "Обычный посёлок", district2: "Пригород", district3: "Жилой район", district4: "Средний посёлок",
+                district5: "Торговый район", district6: "Парк", district7: "Транспортный хаб", district8: "Промышленная зона",
+                district9: "Технопарк", coming: "Скоро"
+            }
+        };
+
+        let lang = 'ru';
+        let currentLang = {};
+
+        function setLang(l) {
+            lang = l;
+            currentLang = LANG[lang];
+            localStorage.setItem('lang', lang);
+            document.getElementById('langModal').classList.remove('active');
+            updateUI();
+            showToast('🌐 Язык изменён');
+        }
+
+        function t(key) { return currentLang[key] || key; }
+
+        function updateUI() {
+            document.getElementById('footerBank').textContent = t('bank');
+            document.getElementById('footerResources').textContent = t('resources');
+            document.getElementById('footerHome').textContent = t('city');
+            document.getElementById('footerQuests').textContent = t('quests');
+            document.getElementById('footerProfile').textContent = t('profile');
+            document.getElementById('bankMyBank').textContent = t('bankMy');
+            document.getElementById('bankMyBankTitle').textContent = t('bankMy');
+            document.getElementById('bankReplenishBtn').textContent = 'Пополнить';
+            document.getElementById('bankCredit').textContent = t('credit');
+            document.getElementById('bankCreditTitle').textContent = t('credit');
+            document.getElementById('bankTakeCredit').textContent = 'Взять кредит';
+            document.getElementById('bankCrypto').textContent = t('crypto');
+            document.getElementById('bankStats').textContent = t('stats');
+            document.getElementById('bankStatsTitle').textContent = t('stats');
+            document.getElementById('bankTitle').textContent = t('bank');
+            document.getElementById('resourcesTitle').textContent = t('resources');
+            document.getElementById('questsTitle').textContent = t('quests');
+            document.getElementById('profileTitle').textContent = t('profile');
+            document.getElementById('mapBack').textContent = t('back');
+            document.getElementById('currentLangDisplay').textContent = lang === 'ru' ? 'Русский' : 'English';
+            renderCityGrid();
+            renderQuests();
+            updateProfileUI();
+            updateBankUI();
+        }
+
+        // ============================================================
+        // ДАННЫЕ
+        // ============================================================
+        const BASE_URL = 'https://rruslan007.github.io/novara-city-images/';
+        const MONETA_ICON = BASE_URL + 'effects/moneta.PNG';
+
+        const DISTRICTS_DATA = [
+            { id: 'suburb', icon: BASE_URL + 'districts/malii_poselok.png', key: 'district1', level: 1 },
+            { id: 'countryside', icon: BASE_URL + 'districts/elita_poselok.png', key: 'district2', level: 2 },
+            { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3', level: 3 },
+            { id: 'midtown', icon: BASE_URL + 'districts/centre.png', key: 'district4', level: 4 },
+            { id: 'commercial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district5', level: 5 },
+            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6', level: 6 },
+            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7', level: 7 },
+            { id: 'industrial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district8', level: 8 },
+            { id: 'techpark', icon: BASE_URL + 'districts/oficini_raion.png', key: 'district9', level: 9 }
+        ];
+
+        // Список районов для выбора в окне (9 штук)
+        const DISTRICT_SELECT = [
+            { id: 'suburb', name: 'Обычный посёлок', icon: BASE_URL + 'districts/malii_poselok.png' },
+            { id: 'countryside', name: 'Пригород', icon: BASE_URL + 'districts/elita_poselok.png' },
+            { id: 'residential', name: 'Жилой район', icon: BASE_URL + 'districts/jiloi_raion.png' },
+            { id: 'midtown', name: 'Средний посёлок', icon: BASE_URL + 'districts/centre.png' },
+            { id: 'commercial', name: 'Торговый район', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'park', name: 'Парк', icon: BASE_URL + 'districts/park.png' },
+            { id: 'transport', name: 'Транспортный хаб', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'industrial', name: 'Промышленная зона', icon: BASE_URL + 'districts/portovii_raion.png' },
+            { id: 'techpark', name: 'Технопарк', icon: BASE_URL + 'districts/oficini_raion.png' }
+        ];
+
+        const RESOURCES = [
+            { id: 'oil', name: 'Нефть', icon: BASE_URL + 'resources/oil_icon.png', amount: 10, max: 1000 },
+            { id: 'gas', name: 'Газ', icon: BASE_URL + 'resources/gas.png', amount: 10, max: 1000 },
+            { id: 'wood', name: 'Древесина', icon: BASE_URL + 'resources/wood_icon.png', amount: 10, max: 1000 },
+            { id: 'energy', name: 'Энергия', icon: BASE_URL + 'resources/energy_icon.png', amount: 10, max: 1000 },
+            { id: 'food', name: 'Еда', icon: BASE_URL + 'resources/wheat_icon.png', amount: 10, max: 1000 },
+            { id: 'gold', name: 'Золото', icon: BASE_URL + 'resources/gold_icon.png', amount: 10, max: 1000 }
+        ];
+
+        const BUILDINGS = [
+            { id: 'house', name: 'Жилой дом', icon: BASE_URL + 'buildings_en/house.jpg', cost: 200, resources: { wood: 10 }, income: 5, xp: 2, time: 5, reputation: 2, maxCount: 10, demolishCost: 50, energyUse: 1, allowedDistricts: ['suburb', 'countryside', 'residential', 'midtown'] },
+            { id: 'store', name: 'Магазин', icon: BASE_URL + 'buildings_en/store.jpg', cost: 300, resources: { wood: 5 }, income: 8, xp: 3, time: 8, reputation: 3, maxCount: 8, demolishCost: 80, energyUse: 2, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'coffee', name: 'Кофейня', icon: BASE_URL + 'buildings_en/coffee_shop.jpg', cost: 250, resources: { food: 5 }, income: 6, xp: 2, time: 6, reputation: 3, maxCount: 10, demolishCost: 60, energyUse: 2, allowedDistricts: ['commercial', 'midtown', 'residential', 'park'] },
+            { id: 'workshop', name: 'Мастерская', icon: BASE_URL + 'buildings_en/workshop.jpg', cost: 200, resources: { wood: 8 }, income: 4, xp: 2, time: 5, reputation: 2, maxCount: 12, demolishCost: 40, energyUse: 1, allowedDistricts: ['industrial', 'countryside', 'residential'] },
+            { id: 'power', name: 'Трансформаторная', icon: BASE_URL + 'buildings_en/powerplant.jpg', cost: 400, resources: { energy: 10 }, income: 10, xp: 4, time: 10, reputation: 5, maxCount: 5, demolishCost: 120, energyUse: 5, allowedDistricts: ['industrial', 'transport', 'suburb'] },
+            { id: 'school', name: 'Школа', icon: BASE_URL + 'buildings_en/school.jpg', cost: 500, resources: { wood: 15, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 10, maxCount: 4, demolishCost: 200, energyUse: 4, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'kindergarten', name: 'Детский сад', icon: BASE_URL + 'buildings_en/kindegrtjen.jpg', cost: 400, resources: { wood: 10, food: 5 }, income: 10, xp: 4, time: 10, reputation: 8, maxCount: 5, demolishCost: 150, energyUse: 3, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'pharmacy', name: 'Аптека', icon: BASE_URL + 'buildings_en/pharmacy.jpg', cost: 300, resources: { wood: 5 }, income: 7, xp: 3, time: 7, reputation: 5, maxCount: 6, demolishCost: 70, energyUse: 2, allowedDistricts: ['commercial', 'residential', 'midtown'] },
+            { id: 'supermarket', name: 'Супермаркет', icon: BASE_URL + 'buildings_en/supermarket.jpg', cost: 600, resources: { wood: 20, food: 10 }, income: 15, xp: 6, time: 15, reputation: 10, maxCount: 4, demolishCost: 250, energyUse: 6, allowedDistricts: ['commercial', 'midtown'] },
+            { id: 'library', name: 'Библиотека', icon: BASE_URL + 'buildings_en/library.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 7, maxCount: 5, demolishCost: 100, energyUse: 2, allowedDistricts: ['midtown', 'residential', 'techpark'] },
+            { id: 'hospital', name: 'Больница', icon: BASE_URL + 'buildings_en/hospital.jpg', cost: 800, resources: { wood: 20, energy: 10, food: 10 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 2, demolishCost: 400, energyUse: 8, allowedDistricts: ['midtown'] },
+            { id: 'apartment', name: 'Жилой комплекс', icon: BASE_URL + 'buildings_en/apartament.jpg', cost: 700, resources: { wood: 25, energy: 5 }, income: 18, xp: 7, time: 18, reputation: 8, maxCount: 6, demolishCost: 300, energyUse: 5, allowedDistricts: ['residential', 'midtown', 'suburb'] },
+            { id: 'office', name: 'Офисное здание', icon: BASE_URL + 'buildings_en/office_building.jpg', cost: 500, resources: { wood: 15, energy: 10 }, income: 14, xp: 5, time: 14, reputation: 8, maxCount: 8, demolishCost: 180, energyUse: 5, allowedDistricts: ['techpark', 'commercial'] },
+            { id: 'gym', name: 'Спортзал', icon: BASE_URL + 'buildings_en/gym.jpg', cost: 400, resources: { wood: 10, energy: 5 }, income: 10, xp: 4, time: 10, reputation: 6, maxCount: 6, demolishCost: 120, energyUse: 3, allowedDistricts: ['commercial', 'residential', 'midtown'] },
+            { id: 'restaurant', name: 'Ресторан', icon: BASE_URL + 'buildings_en/restaurant.jpg', cost: 450, resources: { wood: 10, food: 8 }, income: 12, xp: 5, time: 12, reputation: 8, maxCount: 6, demolishCost: 150, energyUse: 4, allowedDistricts: ['commercial', 'midtown', 'park'] },
+            { id: 'mall', name: 'ТЦ', icon: BASE_URL + 'buildings_en/mall.jpg', cost: 1000, resources: { wood: 30, energy: 20, food: 10 }, income: 30, xp: 12, time: 30, reputation: 20, maxCount: 2, demolishCost: 500, energyUse: 12, allowedDistricts: ['commercial'] },
+            { id: 'theater', name: 'Театр', icon: BASE_URL + 'buildings_en/theater.jpg', cost: 600, resources: { wood: 15, energy: 10 }, income: 16, xp: 6, time: 16, reputation: 12, maxCount: 3, demolishCost: 250, energyUse: 6, allowedDistricts: ['midtown', 'park'] },
+            { id: 'hotel', name: 'Отель', icon: BASE_URL + 'buildings_en/hotel.jpg', cost: 800, resources: { wood: 20, energy: 15, food: 10 }, income: 22, xp: 9, time: 22, reputation: 15, maxCount: 4, demolishCost: 350, energyUse: 8, allowedDistricts: ['midtown'] },
+            { id: 'business', name: 'Бизнес-центр', icon: BASE_URL + 'buildings_en/businesscentre.jpg', cost: 1200, resources: { wood: 30, energy: 25 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['techpark'] },
+            { id: 'stadium', name: 'Стадион', icon: BASE_URL + 'buildings_en/stadium.jpg', cost: 900, resources: { wood: 25, energy: 20 }, income: 25, xp: 10, time: 25, reputation: 20, maxCount: 2, demolishCost: 450, energyUse: 10, allowedDistricts: ['park', 'residential', 'midtown'] },
+            { id: 'factory', name: 'Завод', icon: BASE_URL + 'buildings_en/factory.jpg', cost: 1000, resources: { wood: 20, energy: 30 }, income: 28, xp: 11, time: 28, reputation: 10, maxCount: 3, demolishCost: 500, energyUse: 20, allowedDistricts: ['industrial', 'transport'] },
+            { id: 'trc', name: 'ТРЦ', icon: BASE_URL + 'buildings_en/shoppingmall.jpg', cost: 1200, resources: { wood: 35, energy: 25, food: 15 }, income: 35, xp: 14, time: 35, reputation: 25, maxCount: 2, demolishCost: 600, energyUse: 15, allowedDistricts: ['commercial'] },
+            { id: 'university', name: 'Университет', icon: BASE_URL + 'buildings_en/university.jpg', cost: 1500, resources: { wood: 40, energy: 30, food: 20 }, income: 45, xp: 18, time: 45, reputation: 30, maxCount: 2, demolishCost: 800, energyUse: 20, allowedDistricts: ['techpark', 'midtown'] },
+            { id: 'arena', name: 'Арена', icon: BASE_URL + 'buildings_en/arena.jpg', cost: 2000, resources: { wood: 50, energy: 40, food: 30 }, income: 60, xp: 24, time: 60, reputation: 35, maxCount: 1, demolishCost: 1000, energyUse: 30, allowedDistricts: ['park'] },
+            { id: 'modern_house', name: 'Современный дом', icon: BASE_URL + 'buildings_en/modern_house.jpg', cost: 500, resources: { wood: 12, energy: 5 }, income: 12, xp: 5, time: 12, reputation: 5, maxCount: 8, demolishCost: 200, energyUse: 3, allowedDistricts: ['residential'] },
+            { id: 'gallery', name: 'Галерея', icon: BASE_URL + 'buildings_en/gallery.jpg', cost: 350, resources: { wood: 8 }, income: 8, xp: 3, time: 8, reputation: 10, maxCount: 3, demolishCost: 120, energyUse: 2, allowedDistricts: ['midtown', 'park'] },
+            { id: 'boutique_hotel', name: 'Бутик-отель', icon: BASE_URL + 'buildings_en/boutique_hotel.jpg', cost: 700, resources: { wood: 18, energy: 12, food: 8 }, income: 20, xp: 8, time: 20, reputation: 15, maxCount: 3, demolishCost: 300, energyUse: 7, allowedDistricts: ['midtown'] }
+        ];
+
+        const CRYPTO = [
+            { id: 'btc', name: 'Bitcoin', symbol: 'BTC', icon: BASE_URL + 'crypto/bitcoin.png', price: 30000, amount: 0 },
+            { id: 'eth', name: 'Ethereum', symbol: 'ETH', icon: BASE_URL + 'crypto/ethereum.png', price: 2000, amount: 0 },
+            { id: 'usdt', name: 'Tether', symbol: 'USDT', icon: BASE_URL + 'crypto/tether.png', price: 1, amount: 0 },
+            { id: 'bnb', name: 'BNB', symbol: 'BNB', icon: BASE_URL + 'crypto/BNB.png', price: 300, amount: 0 },
+            { id: 'xrp', name: 'Ripple', symbol: 'XRP', icon: BASE_URL + 'crypto/ripple.png', price: 0.5, amount: 0 },
+            { id: 'sol', name: 'Solana', symbol: 'SOL', icon: BASE_URL + 'crypto/solara.png', price: 100, amount: 0 },
+            { id: 'not', name: 'NotCoin', symbol: 'NOT', icon: BASE_URL + 'crypto/not.png', price: 0.01, amount: 0 },
+            { id: 'dogs', name: 'Dogs', symbol: 'DOGS', icon: BASE_URL + 'crypto/dogs.png', price: 0.001, amount: 0 },
+            { id: 'cati', name: 'Catizen', symbol: 'CATI', icon: BASE_URL + 'crypto/cati.png', price: 0.5, amount: 0 },
+            { id: 'hmstr', name: 'Hamster Kombat', symbol: 'HMSTR', icon: BASE_URL + 'crypto/hmstr.png', price: 0.1, amount: 0 },
+            { id: 'ton', name: 'TONCoin', symbol: 'TON', icon: BASE_URL + 'crypto/ton.png', price: 5, amount: 0 },
+            { id: 'memefi', name: 'MemeFi', symbol: 'MEMEFI', icon: BASE_URL + 'crypto/MemFi.png', price: 0.05, amount: 0 },
+            { id: 'pixfi', name: 'PixelTap', symbol: 'PIXFI', icon: BASE_URL + 'crypto/pixeltap.png', price: 0.1, amount: 0 }
+        ];
+
+        // ============================================================
+        // СОСТОЯНИЕ ИГРЫ
+        // ============================================================
+        let game = {
+            balance: 1000,
+            coins: 500,
+            crystals: 50,
+            xp: 0,
+            level: 1,
+            reputation: 0,
+            resources: {},
+            buildings: [],
+            credit: null,
+            crypto: {},
+            quests: [],
+            lastOnline: Date.now(),
+            earned: 0,
+            builtCount: 0,
+            unlockedDistricts: ['suburb'],
+            cityItems: {} // для хранения выбранных районов для каждого слота
+        };
+
+        // Инициализация cityItems для 12 слотов
+        for (let i = 0; i < 12; i++) {
+            game.cityItems[i] = { districtId: null, unlocked: false, selected: false };
+        }
+        game.cityItems[0].unlocked = true; // первый открыт сразу
+
+        let currentDistrictId = null;
+        let currentPlotId = null;
+        let demolishTarget = null;
+        let exchangeAmount = 0;
+
+        function getLevelXp(level) { return level * 100 + 50; }
+        function getTotalXp(level) { let total = 0; for (let i = 1; i < level; i++) total += getLevelXp(i); return total; }
+        function getXpForLevel(level) { return getLevelXp(level); }
+        function getXpProgress() {
+            const currentLevelXp = getXpForLevel(game.level);
+            const totalXp = getTotalXp(game.level);
+            const progress = game.xp - totalXp;
+            return Math.min(progress / currentLevelXp, 1);
+        }
+
+        function addXp(amount) {
+            game.xp += amount;
+            let needed = getXpForLevel(game.level);
+            let total = getTotalXp(game.level);
+            while (game.xp >= total + needed) {
+                game.level++;
+                needed = getXpForLevel(game.level);
+                total = getTotalXp(game.level);
+                game.crystals += 5;
+                game.balance += 10;
+                showToast(`🎉 Уровень ${game.level} достигнут!`);
+                // Проверяем открытие районов
+                checkDistrictUnlocks();
+            }
+            saveGame();
+            updateUI();
+        }
+
+        function checkDistrictUnlocks() {
+            DISTRICTS_DATA.forEach(d => {
+                if (game.level >= d.level && !game.unlockedDistricts.includes(d.id)) {
+                    game.unlockedDistricts.push(d.id);
+                    showToast(`🏙️ Район "${d.id}" открыт!`);
+                }
+            });
+        }
+
+        function addReputation(amount) { game.reputation += amount; saveGame(); updateUI(); }
+        function getResourceAmount(id) { return game.resources[id] || 0; }
+        function addResource(id, amount) {
+            const max = RESOURCES.find(r => r.id === id)?.max || 1000;
+            game.resources[id] = Math.min((game.resources[id] || 0) + amount, max);
+            saveGame(); renderResources(); updateUI();
+        }
+        function spendResource(id, amount) {
+            if ((game.resources[id] || 0) < amount) return false;
+            game.resources[id] -= amount;
+            saveGame(); renderResources(); updateUI();
+            return true;
+        }
+        function canAfford(resources) {
+            for (let [id, amount] of Object.entries(resources)) {
+                if ((game.resources[id] || 0) < amount) return false;
+            }
+            return true;
+        }
+        function getTotalIncome() {
+            let income = 0;
+            for (let b of game.buildings) {
+                const data = BUILDINGS.find(d => d.id === b.id);
+                if (data && b.status !== 'demolishing') income += data.income * b.level;
+            }
+            return income;
+        }
+
+        // ============================================================
+        // ГОРОД - СЕТКА 12 РАЙОНОВ
+        // ============================================================
+        function renderCityGrid() {
+            const grid = document.getElementById('cityGrid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 12; i++) {
+                const item = game.cityItems[i] || { districtId: null, unlocked: false, selected: false };
+                const div = document.createElement('div');
+                div.className = 'city-item';
+                if (i >= 9) {
+                    // Последние 3 - "Скоро"
+                    div.classList.add('coming-soon');
+                    div.innerHTML = `
+                        <div class="soon-icon">?</div>
+                        <div class="soon-label" style="font-weight:700;color:#fff;">СКОРО</div>
+                    `;
+                } else if (item.unlocked && item.selected && item.districtId) {
+                    // Выбранный район
+                    const dist = DISTRICT_SELECT.find(d => d.id === item.districtId);
+                    div.classList.add('unlocked');
+                    div.innerHTML = `
+                        <img src="${dist.icon}" class="district-icon" alt="${dist.name}">
+                        <div class="district-name">${dist.name}</div>
+                    `;
+                    div.onclick = () => openMapFromCity(item.districtId, dist.name);
+                } else if (item.unlocked) {
+                    // Открыт, но не выбран
+                    div.classList.add('unlocked');
+                    div.innerHTML = `
+                        <button class="open-btn" onclick="event.stopPropagation(); openDistrictSelect(${i})">Открыть</button>
+                    `;
+                } else {
+                    // Заблокирован
+                    div.classList.add('locked');
+                    const levelReq = i + 1; // для первых 9: 1-9
+                    div.innerHTML = `
+                        <div class="lock-icon">🔒</div>
+                        <div class="level-req">LVL ${levelReq}</div>
+                    `;
+                }
+                grid.appendChild(div);
+            }
+        }
+
+        function openDistrictSelect(slotIndex) {
+            const modal = document.getElementById('districtSelectModal');
+            modal.classList.add('active');
+            const grid = document.getElementById('districtSelectGrid');
+            grid.innerHTML = '';
+            // Показываем только доступные районы (уровень открыт)
+            const available = DISTRICT_SELECT.filter(d => game.unlockedDistricts.includes(d.id));
+            available.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'district-select-item';
+                div.innerHTML = `<img src="${d.icon}" alt="${d.name}">${d.name}`;
+                div.onclick = () => {
+                    game.cityItems[slotIndex].districtId = d.id;
+                    game.cityItems[slotIndex].selected = true;
+                    closeDistrictSelect();
+                    renderCityGrid();
+                    saveGame();
+                    showToast(`✅ Район "${d.name}" выбран!`);
+                };
+                grid.appendChild(div);
+            });
+            if (available.length === 0) {
+                grid.innerHTML = '<div style="color:#fff;text-align:center;padding:20px;">Нет доступных районов. Повышайте уровень!</div>';
+            }
+        }
+
+        function closeDistrictSelect() {
+            document.getElementById('districtSelectModal').classList.remove('active');
+        }
+
+        // ============================================================
+        // ОТКРЫТИЕ ГОРОДА (С АНИМАЦИЕЙ)
+        // ============================================================
+        function openCity() {
+            const overlay = document.getElementById('fadeOverlay');
+            overlay.classList.add('active');
+            setTimeout(() => {
+                showScreen('city-screen');
+                // Мгновенно растемняем экран уже в пункте "Город"
+                overlay.classList.remove('active');
+                // Показываем футер города
+                document.getElementById('footer').style.display = 'none';
+                document.getElementById('footerCity').classList.add('active');
+                renderCityGrid();
+                // Проверяем открытие районов по уровню
+                checkDistrictUnlocks();
+            }, 1000);
+        }
+
+        // ============================================================
+        // КАРТА (СИСТЕМА ПОСТРОЕК)
+        // ============================================================
+        function openMapFromCity(districtId, name) {
+            currentDistrictId = districtId;
+            document.getElementById('mapTitle').textContent = name;
+            renderMap(districtId);
+            showScreen('map-screen');
+            // Скрываем футер города, показываем обычный (но пока оставим городской)
+            document.getElementById('footerCity').classList.remove('active');
+            document.getElementById('footer').style.display = 'flex';
+            const container = document.getElementById('mapScrollContainer');
+            setTimeout(() => {
+                container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
+                container.scrollTop = (container.scrollHeight - container.clientHeight) / 2;
+            }, 100);
+            updateMapUI();
+        }
+
+        function goBackFromMap() {
+            // Возврат в город
+            document.getElementById('footerCity').classList.add('active');
+            document.getElementById('footer').style.display = 'none';
+            showScreen('city-screen');
+            renderCityGrid();
+        }
+
+        function renderMap(districtId) {
+            const world = document.getElementById('mapWorld');
+            world.innerHTML = '';
+            const roadWidth = 60;
+            const plotSize = 280;
+            const cell = plotSize + roadWidth; // 340 — шаг сетки: 1 участок + 1 дорога
+            const cols = 8; // участков по каждой стороне
+            // Сетка выложена встык (дорога-участок-дорога-...-дорога), без зазоров и без "лишней" травы
+            const worldSize = cols * cell + roadWidth;
+            world.style.width = worldSize + 'px';
+            world.style.height = worldSize + 'px';
+
+            // Дороги горизонтальные и вертикальные — по cols+1 штук с каждой стороны,
+            // тянутся ровно от начала до конца карты (не обрезаны по краям)
+            for (let k = 0; k <= cols; k++) {
+                const pos = k * cell;
+                const hRoad = document.createElement('div');
+                hRoad.className = 'map-road-h';
+                hRoad.style.top = pos + 'px';
+                hRoad.style.width = worldSize + 'px';
+                world.appendChild(hRoad);
+
+                const vRoad = document.createElement('div');
+                vRoad.className = 'map-road-v';
+                vRoad.style.left = pos + 'px';
+                vRoad.style.height = worldSize + 'px';
+                world.appendChild(vRoad);
+            }
+            // Перекрёстки — плитки без полос поверх дорог, ровно в точках пересечения
+            for (let k = 0; k <= cols; k++) {
+                for (let j = 0; j <= cols; j++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'map-intersection';
+                    tile.style.left = (k * cell) + 'px';
+                    tile.style.top = (j * cell) + 'px';
+                    world.appendChild(tile);
+                }
+            }
+
+            let plotCounter = 0;
+            for (let ix = 0; ix < cols; ix++) {
+                for (let iy = 0; iy < cols; iy++) {
+                    const x = ix * cell + roadWidth;
+                    const y = iy * cell + roadWidth;
+                    const plot = document.createElement('div');
+                    plot.className = 'map-plot';
+                    plot.style.left = x + 'px';
+                    plot.style.top = y + 'px';
+                    plot.style.width = plotSize + 'px';
+                    plot.style.height = plotSize + 'px';
+                    const plotId = `plot_${plotCounter}`;
+                    plot.dataset.plotId = plotId;
+                    plot.style.position = 'absolute';
+                    plot.style.background = '#5a9c4a';
+                    plot.style.border = '2px solid #7cfc00';
+                    plot.style.display = 'flex';
+                    plot.style.alignItems = 'center';
+                    plot.style.justifyContent = 'center';
+                    plot.style.zIndex = '2';
+                    plot.style.cursor = 'pointer';
+
+                    const existingBuilding = game.buildings.find(b => b.plotId === plotId && b.districtId === districtId);
+
+                    if (existingBuilding) {
+                        if (existingBuilding.status === 'demolishing') {
+                            plot.style.background = '#2a4a1a';
+                            const remaining = Math.max(0, existingBuilding.demolishStart + existingBuilding.demolishTime - Date.now());
+                            const sec = Math.ceil(remaining / 1000);
+                            plot.innerHTML = `<div style="text-align:center;color:#fff;font-size:12px;background:rgba(0,0,0,0.7);padding:4px 8px;border-radius:4px;border:1px solid #555;">⏳ ${sec}с</div>`;
+                        } else {
+                            plot.style.background = '#3a6a2a';
+                            plot.innerHTML = `<div style="font-size:36px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">🏢</div>`;
+                            plot.onclick = () => openBuildingInfo(existingBuilding);
+                        }
+                    } else {
+                        const btn = document.createElement('div');
+                        btn.style.cssText = 'width:50px;height:50px;border-radius:50%;background:#1a3a6a;border:3px solid var(--gold);color:var(--gold);font-size:28px;font-weight:300;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.5);z-index:3;';
+                        btn.textContent = '+';
+                        btn.onclick = (e) => { e.stopPropagation(); openBuildModal(districtId, plotId); };
+                        plot.appendChild(btn);
+                    }
+                    world.appendChild(plot);
+                    plotCounter++;
+                }
+            }
+        }
+
+        function updateMapUI() {
+            const progress = getXpProgress();
+            document.getElementById('mapLvlBottom').textContent = game.level;
+            const totalXp = getTotalXp(game.level);
+            const currentXp = game.xp - totalXp;
+            const neededXp = getXpForLevel(game.level);
+            document.getElementById('mapXpLabelBottom').textContent = `${Math.round(currentXp)} / ${neededXp} XP`;
+            document.getElementById('mapXpFillBottom').style.width = `${progress * 100}%`;
+            document.getElementById('mapReputationBottom').textContent = game.reputation;
+        }
+
+        // ============================================================
+        // СТРОИТЕЛЬСТВО
+        // ============================================================
+        function openBuildModal(districtId, plotId) {
+            currentDistrictId = districtId;
+            currentPlotId = plotId;
+            document.getElementById('buildModal').classList.add('active');
+            renderBuildModalList(districtId);
+        }
+        function closeBuildModal() {
+            document.getElementById('buildModal').classList.remove('active');
+            currentDistrictId = null;
+            currentPlotId = null;
+        }
+        function renderBuildModalList(districtId) {
+            const container = document.getElementById('buildModalList');
+            container.innerHTML = '';
+            const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
+            if (availableBuildings.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
+                return;
+            }
+            availableBuildings.forEach(b => {
+                const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
+                const maxCount = b.maxCount || 999;
+                const canBuildMore = builtCount < maxCount;
+                const hasResources = canAfford(b.resources) && game.balance >= b.cost;
+                const card = document.createElement('div');
+                card.className = 'build-card';
+                card.style.cssText = 'background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;border:1px solid var(--glass-border);text-align:center;position:relative;';
+                card.innerHTML = `
+                    <div class="limit" style="font-size:10px;color:var(--text-secondary);font-weight:300;margin-bottom:6px;">Доступно: ${builtCount}/${maxCount}</div>
+                    <img src="${b.icon}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;background:#1a1f2f;" onerror="this.textContent='🏢'">
+                    <div class="bname" style="font-size:13px;font-weight:700;margin:6px 0 4px;color:#fff;">${b.name}</div>
+                    <div class="price" style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px;"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
+                    <button class="btn-gold" style="font-size:12px;padding:6px 12px;width:auto;" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
+                        ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+        function buildOnPlot(buildingId) {
+            const building = BUILDINGS.find(b => b.id === buildingId);
+            if (!building || !currentDistrictId || currentPlotId === null) return;
+            const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
+            if (builtCount >= building.maxCount) { showToast('❌ Достигнут лимит таких зданий в городе!'); return; }
+            if (!canAfford(building.resources)) { showToast('❌ Не хватает ресурсов!'); return; }
+            if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= building.cost;
+            for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
+            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
+            game.builtCount++;
+            addXp(building.xp);
+            addReputation(building.reputation);
+            showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
+            saveGame();
+            closeBuildModal();
+            renderMap(currentDistrictId);
+            updateUI();
+        }
+
+        // ============================================================
+        // ИНФОРМАЦИЯ О ЗДАНИИ И СНОС
+        // ============================================================
+        function openBuildingInfo(building) {
+            const bData = BUILDINGS.find(b => b.id === building.id);
+            if (!bData) return;
+            document.getElementById('infoBuildingImg').src = bData.icon;
+            document.getElementById('infoBuildingName').textContent = bData.name;
+            document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
+            document.getElementById('infoReputation').textContent = bData.reputation || 0;
+            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
+            demolishTarget = building;
+            document.getElementById('buildingInfoModal').classList.add('active');
+        }
+        function closeBuildingInfo() { document.getElementById('buildingInfoModal').classList.remove('active'); demolishTarget = null; }
+        function openDemolishConfirm() {
+            if (!demolishTarget) return;
+            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
+            if (!bData) return;
+            document.getElementById('demolishCostText').textContent = `Стоимость сноса: ${bData.demolishCost} монет`;
+            document.getElementById('confirmDemolishBtn').disabled = game.balance < bData.demolishCost;
+            document.getElementById('demolishError').textContent = `Вам не хватает ${bData.demolishCost - game.balance} монет`;
+            document.getElementById('demolishError').style.display = game.balance < bData.demolishCost ? 'block' : 'none';
+            document.getElementById('demolishConfirm').style.display = 'flex';
+        }
+        function closeDemolishConfirm() { document.getElementById('demolishConfirm').style.display = 'none'; }
+        function confirmDemolish() {
+            if (!demolishTarget) return;
+            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
+            if (!bData || game.balance < bData.demolishCost) return;
+            game.balance -= bData.demolishCost;
+            demolishTarget.status = 'demolishing';
+            demolishTarget.demolishStart = Date.now();
+            demolishTarget.demolishTime = (bData.demolishCost / 10) * 1000;
+            showToast(`🏗️ Снос начат! Здание исчезнет через ${Math.round(demolishTarget.demolishTime / 1000)} сек.`);
+            saveGame();
+            closeDemolishConfirm();
+            closeBuildingInfo();
+            renderMap(demolishTarget.districtId);
+            updateUI();
+        }
+        function checkDemolishCompletion() {
+            const now = Date.now();
+            let changed = false;
+            game.buildings = game.buildings.filter(b => {
+                if (b.status === 'demolishing' && now - b.demolishStart >= b.demolishTime) {
+                    showToast(`🏚️ Здание снесено. Участок освобожден.`);
+                    changed = true;
+                    return false;
+                }
+                return true;
+            });
+            if (changed) { saveGame(); if (currentDistrictId) renderMap(currentDistrictId); }
+        }
+
+        // ============================================================
+        // РЕСУРСЫ
+        // ============================================================
+        function renderResources() {
+            const grid = document.getElementById('resourceGrid');
+            grid.innerHTML = '';
+            RESOURCES.forEach(r => {
+                const amount = getResourceAmount(r.id);
+                const card = document.createElement('div');
+                card.className = 'resource-card glass-dark';
+                card.style.cssText = 'border-radius:12px;padding:12px;text-align:center;border:1px solid var(--glass-border);';
+                card.innerHTML = `
+                    <img src="${r.icon}" style="width:40px;height:40px;object-fit:contain;" onerror="this.textContent='🛢️'">
+                    <div class="rname" style="font-size:12px;margin:4px 0;color:var(--text-secondary);">${r.name}</div>
+                    <div class="ramount" style="font-size:18px;font-weight:700;color:var(--gold);">${Math.round(amount)}</div>
+                    <button class="btn-green" onclick="mineResource('${r.id}')" style="background:var(--green);border:none;color:#fff;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;">⛏️ Добыть</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
+
+        // ============================================================
+        // КВЕСТЫ
+        // ============================================================
+        function generateQuests() {
+            const quests = [
+                { id: 'build1', title: 'Постройте 1 здание', desc: 'Постройте первое здание в любом районе', target: 1, progress: 0, rewardXp: 20, rewardCoins: 10, rewardCrystals: 2, category: 'start' },
+                { id: 'build3', title: 'Город растёт', desc: 'Постройте 3 здания', target: 3, progress: 0, rewardXp: 50, rewardCoins: 30, rewardCrystals: 5, category: 'start' },
+                { id: 'level2', title: 'Новый уровень', desc: 'Достигните 2 уровня', target: 2, progress: 0, rewardXp: 80, rewardCoins: 40, rewardCrystals: 10, category: 'start' },
+                { id: 'income10', title: 'Стабильный доход', desc: 'Заработайте 10 монет за один сбор', target: 10, progress: 0, rewardXp: 30, rewardCoins: 15, rewardCrystals: 3, category: 'daily' },
+                { id: 'collect50', title: 'Запасы древесины', desc: 'Соберите 50 древесины', target: 50, progress: 0, rewardXp: 40, rewardCoins: 20, rewardCrystals: 5, category: 'daily', res: 'wood' },
+                { id: 'reputation20', title: 'Уважение в городе', desc: 'Наберите 20 репутации', target: 20, progress: 0, rewardXp: 60, rewardCoins: 30, rewardCrystals: 8, category: 'daily' },
+                { id: 'event_build5', title: 'Строительный бум', desc: 'Постройте 5 зданий за время ивента', target: 5, progress: 0, rewardXp: 100, rewardCoins: 50, rewardCrystals: 15, category: 'event', endDate: '2026-08-23' },
+                { id: 'event_income100', title: 'Золотая лихорадка', desc: 'Заработайте 100 монет за время ивента', target: 100, progress: 0, rewardXp: 120, rewardCoins: 60, rewardCrystals: 20, category: 'event', endDate: '2026-08-23' }
+            ];
+            game.quests = quests.map(q => ({ ...q, progress: 0, completed: false, claimed: false }));
+            saveGame(); renderQuests();
+        }
+
+        function updateQuests() {
+            game.quests.forEach(q => {
+                if (q.completed) return;
+                if (q.id === 'build1') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
+                if (q.id === 'build3') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
+                if (q.id === 'level2' && game.level >= 2) q.progress = q.target;
+                if (q.id === 'income10') q.progress = Math.min(game.earned, q.target);
+                if (q.id === 'collect50' && q.res) q.progress = Math.min(getResourceAmount(q.res), q.target);
+                if (q.id === 'reputation20') q.progress = Math.min(game.reputation, q.target);
+                if (q.id === 'event_build5') q.progress = Math.min(game.buildings.filter(b => b.status === 'built').length, q.target);
+                if (q.id === 'event_income100') q.progress = Math.min(game.earned, q.target);
+                if (q.progress >= q.target && !q.completed) {
+                    q.completed = true;
+                }
+            });
+            saveGame(); renderQuests();
+        }
+
+        function renderQuests() {
+            const container = document.getElementById('questsList');
+            container.innerHTML = '';
+            if (!game.quests || game.quests.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);">Нет активных квестов</div>';
+                return;
+            }
+            const categories = ['start', 'daily', 'event'];
+            const catNames = { start: 'Начало', daily: 'Ежедневные квесты', event: 'Ивент' };
+            const catSubs = { start: '', daily: '', event: '(до 23 августа включительно)' };
+
+            categories.forEach(cat => {
+                const items = game.quests.filter(q => q.category === cat);
+                if (items.length === 0) return;
+                const catDiv = document.createElement('div');
+                catDiv.className = 'quest-category';
+                catDiv.innerHTML = `
+                    <div class="cat-title">${catNames[cat]}</div>
+                    ${catSubs[cat] ? `<div class="cat-sub">${catSubs[cat]}</div>` : ''}
+                `;
+                container.appendChild(catDiv);
+                // Сначала невыполненные, потом выполненные (перенесены в самый низ)
+                const sorted = [...items].sort((a,b) => {
+                    if (a.completed && !b.completed) return 1;
+                    if (!a.completed && b.completed) return -1;
+                    return 0;
+                });
+                sorted.forEach(q => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'quest-item';
+                    if (q.completed && q.claimed) {
+                        itemDiv.classList.add('completed');
+                        itemDiv.innerHTML = `
+                            <div class="q-done"><span class="check">✓</span> ВЫПОЛНЕНО</div>
+                        `;
+                        itemDiv.style.cssText = 'background:rgba(0,0,0,0.3);border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--glass-border);position:relative;min-height:60px;';
+                        catDiv.appendChild(itemDiv);
+                        return;
+                    }
+                    const progress = Math.min(q.progress / q.target, 1);
+                    const isComplete = q.progress >= q.target;
+                    const rewardText = [];
+                    if (q.rewardXp) rewardText.push(`${q.rewardXp} XP`);
+                    if (q.rewardCoins) rewardText.push(`${q.rewardCoins} 🪙`);
+                    if (q.rewardCrystals) rewardText.push(`${q.rewardCrystals} 💎`);
+                    itemDiv.innerHTML = `
+                        <div class="q-title">${q.title}</div>
+                        <div class="q-desc">${q.desc}</div>
+                        <div class="q-progress">
+                            <div class="fill" style="width:${progress * 100}%"></div>
+                            <span class="p-text">${Math.round(q.progress)} / ${q.target}</span>
+                        </div>
+                        <div class="q-reward">Награда: ${rewardText.join(' | ')}</div>
+                        ${isComplete && !q.claimed ? `<button class="q-btn gold" onclick="claimQuest('${q.id}')">Забрать</button>` :
+                         q.claimed ? `<button class="q-btn gray" disabled>Получено</button>` :
+                         `<button class="q-btn gray" disabled>Не выполнено</button>`}
+                    `;
+                    catDiv.appendChild(itemDiv);
+                });
+            });
+        }
+
+        function claimQuest(id) {
+            const q = game.quests.find(q => q.id === id);
+            if (!q || !q.completed || q.claimed) return;
+            if (q.rewardXp) addXp(q.rewardXp);
+            if (q.rewardCoins) game.balance += q.rewardCoins;
+            if (q.rewardCrystals) game.crystals += q.rewardCrystals;
+            q.claimed = true;
+            showToast(`🎉 Награда получена!`);
+            saveGame();
+            renderQuests();
+            updateUI();
+        }
+
+        // ============================================================
+        // БАНК, КРИПТО, КРЕДИТЫ
+        // ============================================================
+        function toggleAccordion(header) {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            body.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
+        function updateBankUI() {
+            document.getElementById('bankBalanceDisplay').textContent = Math.round(game.balance);
+            document.getElementById('bankCrystalsDisplay').textContent = game.crystals;
+            const creditBtnWrapper = document.getElementById('creditBtnWrapper');
+            if (game.credit) {
+                const remaining = game.credit.amount - game.credit.paid;
+                document.getElementById('creditInfo').innerHTML = `
+                    <div style="border:1px solid var(--glass-border);border-radius:10px;padding:10px;margin:4px 0;">
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>💰 Сумма</span><span>${game.credit.amount}$</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>📊 Процент</span><span>${game.credit.rate}%</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>✅ Выплачено</span><span>${game.credit.paid}$</span></div>
+                        <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span>⏳ Остаток</span><span class="text-red">${remaining}$</span></div>
+                        <div style="text-align:center;margin-top:8px;"><button class="btn-gold" onclick="openRepayModal()" style="width:auto;padding:6px 20px;">Выплатить</button></div>
+                    </div>`;
+                creditBtnWrapper.style.display = 'none';
+            } else {
+                document.getElementById('creditInfo').innerHTML = `<span style="color:var(--text-secondary);">${t('noCredit')}</span>`;
+                creditBtnWrapper.style.display = 'block';
+            }
+            document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
+            document.getElementById('bankExpense').textContent = '0';
+            // крипто портфель
+            const cryptoDiv = document.getElementById('cryptoPortfolio');
+            let hasCrypto = false;
+            let html = '';
+            for (let key in game.crypto) {
+                if (game.crypto[key]?.amount > 0) {
+                    hasCrypto = true;
+                    const c = CRYPTO.find(cr => cr.id === key);
+                    if (c) html += `<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;"><span>${c.symbol}</span><span>${game.crypto[key].amount.toFixed(2)}</span></div>`;
+                }
+            }
+            cryptoDiv.innerHTML = hasCrypto ? html : `<span style="color:var(--text-secondary);">${t('noCrypto')}</span>`;
+        }
+        function openCreditModal() {
+            if (game.credit) { document.getElementById('creditForm').style.display = 'none'; document.getElementById('creditLock').style.display = 'block'; }
+            else { document.getElementById('creditForm').style.display = 'block'; document.getElementById('creditLock').style.display = 'none'; updateCreditSliders(); }
+            document.getElementById('creditModal').classList.add('active');
+        }
+        function closeCreditModal() { document.getElementById('creditModal').classList.remove('active'); }
+        function updateCreditSliders() {
+            const amountSlider = document.getElementById('creditAmountSlider');
+            const termSlider = document.getElementById('creditTermSlider');
+            const maxCredit = Math.max(100, Math.round(getTotalIncome() * 50));
+            amountSlider.max = maxCredit;
+            if (parseInt(amountSlider.value) > maxCredit) amountSlider.value = maxCredit;
+            const amount = parseInt(amountSlider.value);
+            const term = parseInt(termSlider.value);
+            let rate = Math.min(25, Math.max(5, Math.round(5 + (amount / maxCredit) * 10 + (term / 30) * 5)));
+            const totalPay = Math.round(amount + (amount * (rate / 100)));
+            document.getElementById('creditAmountDisplay').textContent = amount;
+            document.getElementById('creditTermDisplay').textContent = term;
+            document.getElementById('creditRateDisplay').textContent = rate + '%';
+            document.getElementById('creditTotalPayDisplay').textContent = totalPay + ' монет';
+            document.getElementById('creditMonthlyPayDisplay').textContent = Math.round(totalPay / term) + ' монет';
+        }
+        function takeCredit() {
+            if (game.credit) { showToast('❌ Уже есть активный кредит!'); return; }
+            const amount = parseInt(document.getElementById('creditAmountSlider').value);
+            const term = parseInt(document.getElementById('creditTermSlider').value);
+            const rate = parseInt(document.getElementById('creditRateDisplay').textContent);
+            if (amount <= 0 || term <= 0 || rate <= 0) return;
+            game.credit = { amount, term, rate, paid: 0, takenAt: Date.now() };
+            game.balance += amount;
+            showToast(`💰 Кредит ${amount}$ оформлен!`);
+            saveGame(); updateUI(); closeCreditModal();
+        }
+        function getCreditRemaining() { return game.credit ? game.credit.amount - game.credit.paid : 0; }
+        function repayCredit(amount) {
+            if (!game.credit || amount > game.balance) { showToast('❌ Не хватает денег!'); return; }
+            const pay = Math.min(amount, getCreditRemaining());
+            game.balance -= pay;
+            game.credit.paid += pay;
+            if (game.credit.paid >= game.credit.amount) { game.credit = null; showToast('🎉 Кредит погашен!'); }
+            else showToast(`✅ Выплачено ${pay}$`);
+            saveGame(); updateUI(); closeRepayModal();
+        }
+        function openRepayModal() {
+            if (!game.credit) return;
+            document.getElementById('repayAmount').value = 0;
+            document.getElementById('repayBalance').textContent = Math.round(game.balance);
+            document.getElementById('repayRemaining').textContent = getCreditRemaining();
+            document.getElementById('repayBtn').disabled = true;
+            document.getElementById('repayModal').classList.add('active');
+        }
+        function closeRepayModal() { document.getElementById('repayModal').classList.remove('active'); }
+        function adjustRepay(delta) {
+            const input = document.getElementById('repayAmount');
+            let val = Math.max(0, Math.min(Math.min(game.balance, getCreditRemaining()), (parseInt(input.value) || 0) + delta));
+            input.value = val;
+            document.getElementById('repayBtn').disabled = val <= 0;
+        }
+        function confirmRepay() { const amount = parseInt(document.getElementById('repayAmount').value) || 0; if (amount > 0) repayCredit(amount); }
+
+        // ============================================================
+        // МАГАЗИН (ОКНО)
+        // ============================================================
+        let shopTimer = null;
+
+        function openShop() {
+            document.getElementById('shop-modal').classList.add('active');
+            updateShopUI();
+            renderShopItems();
+        }
+        function closeShop() {
+            document.getElementById('shop-modal').classList.remove('active');
+            if (shopTimer) clearInterval(shopTimer);
+        }
+
+        function updateShopUI() {
+            document.getElementById('shopBalCoins').textContent = Math.round(game.balance);
+            document.getElementById('shopBalCrystals').textContent = game.crystals;
+        }
+
+        function renderShopItems() {
+            // NOVARA COIN
+            const coinGrid = document.getElementById('shopCoinItems');
+            coinGrid.innerHTML = '';
+            const coinPacks = [
+                { id: 'coin_free', amount: 100, price: 0, free: true, cooldown: 300, discount: 0 },
+                { id: 'coin_500', amount: 500, price: 25, discount: 0 },
+                { id: 'coin_1000', amount: 1000, price: 45, discount: 10 },
+                { id: 'coin_2000', amount: 2000, price: 80, discount: 20 },
+                { id: 'coin_5000', amount: 5000, price: 180, discount: 25 },
+                { id: 'coin_10000', amount: 10000, price: 320, discount: 35 }
+            ];
+            coinPacks.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'shop-item';
+                if (p.free) div.classList.add('green-item');
+                if (p.discount > 0) div.classList.add('discount');
+                let badge = '';
+                if (p.free) badge = '<div class="item-badge">FREE!</div>';
+                if (p.discount > 0) badge = `<div class="discount-tag">-${p.discount}%</div>`;
+                const priceText = p.free ? 'Бесплатно' : `${p.price} ⭐`;
+                const btnText = p.free ? 'Взять' : 'Купить';
+                const isFreeAvailable = p.free ? checkFreeAvailable() : true;
+                div.innerHTML = `
+                    ${badge}
+                    <div class="item-amount">${p.amount} <img src="${MONETA_ICON}" style="width:14px;height:14px;"></div>
+                    <div class="item-price">${priceText}</div>
+                    <button class="item-btn" onclick="${p.free ? 'takeFreeCoins()' : `buyCoinPack(${p.amount}, ${p.price})`}" ${!isFreeAvailable ? 'disabled' : ''}>
+                        ${p.free ? (isFreeAvailable ? 'Взять' : `⏳ ${Math.floor((Date.now() - (game.lastFreeClaim || 0)) / 1000)}с`) : 'Купить'}
+                    </button>
+                `;
+                coinGrid.appendChild(div);
+            });
+
+            // NOVARA DIAMONDS
+            const diamondGrid = document.getElementById('shopDiamondItems');
+            diamondGrid.innerHTML = '';
+            const diamondPacks = [
+                { id: 'diamond_50', amount: 50, price: 30, discount: 0 },
+                { id: 'diamond_100', amount: 100, price: 55, discount: 5 },
+                { id: 'diamond_200', amount: 200, price: 100, discount: 10 },
+                { id: 'diamond_500', amount: 500, price: 220, discount: 20 },
+                { id: 'diamond_1000', amount: 1000, price: 400, discount: 30 },
+                { id: 'diamond_2500', amount: 2500, price: 900, discount: 40 }
+            ];
+            diamondPacks.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'shop-item blue-item';
+                if (p.discount > 0) div.classList.add('discount');
+                let badge = '';
+                if (p.discount > 0) badge = `<div class="discount-tag">-${p.discount}%</div>`;
+                div.innerHTML = `
+                    ${badge}
+                    <div class="item-amount">${p.amount} 💎</div>
+                    <div class="item-price">${p.price} ⭐</div>
+                    <button class="item-btn" onclick="buyDiamondPack(${p.amount}, ${p.price})">Купить</button>
+                `;
+                diamondGrid.appendChild(div);
+            });
+        }
+
+        let freeCooldown = 300000; // 5 минут
+        function checkFreeAvailable() {
+            if (!game.lastFreeClaim) return true;
+            return (Date.now() - game.lastFreeClaim) > freeCooldown;
+        }
+
+        function takeFreeCoins() {
+            if (!checkFreeAvailable()) { showToast('⏳ Подождите 5 минут'); return; }
+            game.balance += 100;
+            game.lastFreeClaim = Date.now();
+            showToast('✅ +100 монет бесплатно!');
+            saveGame();
+            updateShopUI();
+            renderShopItems();
+        }
+
+        function buyCoinPack(amount, price) {
+            // Имитация покупки за звезды - отправка в бота
+            showToast(`⭐ Покупка ${amount} монет за ${price} звёзд. Проверьте Telegram!`);
+            // Здесь будет интеграция с ботом
+        }
+
+        function buyDiamondPack(amount, price) {
+            showToast(`⭐ Покупка ${amount} кристаллов за ${price} звёзд. Проверьте Telegram!`);
+        }
+
+        // ============================================================
+        // ОБМЕННИК
+        // ============================================================
+        function adjustExchange(delta) {
+            const el = document.getElementById('exchangerAmount');
+            let val = parseInt(el.textContent) || 0;
+            val = Math.max(0, Math.min(game.crystals, val + delta));
+            el.textContent = val;
+            updateExchangeResult();
+        }
+
+        function updateExchangeResult() {
+            const val = parseInt(document.getElementById('exchangerAmount').textContent) || 0;
+            document.getElementById('exchangerResult').textContent = `${val} кристаллов = ${val * 100} монет`;
+        }
+
+        function enableExchangeInput() {
+            const el = document.getElementById('exchangerAmount');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = el.textContent;
+            input.style.cssText = 'width:80px;background:rgba(255,255,255,0.1);border:2px solid var(--gold);border-radius:8px;color:#fff;font-size:18px;font-weight:700;text-align:center;';
+            el.parentNode.replaceChild(input, el);
+            input.focus();
+            input.onblur = function() {
+                let val = parseInt(this.value) || 0;
+                val = Math.min(game.crystals, Math.max(0, val));
+                const span = document.createElement('span');
+                span.className = 'num-display';
+                span.textContent = val;
+                span.onclick = enableExchangeInput;
+                this.parentNode.replaceChild(span, this);
+                updateExchangeResult();
+            };
+            input.onkeydown = function(e) {
+                if (e.key === 'Enter') this.blur();
+            };
+        }
+
+        function openExchangeConfirm() {
+            const val = parseInt(document.getElementById('exchangerAmount').textContent) || 0;
+            if (val <= 0) { showToast('❌ Введите количество кристаллов'); return; }
+            if (val > game.crystals) { showToast('❌ Не хватает кристаллов'); return; }
+            document.getElementById('exchangeConfirmText').textContent = `Вы точно хотите обменять ${val} кристаллов на ${val * 100} монет?`;
+            document.getElementById('exchangeConfirm').classList.add('active');
+            exchangeAmount = val;
+        }
+
+        function closeExchangeConfirm() {
+            document.getElementById('exchangeConfirm').classList.remove('active');
+        }
+
+        function confirmExchange() {
+            if (exchangeAmount <= 0 || exchangeAmount > game.crystals) return;
+            game.crystals -= exchangeAmount;
+            game.balance += exchangeAmount * 100;
+            showToast(`✅ Обмен выполнен! +${exchangeAmount * 100} монет`);
+            saveGame();
+            closeExchangeConfirm();
+            updateShopUI();
+            renderShopItems();
+            document.getElementById('exchangerAmount').textContent = '0';
+            updateExchangeResult();
+        }
+
+        // ============================================================
+        // ПРОМОКОД
+        // ============================================================
+        const promoCodes = {
+            'novara2025': { coins: 500, crystals: 50, xp: 100 },
+            'welcome': { coins: 200, crystals: 20, xp: 50 },
+            'citybuilder': { coins: 300, crystals: 30, xp: 75 }
+        };
+        let usedPromoCodes = [];
+
+        function applyPromo() {
+            const input = document.getElementById('promoInput').value.trim().toLowerCase();
+            const errorEl = document.getElementById('promoError');
+            if (!input) { errorEl.style.display = 'block'; errorEl.textContent = 'Введите промокод'; return; }
+            if (usedPromoCodes.includes(input)) {
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Промокод уже использован';
+                return;
+            }
+            const promo = promoCodes[input];
+            if (!promo) {
+                errorEl.style.display = 'block';
+                errorEl.textContent = 'Промокод не найден или не действителен';
+                return;
+            }
+            errorEl.style.display = 'none';
+            // Награда
+            game.balance += promo.coins || 0;
+            game.crystals += promo.crystals || 0;
+            if (promo.xp) addXp(promo.xp);
+            usedPromoCodes.push(input);
+            saveGame();
+            showToast(`🎁 Промокод активирован! +${promo.coins||0} монет, +${promo.crystals||0} кристаллов`);
+            updateShopUI();
+            document.getElementById('promoInput').value = '';
+        }
+
+        // ============================================================
+        // НАСТРОЙКИ И ЖАЛОБЫ
+        // ============================================================
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+        function openComplaints() {
+            document.getElementById('complaintsModal').classList.add('active');
+        }
+        function closeComplaints() {
+            document.getElementById('complaintsModal').classList.remove('active');
+        }
+
+        // ============================================================
+        // НАВИГАЦИЯ
+        // ============================================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            if (screenId === 'bank-screen') updateBankUI();
+            if (screenId === 'resources-screen') renderResources();
+            if (screenId === 'quests-screen') renderQuests();
+            if (screenId === 'profile-screen') updateProfileUI();
+            if (screenId === 'city-screen') renderCityGrid();
+            // Скрываем футер города если не город
+            if (screenId !== 'city-screen' && screenId !== 'map-screen') {
+                document.getElementById('footerCity').classList.remove('active');
+                document.getElementById('footer').style.display = 'flex';
+            }
+            if (screenId === 'menu-screen') {
+                document.getElementById('footerCity').classList.remove('active');
+                document.getElementById('footer').style.display = 'flex';
+            }
+        }
+
+        // ============================================================
+        // ПРОФИЛЬ
+        // ============================================================
+        function updateProfileUI() {
+            document.getElementById('profileLevel').textContent = game.level;
+            document.getElementById('profileXp').textContent = game.xp;
+            document.getElementById('profileReputation').textContent = game.reputation;
+            document.getElementById('profileBuildings').textContent = game.buildings.filter(b => b.status === 'built').length;
+            document.getElementById('profileEarned').textContent = Math.round(game.earned);
+            let totalCryptoVal = 0;
+            for(let key in game.crypto) { const c = CRYPTO.find(cr => cr.id === key); if(c) totalCryptoVal += (game.crypto[key]?.amount || 0) * c.price; }
+            document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
+            document.getElementById('profileTime').textContent = `В игре: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
+            document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+        }
+
+        // ============================================================
+        // КРИПТО-БИРЖА
+        // ============================================================
+        function initCrypto() { CRYPTO.forEach(c => { if (!game.crypto[c.id]) game.crypto[c.id] = { amount: 0 }; }); }
+        function updateCryptoPrices() { CRYPTO.forEach(c => { c.price = Math.max(0.01, c.price * (1 + (Math.random() - 0.48) * 0.05)); }); }
+        function buyCrypto(id, amount) {
+            const c = CRYPTO.find(cr => cr.id === id);
+            if (!c || game.balance < c.price * amount * 1.005) { showToast('❌ Не хватает денег!'); return; }
+            game.balance -= c.price * amount * 1.005;
+            game.crypto[id].amount = (game.crypto[id].amount || 0) + amount;
+            showToast(`✅ Куплено ${amount} ${c.symbol}`);
+            saveGame(); updateUI(); renderCryptoList();
+        }
+        function sellCrypto(id, amount) {
+            const c = CRYPTO.find(cr => cr.id === id);
+            if (!c || (game.crypto[id]?.amount || 0) < amount) { showToast('❌ Не хватает монет!'); return; }
+            game.balance += c.price * amount * 0.995;
+            game.crypto[id].amount -= amount;
+            showToast(`✅ Продано ${amount} ${c.symbol}`);
+            saveGame(); updateUI(); renderCryptoList();
+        }
+        function openCryptoExchange() { document.getElementById('cryptoModal').classList.add('active'); renderCryptoList(); }
+        function closeCryptoModal() { document.getElementById('cryptoModal').classList.remove('active'); }
+        let cryptoTab = 'main';
+        function switchCryptoTab(tab) {
+            cryptoTab = tab;
+            ['cryptoTabMain','cryptoTabExclusive','cryptoTabSell'].forEach(id => { document.getElementById(id).style.background='rgba(255,255,255,0.05)'; document.getElementById(id).style.color='#fff'; });
+            const active = document.getElementById(tab==='main'?'cryptoTabMain':tab==='exclusive'?'cryptoTabExclusive':'cryptoTabSell');
+            active.style.background='var(--gold-gradient)'; active.style.color='#1a1a2e';
+            renderCryptoList();
+        }
+        function renderCryptoList() {
+            const list = document.getElementById('cryptoList');
+            const search = document.getElementById('cryptoSearch').value.toLowerCase();
+            list.innerHTML = '';
+            let items = CRYPTO;
+            if (cryptoTab === 'sell') items = CRYPTO.filter(c => (game.crypto[c.id]?.amount || 0) > 0);
+            items = items.filter(c => c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search));
+            if (!items.length) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">🔍 Ничего не найдено</div>'; return; }
+            items.forEach(c => {
+                const amount = game.crypto[c.id]?.amount || 0;
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border);';
+                div.innerHTML = `
+                    <img src="${c.icon}" style="width:32px;height:32px;object-fit:contain;" onerror="this.style.display='none'">
+                    <div style="flex:1;"><div style="font-weight:600;font-size:14px;color:#fff;">${c.name}</div><div style="font-size:11px;color:var(--text-secondary);">${c.symbol} | $${c.price.toFixed(4)} | ${amount>0?amount.toFixed(2)+' шт.':''}</div></div>
+                    ${cryptoTab==='sell'&&amount>0?`<button class="btn-red" onclick="sellCrypto('${c.id}',1)" style="background:var(--red);border:none;color:#fff;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;">Продать</button>`:cryptoTab!=='sell'?`<button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyCrypto('${c.id}',1)">Купить</button>`:''}
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // ============================================================
+        // TOAST И СОХРАНЕНИЕ
+        // ============================================================
+        let toastTimeout;
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            toast.textContent = text;
+            toast.style.opacity = 1;
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.opacity = 0; }, 3000);
+        }
+        function saveGame() {
+            localStorage.setItem('novaraCitySave', JSON.stringify({
+                balance: game.balance, coins: game.coins, crystals: game.crystals,
+                xp: game.xp, level: game.level, reputation: game.reputation,
+                resources: game.resources, buildings: game.buildings, credit: game.credit,
+                crypto: game.crypto, quests: game.quests, lastOnline: game.lastOnline,
+                earned: game.earned, builtCount: game.builtCount,
+                unlockedDistricts: game.unlockedDistricts,
+                cityItems: game.cityItems,
+                lastFreeClaim: game.lastFreeClaim,
+                usedPromoCodes: usedPromoCodes
+            }));
+        }
+        function loadGame() {
+            const raw = localStorage.getItem('novaraCitySave');
+            if (!raw) return false;
+            try {
+                const data = JSON.parse(raw);
+                Object.assign(game, data);
+                if (!game.buildings) game.buildings = [];
+                game.buildings.forEach(b => { if (!b.status) b.status = 'built'; });
+                if (!game.unlockedDistricts) game.unlockedDistricts = ['suburb'];
+                if (!game.cityItems) {
+                    game.cityItems = {};
+                    for (let i = 0; i < 12; i++) {
+                        game.cityItems[i] = { districtId: null, unlocked: false, selected: false };
+                    }
+                    game.cityItems[0].unlocked = true;
+                }
+                if (data.usedPromoCodes) usedPromoCodes = data.usedPromoCodes;
+                return true;
+            } catch (e) { return false; }
+        }
+
+        // ============================================================
+        // АВТОМАТИЧЕСКИЕ ЗАДАЧИ
+        // ============================================================
+        function autoGather() {
+            RESOURCES.forEach(r => addResource(r.id, 0.1));
+            const income = getTotalIncome() / 60;
+            if (income > 0) { game.balance += income; game.earned += income; }
+            updateQuests();
+            checkDemolishCompletion();
+            updateUI();
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        function init() {
+            const savedLang = localStorage.getItem('lang');
+            if (savedLang && LANG[savedLang]) lang = savedLang;
+            else { document.getElementById('langModal').classList.add('active'); return; }
+            currentLang = LANG[lang];
+
+            if (!loadGame()) {
+                RESOURCES.forEach(r => { game.resources[r.id] = 10; });
+                generateQuests();
+                initCrypto();
+                // Первый район открыт
+                game.unlockedDistricts = ['suburb'];
+                game.cityItems[0] = { districtId: 'suburb', unlocked: true, selected: true };
+                saveGame();
+            } else {
+                const diff = (Date.now() - game.lastOnline) / 1000;
+                if (diff > 60) {
+                    const income = getTotalIncome() / 60 * Math.min(diff / 60, 60);
+                    if (income > 0) { game.balance += income; game.earned += income; showToast(`💰 Офлайн-доход: +${Math.round(income)}$`); }
+                }
+                game.lastOnline = Date.now();
+                if (!game.quests || !game.quests.length) generateQuests();
+                initCrypto();
+                saveGame();
+            }
+
+            updateUI();
+            renderResources();
+            renderQuests();
+
+            document.getElementById('creditAmountSlider').oninput = updateCreditSliders;
+            document.getElementById('creditTermSlider').oninput = updateCreditSliders;
+            document.getElementById('cryptoSearch').oninput = renderCryptoList;
+            document.getElementById('playerName').onchange = function() { localStorage.setItem('playerName', this.value); };
+
+            setInterval(autoGather, 5000);
+            setInterval(updateCryptoPrices, 15000);
+            setInterval(() => {
+                saveGame();
+                if(document.getElementById('map-screen').classList.contains('active')) updateMapUI();
+                if(document.getElementById('bank-screen').classList.contains('active')) updateBankUI();
+                if(document.getElementById('shop-modal').classList.contains('active')) { updateShopUI(); renderShopItems(); }
+            }, 30000);
+
+            showScreen('menu-screen');
+            showToast('🏙️ Добро пожаловать в Novara City!');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
