@@ -1435,6 +1435,67 @@
         .modal-overlay.active {
             display: flex;
         }
+    
+/* === USER REQUEST PATCH 2026-08 === */
+#menu-screen { inset: 0; bottom: 0; background-size: cover; }
+#menu-screen .overlay { padding-bottom: 18px; gap: 10px; justify-content: flex-end; }
+.menu-btn-wide, .menu-btn-half { border-radius: 16px !important; }
+.menu-btn-wide { padding: 14px 20px; }
+.menu-btn-half { padding: 10px 8px; }
+
+.district-xp-bar { height: 16px; }
+.district-header .district-info { min-width: 0; }
+.district-header .district-name-row { align-items:center; }
+.district-balances { display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:11px; font-weight:600; }
+.district-balances .balance-item { display:flex; align-items:center; gap:3px; }
+.district-balances img { width:15px; height:15px; object-fit:contain; }
+.map-plot.construction { background:rgba(0,0,0,.72) !important; border-color:#7cfc00 !important; }
+.map-plot .construction-overlay { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%; background:rgba(0,0,0,.52); color:#fff; }
+.map-plot .construction-emblem { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:48px; height:48px; object-fit:contain; filter:drop-shadow(0 2px 5px #000); }
+.map-plot .construction-timer { font-size:20px; font-weight:700; text-shadow:0 2px 4px #000; }
+.map-plot .construction-label { font-size:11px; color:#ddd; }
+
+.page-title { position:relative; z-index:5; }
+#resourcesTitle { transform:translateY(2px); }
+#bankTitle { transform:translateY(5px); }
+#questsTitle { transform:translateY(1.5px); }
+#profileTitle { transform:translateY(2.5px); }
+#profile-screen > *:not(#profileTitle) { transform:translateY(40px); }
+#profile-screen { overflow-y:auto; }
+
+.resources-tools { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:2px 0 10px; }
+.resources-tool { min-height:105px; border-radius:14px; background:rgba(0,0,0,.42); border:2px solid #fff; backdrop-filter:blur(8px); padding:10px; cursor:pointer; color:#fff; }
+.resources-tool h3 { font-size:16px; margin:0 0 8px; text-align:center; }
+.resources-balance { display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:13px; }
+.balance-add { width:17px; height:17px; border-radius:50%; background:#00c853; color:#ffe600; display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; flex:none; }
+.market-btn { grid-column:1 / -1; min-height:44px; background:var(--gold-gradient); color:#fff; border:2px solid #fff; border-radius:14px; font-weight:800; font-size:15px; cursor:pointer; }
+.resources-list-box { position:relative; height:calc(100dvh - 290px); min-height:250px; overflow:hidden; background:rgba(0,0,0,.42); border:2px solid #fff; border-radius:14px; backdrop-filter:blur(8px); padding:10px 8px; }
+.resources-list-scroll { height:100%; overflow-y:auto; overflow-x:hidden; padding-right:5px; }
+.resources-list-scroll::-webkit-scrollbar { width:5px; }
+.resources-list-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,.45); border-radius:5px; }
+.resource-grid { grid-template-columns:1fr 1fr !important; gap:8px !important; }
+.resource-card { min-height:110px; }
+.resource-unit { font-size:10px; color:#aaa; margin-top:2px; }
+
+#quests-screen { position:fixed; z-index:20; }
+#questsList, .quests-container { position:relative; z-index:30; }
+.quest-category, .quest-item { position:relative; z-index:31; }
+
+@media (max-width:390px) {
+  .menu-btn-wide { font-size:19px; padding:12px 16px; }
+  .menu-btn-half { font-size:13px; }
+  .district-name { font-size:clamp(12px,4vw,16px); }
+  .district-balances { font-size:9px; gap:4px; }
+  .district-header { padding-left:9px; padding-right:9px; gap:7px; }
+  .district-star { width:38px; height:38px; }
+  .district-star .star-icon { font-size:38px; line-height:38px; }
+  .district-star .star-level { font-size:12px; }
+}
+@media (min-width:700px) {
+  .city-grid { max-width:720px; gap:14px; }
+  .city-item .district-name { font-size:clamp(12px,1.8vw,16px); }
+}
+
     </style>
 </head>
 <body>
@@ -1488,7 +1549,10 @@
             <div class="district-info">
                 <div class="district-name-row">
                     <span class="district-name" id="mapTitle">Район</span>
-                    <span class="district-rep">🏅 <span id="mapReputationTop">0</span></span>
+                    <div class="district-balances">
+    <span class="balance-item"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" alt="coins"><span id="mapBalanceTop">0</span></span>
+    <span class="balance-item"><span>💎</span><span id="mapCrystalsTop">0</span></span>
+</div>
                 </div>
                 <div class="district-xp-bar">
                     <div class="fill" id="mapXpFillTop" style="width:0%"></div>
@@ -1566,7 +1630,23 @@
     <!-- ===== РЕСУРСЫ ===== -->
     <div class="screen" id="resources-screen">
         <div class="page-title" id="resourcesTitle">Ресурсы</div>
-        <div class="resource-grid" id="resourceGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+        <div class="resources-tools">
+            <button class="resources-tool" type="button">
+                <h3>💸 Траты</h3>
+                <div style="font-size:11px;color:#aaa;text-align:center;">История расходов</div>
+            </button>
+            <button class="resources-tool" type="button" onclick="openShopAndScroll('coins')">
+                <h3>Банк</h3>
+                <div class="resources-balance"><span>🪙 Монеты</span><span><span id="resourcesCoins">0</span> <span class="balance-add">+</span></span></div>
+                <div class="resources-balance"><span>💎 Кристаллы</span><span><span id="resourcesCrystals">0</span> <span class="balance-add">+</span></span></div>
+            </button>
+            <button class="market-btn" type="button" onclick="openShopAndScroll('coins')">РЫНОК</button>
+        </div>
+        <div class="resources-list-box">
+            <div class="resources-list-scroll" id="resourcesScroll">
+                <div class="resource-grid" id="resourceGrid"></div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== КВЕСТЫ ===== -->
@@ -1607,7 +1687,7 @@
         </button>
         <button onclick="showScreen('menu-screen')" data-screen="menu-screen" class="active">
             <img src="https://rruslan007.github.io/novara-city-images/logo/home_icon.png" alt="Home">
-            <span class="label" id="footerHome">Home</span>
+            <span class="label" id="footerHome">Меню</span>
         </button>
         <button onclick="showScreen('quests-screen')" data-screen="quests-screen">
             <img src="https://rruslan007.github.io/novara-city-images/logo/tasks_icon.png" alt="Quests">
@@ -1737,9 +1817,10 @@
             <button class="close-btn" onclick="closeBuildingInfo()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <img id="infoBuildingImg" src="" alt="building" style="width:80px;height:80px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
             <h3 id="infoBuildingName" style="margin-bottom:8px;"></h3>
-            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⚡ Электричество: <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
-            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">⭐ Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
-            <div class="built-date" id="infoBuiltDate" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;"></div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);"><span id="infoEnergyIcon">⚡</span> Электричество: <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
+            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Состояние: <span id="infoState" style="color:#fff;">Построено</span></div>
+            <div class="built-date" id="infoBuiltDate" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;">Построено: —</div>
             <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
         </div>
     </div>
@@ -1876,11 +1957,14 @@
         let currentLang = {};
 
         function setLang(l) {
+            if (!LANG[l]) return;
             lang = l;
             currentLang = LANG[lang];
             localStorage.setItem('lang', lang);
             document.getElementById('langModal').classList.remove('active');
+            document.getElementById('settingsModal').classList.remove('active');
             updateUI();
+            document.getElementById('currentLangDisplay').textContent = lang === 'ru' ? 'Русский' : 'English';
             showToast('🌐 Язык изменён');
         }
 
@@ -1889,7 +1973,7 @@
         function updateUI() {
             document.getElementById('footerBank').textContent = t('bank');
             document.getElementById('footerResources').textContent = t('resources');
-            document.getElementById('footerHome').textContent = t('city');
+            document.getElementById('footerHome').textContent = 'Меню';
             document.getElementById('footerQuests').textContent = t('quests');
             document.getElementById('footerProfile').textContent = t('profile');
             document.getElementById('bankMyBank').textContent = t('bankMy');
@@ -1905,6 +1989,8 @@
             document.getElementById('resourcesTitle').textContent = t('resources');
             document.getElementById('questsTitle').textContent = t('quests');
             document.getElementById('profileTitle').textContent = t('profile');
+            if (document.getElementById('resourcesCoins')) document.getElementById('resourcesCoins').textContent = Math.round(game.balance);
+            if (document.getElementById('resourcesCrystals')) document.getElementById('resourcesCrystals').textContent = game.crystals;
             document.getElementById('currentLangDisplay').textContent = lang === 'ru' ? 'Русский' : 'English';
             renderCityGrid();
             renderQuests();
@@ -2334,7 +2420,18 @@
                     const existingBuilding = game.buildings.find(b => b.plotId === plotId && b.districtId === districtId);
 
                     if (existingBuilding) {
-                        if (existingBuilding.status === 'demolishing') {
+                        if (existingBuilding.status === 'constructing') {
+                            plot.classList.add('construction');
+                            const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
+                            const remaining = Math.max(0, (existingBuilding.buildStart || existingBuilding.builtAt) + (existingBuilding.buildTime || ((bData?.time || 5) * 1000)) - Date.now());
+                            const sec = Math.ceil(remaining / 1000);
+                            plot.innerHTML = `<div class="construction-overlay">
+                                <img class="construction-emblem" src="https://rruslan007.github.io/novara-city-images/logo/build.png" onerror="this.style.display='none'" alt="construction">
+                                <div class="construction-timer">⏳ ${sec}с</div>
+                                <div class="construction-label">${bData ? bData.name : 'Строительство'}</div>
+                            </div>`;
+                            plot.onclick = () => showToast('🏗️ Здание ещё строится');
+                        } else if (existingBuilding.status === 'demolishing') {
                             plot.style.background = '#2a4a1a';
                             const remaining = Math.max(0, existingBuilding.demolishStart + existingBuilding.demolishTime - Date.now());
                             const sec = Math.ceil(remaining / 1000);
@@ -2367,6 +2464,8 @@
             document.getElementById('mapXpLabelTop').textContent = `${Math.round(currentXp)} / ${neededXp} XP`;
             document.getElementById('mapXpFillTop').style.width = `${progress * 100}%`;
             document.getElementById('mapReputationTop').textContent = game.reputation;
+            document.getElementById('mapBalanceTop').textContent = Math.round(game.balance);
+            document.getElementById('mapCrystalsTop').textContent = game.crystals;
         }
 
         // ============================================================
@@ -2400,7 +2499,7 @@
             container.style.display = 'block';
             const availableBuildings = BUILDINGS.filter(b => b.allowedDistricts.includes(districtId));
             if (availableBuildings.length === 0) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе пока нельзя ничего построить.</div>';
+                container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">В этом районе нет доступных типов зданий — выберите другой участок или район.</div>';
                 return;
             }
             BUILDING_CATEGORY_ORDER.forEach(cat => {
@@ -2443,11 +2542,14 @@
             if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
             game.balance -= building.cost;
             for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
-            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: currentPlotId, districtId: currentDistrictId, status: 'built' });
+            const now = Date.now();
+            game.buildings.push({
+                id: building.id, level: 1, builtAt: 0, plotId: currentPlotId,
+                districtId: currentDistrictId, status: 'constructing',
+                buildStart: now, buildTime: (building.time || 5) * 1000
+            });
             game.builtCount++;
-            addXp(building.xp);
-            addReputation(building.reputation);
-            showToast(`✅ ${building.name} построен! +${building.reputation} репутации`);
+            showToast(`🏗️ ${building.name}: строительство начато на ${building.time || 5} сек.`);
             saveGame();
             closeBuildModal();
             renderMap(currentDistrictId);
@@ -2464,7 +2566,8 @@
             document.getElementById('infoBuildingName').textContent = bData.name;
             document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
             document.getElementById('infoReputation').textContent = bData.reputation || 0;
-            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
+            document.getElementById('infoState').textContent = building.status === 'built' ? 'Построено' : (building.status === 'constructing' ? 'Строится' : 'Сносится');
+            document.getElementById('infoBuiltDate').textContent = building.builtAt ? `Построено: ${new Date(building.builtAt).toLocaleString()}` : 'Построено: —';
             demolishTarget = building;
             document.getElementById('buildingInfoModal').classList.add('active');
         }
@@ -2495,6 +2598,30 @@
             renderMap(demolishTarget.districtId);
             updateUI();
         }
+        function checkConstructionCompletion() {
+            const now = Date.now();
+            let changed = false;
+            game.buildings.forEach(b => {
+                if (b.status === 'constructing') {
+                    const bData = BUILDINGS.find(x => x.id === b.id);
+                    const duration = b.buildTime || ((bData?.time || 5) * 1000);
+                    if (now - (b.buildStart || b.builtAt || now) >= duration) {
+                        b.status = 'built';
+                        b.builtAt = b.buildStart || now;
+                        addXp(bData?.xp || 0);
+                        addReputation(bData?.reputation || 0);
+                        showToast(`✅ ${bData?.name || 'Здание'} построено!`);
+                        changed = true;
+                    }
+                }
+            });
+            if (changed) {
+                saveGame();
+                updateUI();
+                if (currentDistrictId) renderMap(currentDistrictId);
+            }
+        }
+
         function checkDemolishCompletion() {
             const now = Date.now();
             let changed = false;
@@ -2517,17 +2644,20 @@
             grid.innerHTML = '';
             RESOURCES.forEach(r => {
                 const amount = getResourceAmount(r.id);
+                const units = { oil:'барр.', gas:'м³', wood:'т', energy:'кВт·ч', food:'т', gold:'кг' };
                 const card = document.createElement('div');
                 card.className = 'resource-card glass-dark';
-                card.style.cssText = 'border-radius:12px;padding:12px;text-align:center;border:1px solid var(--glass-border);';
+                card.style.cssText = 'border-radius:12px;padding:10px;text-align:center;border:1px solid var(--glass-border);';
                 card.innerHTML = `
                     <img src="${r.icon}" style="width:40px;height:40px;object-fit:contain;" onerror="this.textContent='🛢️'">
                     <div class="rname" style="font-size:12px;margin:4px 0;color:var(--text-secondary);">${r.name}</div>
-                    <div class="ramount" style="font-size:18px;font-weight:700;color:var(--gold);">${Math.round(amount)}</div>
+                    <div class="ramount" style="font-size:18px;font-weight:700;color:var(--gold);">${Math.round(amount)} <span class="resource-unit">${units[r.id] || 'ед.'}</span></div>
                     <button class="btn-green" onclick="mineResource('${r.id}')" style="background:var(--green);border:none;color:#fff;font-weight:600;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;">⛏️ Добыть</button>
                 `;
                 grid.appendChild(card);
             });
+            if (document.getElementById('resourcesCoins')) document.getElementById('resourcesCoins').textContent = Math.round(game.balance);
+            if (document.getElementById('resourcesCrystals')) document.getElementById('resourcesCrystals').textContent = game.crystals;
         }
         function mineResource(id) { addResource(id, 5); addXp(1); showToast(`⛏️ +5 ${RESOURCES.find(r => r.id === id)?.name}`); }
 
@@ -2988,6 +3118,7 @@
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+            document.querySelectorAll('#footer button[data-screen]').forEach(btn => btn.classList.toggle('active', btn.dataset.screen === screenId));
             if (screenId === 'bank-screen') updateBankUI();
             if (screenId === 'resources-screen') renderResources();
             if (screenId === 'quests-screen') renderQuests();
@@ -3040,6 +3171,15 @@
             game.crypto[id].amount -= amount;
             showToast(`✅ Продано ${amount} ${c.symbol}`);
             saveGame(); updateUI(); renderCryptoList();
+        }
+        function openShopAndScroll(target) {
+            document.getElementById('shop-modal').classList.add('active');
+            const scroll = document.getElementById('shopScroll');
+            setTimeout(() => {
+                const sections = scroll.querySelectorAll('.shop-section');
+                const index = target === 'crystals' ? 1 : 0;
+                if (sections[index]) scroll.scrollTo({ top: sections[index].offsetTop - 8, behavior: 'smooth' });
+            }, 50);
         }
         function openCryptoExchange() { document.getElementById('cryptoModal').classList.add('active'); renderCryptoList(); }
         function closeCryptoModal() { document.getElementById('cryptoModal').classList.remove('active'); }
@@ -3169,6 +3309,7 @@
             document.getElementById('playerName').onchange = function() { localStorage.setItem('playerName', this.value); };
 
             setInterval(autoGather, 5000);
+            setInterval(() => { checkConstructionCompletion(); checkDemolishCompletion(); if(document.getElementById('map-screen').classList.contains('active')) { renderMap(currentDistrictId); updateMapUI(); } }, 1000);
             setInterval(updateCryptoPrices, 15000);
             setInterval(() => {
                 saveGame();
