@@ -306,6 +306,9 @@
         .menu-btn-wide.btn-store img {
             filter: none;
         }
+        .menu-btn-wide.btn-settings {
+            background: #78909c;
+        }
         .menu-btn-wide:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
@@ -357,6 +360,8 @@
             padding: 16px;
             top: 0;
             bottom: 64px;
+            overflow-x: hidden;
+            touch-action: pan-y;
         }
         @keyframes chameleon {
             0% { background: #b2d8a8; }
@@ -375,10 +380,12 @@
 
         .city-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             max-width: 600px;
             margin: 0 auto;
+            touch-action: pan-y;
+            overflow-x: hidden;
         }
         .city-item {
             aspect-ratio: 1 / 1.2;
@@ -1185,6 +1192,21 @@
             background: #3a3a3a;
             z-index: 1;
         }
+        /* Пешеходные переходы (зебра) */
+        .map-world .map-crossing-h {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: repeating-linear-gradient(0deg, #fff 0px, #fff 6px, transparent 6px, transparent 13px);
+            z-index: 2;
+        }
+        .map-world .map-crossing-v {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background: repeating-linear-gradient(90deg, #fff 0px, #fff 6px, transparent 6px, transparent 13px);
+            z-index: 2;
+        }
 
         /* Аккордеон банка: раскрытие тела и поворот стрелки по классу .open */
         .accordion .header .arrow {
@@ -1224,14 +1246,15 @@
         /* Ресурсы: верхний ряд (Рынок слева, балансы справа) */
         .res-top-row {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: space-between;
             max-width: 460px;
             margin: 38px auto 14px;
         }
         .res-balances {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            gap: 6px;
         }
         .res-bal-oval {
             display: flex;
@@ -1251,6 +1274,7 @@
         .res-bal-oval img { width: 16px; height: 16px; }
         .res-market-btn {
             flex: 0 0 auto;
+            align-self: stretch;
             padding: 8px 20px;
             background: var(--gold-gradient);
             border: 1.5px solid #fff;
@@ -1264,22 +1288,23 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
         .res-scroll-box {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 24px);
             max-width: 460px;
-            margin: 0 auto;
             background: rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1.5px solid #fff;
             border-radius: 18px;
             padding: 0 12px 12px;
-            height: 420px;
-            min-height: 160px;
-            max-height: calc(100dvh - 220px);
+            top: 190px;
+            bottom: 20px;
             overflow-y: auto;
             overflow-x: hidden;
             touch-action: pan-y;
             overscroll-behavior: contain;
-            position: relative;
         }
         .res-scroll-handle {
             position: sticky;
@@ -1570,16 +1595,10 @@
                 <span>Магазин</span>
                 <img src="https://rruslan007.github.io/novara-city-images/logo/store.png" alt="store">
             </button>
-            <div class="menu-btn-half-row">
-                <button class="menu-btn-half btn-complaints" onclick="openComplaints()">
-                    <img src="https://rruslan007.github.io/novara-city-images/logo/nevs_icon.png" alt="complaints">
-                    <span>Жалобы</span>
-                </button>
-                <button class="menu-btn-half btn-settings" onclick="openSettings()">
-                    <img src="https://rruslan007.github.io/novara-city-images/logo/settings.png" alt="settings">
-                    <span>Настройки</span>
-                </button>
-            </div>
+            <button class="menu-btn-wide btn-settings" onclick="openSettings()">
+                <span>Настройки</span>
+                <img src="https://rruslan007.github.io/novara-city-images/logo/settings.png" alt="settings">
+            </button>
         </div>
     </div>
 
@@ -1615,7 +1634,7 @@
     <!-- ===== БАНК ===== -->
     <div class="screen" id="bank-screen">
         <div class="page-title" id="bankTitle">Банк</div>
-        <div class="bank-accordion-wrapper" style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto;">
+        <div class="bank-accordion-wrapper" style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:76px auto 0;">
             <div class="accordion" style="border:1px solid rgba(255,255,255,0.15);border-radius:12px;overflow:hidden;background:rgba(10,14,26,0.7);backdrop-filter:blur(8px);">
                 <div class="header" onclick="toggleAccordion(this)" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:var(--transition);">
                     <div class="left" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;"><img src="https://rruslan007.github.io/novara-city-images/logo/bank_icon.png" alt="bank" style="width:24px;height:24px;"> <span id="bankMyBank">Мой банк</span></div>
@@ -1624,11 +1643,11 @@
                 <div class="body open" style="overflow-y:auto;">
                     <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankMyBankTitle">Мой банк</div>
                     <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
-                        <div class="label" style="display:flex;align-items:center;gap:6px;"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;"> Баланс Новара Коинов</div>
+                        <div class="label" style="display:flex;align-items:center;gap:6px;"><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:20px;height:20px;"> NOVARA COINS</div>
                         <span id="bankBalanceDisplay">1000</span>
                     </div>
                     <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;">
-                        <span>💎 Баланс Новара Кристаллов</span><span id="bankCrystalsDisplay">50</span>
+                        <span>💎 NOVARA CRYSTALS</span><span id="bankCrystalsDisplay">50</span>
                     </div>
                     <div style="margin-top:12px;text-align:center;">
                         <button class="btn-gold" id="bankReplenishBtn" onclick="showToast('💰 Пополнение в разработке')" style="width:auto;padding:6px 20px;">Пополнить</button>
@@ -1866,11 +1885,18 @@
             <button class="close-btn" onclick="closeBuildingInfo()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <img id="infoBuildingImg" src="" alt="building" style="width:80px;height:80px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
             <h3 id="infoBuildingName" style="margin-bottom:8px;"></h3>
-            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Состояние: <span id="infoState" style="color:#fff;"></span></div>
-            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;gap:4px;">Электричество: <img src="https://rruslan007.github.io/novara-city-images/resources/energy_icon.png" style="width:14px;height:14px;" onerror="this.style.display='none'"> <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
-            <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
-            <div class="built-date" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;"><span style="font-weight:300;">Построено:</span> <span id="infoBuiltDate"></span></div>
-            <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
+            <div id="infoNormalBlock">
+                <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Состояние: <span id="infoState" style="color:#fff;"></span></div>
+                <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;gap:4px;">Электричество: <img src="https://rruslan007.github.io/novara-city-images/resources/energy_icon.png" style="width:14px;height:14px;" onerror="this.style.display='none'"> <span id="infoEnergy" style="color:#fff;">0</span>/час</div>
+                <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--text-secondary);">Репутация: <span id="infoReputation" style="color:#fff;">0</span></div>
+                <div class="built-date" style="font-size:11px;color:var(--text-secondary);font-weight:300;margin-top:8px;"><span style="font-weight:300;">Построено:</span> <span id="infoBuiltDate"></span></div>
+                <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:12px;">🏗️ Снести</button>
+            </div>
+            <div id="infoBrokenBlock" style="display:none;">
+                <div class="info-row" style="font-size:13px;margin:6px 0;color:var(--red);font-weight:700;">Состояние: Аварийное</div>
+                <button class="btn-gold" onclick="repairBuilding()" style="width:auto;padding:8px 20px;margin-top:8px;">🔧 Починить за <span id="repairCostText">0</span></button>
+                <button class="btn-gold demolish" onclick="openDemolishConfirm()" style="width:auto;padding:8px 20px;margin-top:8px;background:var(--red);">🏗️ Снести</button>
+            </div>
         </div>
     </div>
 
@@ -1894,14 +1920,50 @@
     <div class="modal-overlay" id="cryptoModal" style="align-items:center;">
         <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
             <button class="close-btn" onclick="closeCryptoModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
-            <h2 id="cryptoModalTitle" style="text-align:center;">📈 Биржа криптовалют</h2>
+            <h2 id="cryptoModalTitle" style="text-align:center;">📈 Биржа</h2>
             <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
                 <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;" onclick="switchCryptoTab('main')" id="cryptoTabMain">Основные</button>
                 <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('exclusive')" id="cryptoTabExclusive">Эксклюзив</button>
                 <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:rgba(255,255,255,0.05);color:#fff;" onclick="switchCryptoTab('sell')" id="cryptoTabSell">Продажа</button>
+                <button class="btn-gold" style="flex:1;padding:6px;font-size:12px;background:var(--gold-gradient);color:#1a1a2e;" onclick="switchCryptoTab('myshares')" id="cryptoTabMyshares">Мои акции</button>
             </div>
             <input type="text" id="cryptoSearch" placeholder="🔍 Поиск..." style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;margin-bottom:8px;">
             <div id="cryptoList" style="max-height:300px;overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <!-- ===== СОЗДАНИЕ АКЦИИ ===== -->
+    <div class="modal-overlay" id="createShareModal" style="align-items:center;">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;overflow-x:hidden;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeCreateShareModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:10px;text-align:center;font-weight:700;font-size:18px;color:#fff;margin-bottom:14px;">Создание акции</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">Введите название</div>
+            <input type="text" id="shareNameInput" placeholder="Название акции" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;margin-bottom:12px;">
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;display:flex;align-items:center;gap:6px;">Введите тикер
+                <span onclick="openTickerInfo()" style="cursor:pointer;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.15);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">?</span>
+            </div>
+            <input type="text" id="shareTickerInput" placeholder="Например: NVR" maxlength="6" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,0.05);color:#fff;text-transform:uppercase;margin-bottom:12px;">
+            <div style="font-size:12px;color:var(--text-secondary);background:rgba(255,255,255,0.03);border-radius:10px;padding:10px;margin-bottom:12px;">
+                Стоимость акции будет зависеть от вашей репутации и числа её покупок другими игроками.
+            </div>
+            <div style="text-align:center;font-size:13px;color:var(--gold);margin-bottom:12px;">Стоимость создания: 100 000 NOVARA COINS</div>
+            <button class="btn-gold" onclick="createShare()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;">
+                Создать за 100 000 <img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:18px;height:18px;">
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== ЧТО ТАКОЕ ТИКЕР ===== -->
+    <div class="modal-overlay" id="tickerInfoModal" style="align-items:center;">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:400px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+            <button class="close-btn" onclick="closeTickerInfo()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
+            <h2 style="text-align:center;">Что такое тикер</h2>
+            <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-top:8px;">
+                Тикер — это короткое буквенное обозначение акции, по которому её узнают на бирже, обычно от 3 до 5 латинских букв.
+                Например: у компании «Apple» тикер AAPL, у «Tesla» — TSLA, у «Amazon» — AMZN.
+                Для своей акции в NOVARA придумайте похожее короткое обозначение — например, если акция называется «Novara Trade», тикером может быть NVRT.
+                Тикер должен быть уникальным и легко узнаваемым, чтобы другие игроки могли быстро найти вашу акцию на бирже.
+            </div>
         </div>
     </div>
 
@@ -1916,8 +1978,8 @@
                     <input type="range" id="creditAmountSlider" min="0" max="1000" step="50" value="0" style="width:100%;">
                 </div>
                 <div style="margin-bottom:8px;">
-                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Срок: <span id="creditTermDisplay">7</span> дней</span></div>
-                    <input type="range" id="creditTermSlider" min="7" max="30" step="1" value="7" style="width:100%;">
+                    <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Срок: <span id="creditTermDisplay">5</span> мин</span></div>
+                    <input type="range" id="creditTermSlider" min="5" max="2880" step="5" value="5" style="width:100%;">
                 </div>
                 <div style="margin-bottom:8px;background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;font-size:13px;">
                     <div class="flex-between" style="display:flex;justify-content:space-between;align-items:center;"><span>Процентная ставка:</span><span class="text-red" id="creditRateDisplay">0%</span></div>
@@ -1935,14 +1997,14 @@
 
     <!-- ===== ВЫПЛАТА КРЕДИТА ===== -->
     <div class="modal-overlay" id="repayModal" style="align-items:center;">
-        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
+        <div class="modal-box" style="position:relative;background:var(--bg-secondary);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);">
             <button class="close-btn" onclick="closeRepayModal()" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--red);font-size:24px;cursor:pointer;">✕</button>
             <h2 id="repayTitle" style="text-align:center;">💳 Выплата</h2>
             <div style="text-align:center;color:var(--text-secondary);font-size:14px;">Введите сумму для погашения</div>
-            <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
-                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(-10)">−</button>
-                <input type="number" id="repayAmount" value="0" style="flex:1;padding:8px;border-radius:10px;border:2px solid var(--gold);background:rgba(255,255,255,0.05);color:#fff;font-size:18px;font-weight:700;text-align:center;">
-                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;" onclick="adjustRepay(10)">+</button>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;">
+                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;flex-shrink:0;" onclick="adjustRepay(-10)">−</button>
+                <input type="number" id="repayAmount" value="0" style="width:110px;flex:0 0 auto;padding:8px;border-radius:10px;border:2px solid var(--gold);background:rgba(255,255,255,0.05);color:#fff;font-size:18px;font-weight:700;text-align:center;">
+                <button class="btn-green" style="width:36px;height:36px;border-radius:50%;padding:0;flex-shrink:0;" onclick="adjustRepay(10)">+</button>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);">
                 <span>Баланс: <span id="repayBalance">0</span></span>
@@ -2058,24 +2120,28 @@
             { id: 'residential', icon: BASE_URL + 'districts/jiloi_raion.png', key: 'district3', level: 3 },
             { id: 'midtown', icon: BASE_URL + 'districts/centre.png', key: 'district4', level: 4 },
             { id: 'commercial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district5', level: 5 },
-            { id: 'park', icon: BASE_URL + 'districts/park.png', key: 'district6', level: 6 },
-            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7', level: 7 },
-            { id: 'industrial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district8', level: 8 },
-            { id: 'techpark', icon: BASE_URL + 'districts/oficini_raion.png', key: 'district9', level: 9 }
+            { id: 'transport', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district6', level: 6 },
+            { id: 'industrial', icon: BASE_URL + 'districts/portovii_raion.png', key: 'district7', level: 7 },
+            { id: 'techpark', icon: BASE_URL + 'districts/oficini_raion.png', key: 'district8', level: 8 }
         ];
 
-        // Список районов для выбора в окне (9 штук)
+        // Список районов для выбора в окне (8 штук)
         const DISTRICT_SELECT = [
             { id: 'suburb', name: 'Обычный посёлок', icon: BASE_URL + 'districts/malii_poselok.png' },
             { id: 'countryside', name: 'Пригород', icon: BASE_URL + 'districts/elita_poselok.png' },
             { id: 'residential', name: 'Жилой район', icon: BASE_URL + 'districts/jiloi_raion.png' },
             { id: 'midtown', name: 'Средний посёлок', icon: BASE_URL + 'districts/centre.png' },
             { id: 'commercial', name: 'Торговый район', icon: BASE_URL + 'districts/portovii_raion.png' },
-            { id: 'park', name: 'Парк', icon: BASE_URL + 'districts/park.png' },
             { id: 'transport', name: 'Транспортный хаб', icon: BASE_URL + 'districts/portovii_raion.png' },
             { id: 'industrial', name: 'Промышленная зона', icon: BASE_URL + 'districts/portovii_raion.png' },
             { id: 'techpark', name: 'Технопарк', icon: BASE_URL + 'districts/oficini_raion.png' }
         ];
+
+        // Лимит зданий на район (свой для каждого)
+        const DISTRICT_BUILD_LIMITS = {
+            suburb: 12, countryside: 14, residential: 18, midtown: 22,
+            commercial: 16, transport: 10, industrial: 14, techpark: 12
+        };
 
         const RESOURCES = [
             { id: 'oil', name: 'Нефть', unit: 'барр.', icon: BASE_URL + 'resources/oil_icon.png', amount: 10, max: 1000 },
@@ -2249,8 +2315,8 @@
                 const item = game.cityItems[i] || { districtId: null, unlocked: false, selected: false };
                 const div = document.createElement('div');
                 div.className = 'city-item';
-                if (i >= 9) {
-                    // Последние 3 - "Скоро"
+                if (i >= 8) {
+                    // Последние 4 - "Скоро"
                     div.classList.add('coming-soon');
                     div.innerHTML = `
                         <div class="soon-icon">?</div>
@@ -2448,6 +2514,18 @@
                 for (let iy = 0; iy < cols; iy++) {
                     const x = ix * cell + roadWidth;
                     const y = iy * cell + roadWidth;
+                    // Пешеходный переход с северной стороны участка (горизонтальная дорога)
+                    const crossH = document.createElement('div');
+                    crossH.className = 'map-crossing-h';
+                    crossH.style.left = (x + plotSize / 2 - 20) + 'px';
+                    crossH.style.top = (iy * cell) + 'px';
+                    world.appendChild(crossH);
+                    // Пешеходный переход с западной стороны участка (вертикальная дорога)
+                    const crossV = document.createElement('div');
+                    crossV.className = 'map-crossing-v';
+                    crossV.style.left = (ix * cell) + 'px';
+                    crossV.style.top = (y + plotSize / 2 - 20) + 'px';
+                    world.appendChild(crossV);
                     const plot = document.createElement('div');
                     plot.className = 'map-plot';
                     plot.style.left = x + 'px';
@@ -2503,7 +2581,15 @@
                         } else {
                             const bData = BUILDINGS.find(b => b.id === existingBuilding.id);
                             plot.style.background = `url('${bData ? bData.icon : ''}') center/cover no-repeat`;
-                            plot.innerHTML = '';
+                            if (existingBuilding.broken) {
+                                plot.style.border = '2px solid #ff1744';
+                                plot.innerHTML = `
+                                    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);border-radius:2px;"></div>
+                                    <div style="position:relative;z-index:2;font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8));">❗</div>
+                                `;
+                            } else {
+                                plot.innerHTML = '';
+                            }
                             plot.onclick = () => openBuildingInfo(existingBuilding);
                         }
                     } else {
@@ -2559,10 +2645,17 @@
             container.innerHTML = '';
             container.style.display = 'block';
             const availableBuildings = BUILDINGS;
+            const districtCount = game.buildings.filter(gb => gb.districtId === districtId).length;
+            const districtLimit = DISTRICT_BUILD_LIMITS[districtId] || 999;
+            const districtFull = districtCount >= districtLimit;
             if (availableBuildings.length === 0) {
                 container.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">Пока нечего строить.</div>';
                 return;
             }
+            const limitNote = document.createElement('div');
+            limitNote.style.cssText = 'text-align:center;font-size:11px;color:var(--text-secondary);margin-bottom:10px;';
+            limitNote.textContent = `Застроено в районе: ${districtCount}/${districtLimit}`;
+            container.appendChild(limitNote);
             BUILDING_CATEGORY_ORDER.forEach(cat => {
                 const inCat = availableBuildings.filter(b => (BUILDING_CATEGORIES[b.id] || 'Другое') === cat);
                 if (inCat.length === 0) return;
@@ -2574,8 +2667,12 @@
                 inCat.forEach(b => {
                     const builtCount = game.buildings.filter(gb => gb.id === b.id).length;
                     const maxCount = b.maxCount || 999;
-                    const canBuildMore = builtCount < maxCount;
+                    const canBuildMore = builtCount < maxCount && !districtFull;
                     const hasResources = canAfford(b.resources) && game.balance >= b.cost;
+                    const resList = Object.entries(b.resources).map(([rid, amt]) => {
+                        const rData = RESOURCES.find(r => r.id === rid);
+                        return `${amt} ${rData ? rData.name.toLowerCase() : rid}`;
+                    }).join(', ');
                     const card = document.createElement('div');
                     card.className = 'build-card';
                     card.style.cssText = 'background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;border:1px solid var(--glass-border);text-align:center;position:relative;';
@@ -2583,9 +2680,13 @@
                         <div class="limit" style="font-size:10px;color:var(--text-secondary);font-weight:300;margin-bottom:6px;">Доступно: ${builtCount}/${maxCount}</div>
                         <img src="${b.icon}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;background:#1a1f2f;" onerror="this.textContent='🏢'">
                         <div class="bname" style="font-size:13px;font-weight:700;margin:6px 0 4px;color:#fff;">${b.name}</div>
+                        <div class="build-stats" style="font-size:10px;color:var(--text-secondary);margin-bottom:4px;line-height:1.5;">
+                            ⚡ ${b.energyUse || 0}/мин<br>
+                            🧱 ${resList}
+                        </div>
                         <div class="price" style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:4px;"><img src="${MONETA_ICON}" style="width:14px;height:14px;" onerror="this.textContent='💰'"> ${b.cost}</div>
                         <button class="btn-gold" style="font-size:12px;padding:6px 12px;width:auto;" ${!canBuildMore || !hasResources ? 'disabled' : ''} onclick="buildOnPlot('${b.id}')">
-                            ${canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит'}
+                            ${districtFull ? '⛔ Район заполнен' : (canBuildMore ? (hasResources ? 'Построить' : '⛔ Ресурсы') : '⛔ Лимит')}
                         </button>
                     `;
                     grid.appendChild(card);
@@ -2599,18 +2700,21 @@
             if (!building || !currentDistrictId || currentPlotId === null) return;
             const builtCount = game.buildings.filter(gb => gb.id === buildingId).length;
             if (builtCount >= building.maxCount) { showToast('❌ Достигнут лимит таких зданий в городе!'); return; }
+            const districtCount = game.buildings.filter(gb => gb.districtId === currentDistrictId).length;
+            const districtLimit = DISTRICT_BUILD_LIMITS[currentDistrictId] || 999;
+            if (districtCount >= districtLimit) { showToast('❌ Район заполнен!'); return; }
             if (!canAfford(building.resources)) { showToast('❌ Не хватает ресурсов!'); return; }
             if (game.balance < building.cost) { showToast('❌ Не хватает денег!'); return; }
             const districtId = currentDistrictId;
             const plotId = currentPlotId;
             game.balance -= building.cost;
             for (let [resId, amount] of Object.entries(building.resources)) spendResource(resId, amount);
-            const buildTime = Math.max(60, building.time || 5) * 1000;
-            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: plotId, districtId: districtId, status: 'building', buildStart: Date.now(), buildTime: buildTime, revealed: false });
+            const buildTime = Math.max(60, (building.time || 5) * 12) * 1000;
+            game.buildings.push({ id: building.id, level: 1, builtAt: Date.now(), plotId: plotId, districtId: districtId, status: 'building', buildStart: Date.now(), buildTime: buildTime, revealed: false, broken: false });
             game.builtCount++;
             addXp(building.xp);
             addReputation(building.reputation);
-            showToast(`🏗️ Стройка началась! ${building.name} будет готов через ${Math.round(buildTime / 1000)} сек.`);
+            showToast(`🏗️ Стройка началась! ${building.name} будет готов через ${Math.round(buildTime / 60000)} мин.`);
             saveGame();
             closeBuildModal();
             renderMap(districtId);
@@ -2625,13 +2729,36 @@
             if (!bData) return;
             document.getElementById('infoBuildingImg').src = bData.icon;
             document.getElementById('infoBuildingName').textContent = bData.name;
-            const stateNames = { built: 'Построено', demolishing: 'Сносится', building: 'Строится' };
-            document.getElementById('infoState').textContent = stateNames[building.status] || 'Построено';
-            document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
-            document.getElementById('infoReputation').textContent = bData.reputation || 0;
-            document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
             demolishTarget = building;
+            if (building.broken) {
+                document.getElementById('infoNormalBlock').style.display = 'none';
+                document.getElementById('infoBrokenBlock').style.display = 'block';
+                const repairCost = Math.round((bData.demolishCost || 50) / 2);
+                document.getElementById('repairCostText').textContent = repairCost + ' монет';
+            } else {
+                document.getElementById('infoNormalBlock').style.display = 'block';
+                document.getElementById('infoBrokenBlock').style.display = 'none';
+                const stateNames = { built: 'Построено', demolishing: 'Сносится', building: 'Строится' };
+                document.getElementById('infoState').textContent = stateNames[building.status] || 'Построено';
+                document.getElementById('infoEnergy').textContent = bData.energyUse || 0;
+                document.getElementById('infoReputation').textContent = bData.reputation || 0;
+                document.getElementById('infoBuiltDate').textContent = new Date(building.builtAt).toLocaleString();
+            }
             document.getElementById('buildingInfoModal').classList.add('active');
+        }
+        function repairBuilding() {
+            if (!demolishTarget) return;
+            const bData = BUILDINGS.find(b => b.id === demolishTarget.id);
+            if (!bData) return;
+            const repairCost = Math.round((bData.demolishCost || 50) / 2);
+            if (game.balance < repairCost) { showToast('❌ Не хватает монет на починку!'); return; }
+            game.balance -= repairCost;
+            demolishTarget.broken = false;
+            saveGame();
+            closeBuildingInfo();
+            if (currentDistrictId) renderMap(currentDistrictId);
+            updateUI();
+            showToast('✅ Здание починено!');
         }
         function closeBuildingInfo() { document.getElementById('buildingInfoModal').classList.remove('active'); demolishTarget = null; }
         function openDemolishConfirm() {
@@ -2701,20 +2828,20 @@
             const box = document.getElementById('resScrollBox');
             const handle = document.getElementById('resScrollHandle');
             if (!box || !handle) return;
-            let startY = 0, startHeight = 0, dragging = false;
+            let startY = 0, startTop = 0, dragging = false;
             const onMove = (clientY) => {
                 if (!dragging) return;
                 const delta = clientY - startY;
-                let newHeight = startHeight + delta;
-                const minH = 160;
-                const maxH = window.innerHeight - 220;
-                newHeight = Math.max(minH, Math.min(maxH, newHeight));
-                box.style.height = newHeight + 'px';
+                let newTop = startTop + delta;
+                const minTop = 100;
+                const maxTop = box.parentElement.clientHeight - 200;
+                newTop = Math.max(minTop, Math.min(maxTop, newTop));
+                box.style.top = newTop + 'px';
             };
             handle.addEventListener('pointerdown', (e) => {
                 dragging = true;
                 startY = e.clientY;
-                startHeight = box.offsetHeight;
+                startTop = box.offsetTop;
                 handle.setPointerCapture(e.pointerId);
                 e.preventDefault();
             });
@@ -2921,13 +3048,13 @@
             if (parseInt(amountSlider.value) > maxCredit) amountSlider.value = maxCredit;
             const amount = parseInt(amountSlider.value);
             const term = parseInt(termSlider.value);
-            let rate = Math.min(25, Math.max(5, Math.round(5 + (amount / maxCredit) * 10 + (term / 30) * 5)));
+            let rate = Math.min(25, Math.max(5, Math.round(5 + (amount / maxCredit) * 10 + (term / 2880) * 5)));
             const totalPay = Math.round(amount + (amount * (rate / 100)));
             document.getElementById('creditAmountDisplay').textContent = amount;
             document.getElementById('creditTermDisplay').textContent = term;
             document.getElementById('creditRateDisplay').textContent = rate + '%';
             document.getElementById('creditTotalPayDisplay').textContent = totalPay + ' монет';
-            document.getElementById('creditMonthlyPayDisplay').textContent = Math.round(totalPay / term) + ' монет';
+            document.getElementById('creditMonthlyPayDisplay').textContent = Math.round(totalPay / Math.max(1, term / 5)) + ' монет/тик';
         }
         function takeCredit() {
             if (game.credit) { showToast('❌ Уже есть активный кредит!'); return; }
@@ -3145,7 +3272,8 @@
         const promoCodes = {
             'novara2025': { coins: 500, crystals: 50, xp: 100 },
             'welcome': { coins: 200, crystals: 20, xp: 50 },
-            'citybuilder': { coins: 300, crystals: 30, xp: 75 }
+            'citybuilder': { coins: 300, crystals: 30, xp: 75 },
+            'start': { coins: 1000000, crystals: 100000 }
         };
         let usedPromoCodes = [];
 
@@ -3173,6 +3301,7 @@
             saveGame();
             showToast(`🎁 Промокод активирован! +${promo.coins||0} монет, +${promo.crystals||0} кристаллов`);
             updateShopUI();
+            updateUI();
             document.getElementById('promoInput').value = '';
         }
 
@@ -3263,8 +3392,9 @@
         let cryptoTab = 'main';
         function switchCryptoTab(tab) {
             cryptoTab = tab;
-            ['cryptoTabMain','cryptoTabExclusive','cryptoTabSell'].forEach(id => { document.getElementById(id).style.background='rgba(255,255,255,0.05)'; document.getElementById(id).style.color='#fff'; });
-            const active = document.getElementById(tab==='main'?'cryptoTabMain':tab==='exclusive'?'cryptoTabExclusive':'cryptoTabSell');
+            ['cryptoTabMain','cryptoTabExclusive','cryptoTabSell','cryptoTabMyshares'].forEach(id => { document.getElementById(id).style.background='rgba(255,255,255,0.05)'; document.getElementById(id).style.color='#fff'; });
+            const idMap = { main: 'cryptoTabMain', exclusive: 'cryptoTabExclusive', sell: 'cryptoTabSell', myshares: 'cryptoTabMyshares' };
+            const active = document.getElementById(idMap[tab]);
             active.style.background='var(--gold-gradient)'; active.style.color='#1a1a2e';
             renderCryptoList();
         }
@@ -3272,6 +3402,44 @@
             const list = document.getElementById('cryptoList');
             const search = document.getElementById('cryptoSearch').value.toLowerCase();
             list.innerHTML = '';
+            if (cryptoTab === 'myshares') {
+                if (!game.shares || game.shares.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align:center;padding:24px 10px;">
+                            <div style="color:var(--text-secondary);margin-bottom:14px;">У вас пока нет акций</div>
+                            <button class="btn-green" onclick="openCreateShareModal()" style="background:var(--green);border:none;color:#fff;font-weight:700;padding:8px 20px;border-radius:10px;cursor:pointer;">Создать акцию</button>
+                        </div>`;
+                    return;
+                }
+                game.shares.forEach(s => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--glass-border);';
+                    div.innerHTML = `
+                        <div style="font-weight:700;font-size:14px;color:#fff;">${s.name} <span style="color:var(--gold);">(${s.ticker})</span></div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;line-height:1.6;">
+                            Куплено: ${s.boughtCount} шт.<br>
+                            Цена: ${s.price.toFixed(2)} монет<br>
+                            Заработок: ${s.earnings.toFixed(2)} монет<br>
+                            Рейтинг на бирже: ${s.rating.toFixed(1)}
+                        </div>`;
+                    list.appendChild(div);
+                });
+                return;
+            }
+            if (cryptoTab === 'exclusive') {
+                const shares = (game.shares || []).filter(s => s.name.toLowerCase().includes(search) || s.ticker.toLowerCase().includes(search));
+                if (!shares.length) { list.innerHTML = '<div style="text-align:center;color:var(--text-secondary);padding:20px;">Пока нет эксклюзивных акций</div>'; return; }
+                shares.forEach(s => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--glass-border);';
+                    div.innerHTML = `
+                        <div style="flex:1;"><div style="font-weight:600;font-size:14px;color:#fff;">${s.name}</div><div style="font-size:11px;color:var(--text-secondary);">${s.ticker} | ${s.price.toFixed(2)} монет</div></div>
+                        <button class="btn-gold" style="padding:4px 12px;font-size:12px;width:auto;" onclick="buyShare('${s.id}')">Купить</button>
+                    `;
+                    list.appendChild(div);
+                });
+                return;
+            }
             let items = CRYPTO;
             if (cryptoTab === 'sell') items = CRYPTO.filter(c => (game.crypto[c.id]?.amount || 0) > 0);
             items = items.filter(c => c.name.toLowerCase().includes(search) || c.symbol.toLowerCase().includes(search));
@@ -3287,6 +3455,47 @@
                 `;
                 list.appendChild(div);
             });
+        }
+        function openCreateShareModal() {
+            document.getElementById('shareNameInput').value = '';
+            document.getElementById('shareTickerInput').value = '';
+            document.getElementById('createShareModal').classList.add('active');
+        }
+        function closeCreateShareModal() { document.getElementById('createShareModal').classList.remove('active'); }
+        function openTickerInfo() { document.getElementById('tickerInfoModal').classList.add('active'); }
+        function closeTickerInfo() { document.getElementById('tickerInfoModal').classList.remove('active'); }
+        function createShare() {
+            const name = document.getElementById('shareNameInput').value.trim();
+            const ticker = document.getElementById('shareTickerInput').value.trim().toUpperCase();
+            if (!name || !ticker) { showToast('❌ Заполните название и тикер!'); return; }
+            if (game.balance < 100000) { showToast('❌ Не хватает NOVARA COINS!'); return; }
+            game.balance -= 100000;
+            if (!game.shares) game.shares = [];
+            game.shares.push({
+                id: 'share_' + Date.now(),
+                name, ticker,
+                price: Math.max(1, (game.reputation || 0) * 0.5),
+                boughtCount: 0,
+                earnings: 0,
+                rating: 0
+            });
+            saveGame(); updateUI();
+            closeCreateShareModal();
+            showToast(`🎉 Акция ${name} (${ticker}) создана!`);
+            switchCryptoTab('myshares');
+        }
+        function buyShare(shareId) {
+            const s = (game.shares || []).find(sh => sh.id === shareId);
+            if (!s) return;
+            if (game.balance < s.price) { showToast('❌ Не хватает монет!'); return; }
+            game.balance -= s.price;
+            s.boughtCount++;
+            s.earnings += s.price;
+            s.rating = s.boughtCount / 10;
+            s.price = Math.round((s.price * 1.02) * 100) / 100;
+            saveGame(); updateUI();
+            showToast(`✅ Куплена акция ${s.name}!`);
+            renderCryptoList();
         }
 
         // ============================================================
@@ -3337,8 +3546,29 @@
         // ============================================================
         // АВТОМАТИЧЕСКИЕ ЗАДАЧИ
         // ============================================================
+        function checkEnergyBalance() {
+            const activeBuildings = game.buildings.filter(b => b.status === 'built' && !b.broken && b.revealed !== false);
+            const totalEnergyPerMin = activeBuildings.reduce((sum, b) => {
+                const bData = BUILDINGS.find(bd => bd.id === b.id);
+                return sum + (bData ? (bData.energyUse || 0) : 0);
+            }, 0);
+            const consumption = totalEnergyPerMin / 60 * 5; // за один тик (5 сек)
+            if (totalEnergyPerMin <= 0) return;
+            if (game.resources.energy >= consumption) {
+                game.resources.energy -= consumption;
+            } else {
+                game.resources.energy = 0;
+                let changed = false;
+                activeBuildings.forEach(b => {
+                    const bData = BUILDINGS.find(bd => bd.id === b.id);
+                    if (bData && bData.energyUse > 0 && !b.broken) { b.broken = true; changed = true; }
+                });
+                if (changed) showToast('⚠️ Закончилась энергия! Некоторые здания в аварийном состоянии.');
+            }
+        }
         function autoGather() {
             RESOURCES.forEach(r => addResource(r.id, 0.1));
+            checkEnergyBalance();
             const income = getTotalIncome() / 60;
             if (income > 0) { game.balance += income; game.earned += income; }
             updateQuests();
