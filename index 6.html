@@ -3711,6 +3711,104 @@
         }
 
         document.addEventListener('DOMContentLoaded', init);
+
+                // ========== НАСТРОЙКА СЕРВЕРА ==========
+        // Для локального тестирования
+        const SERVER_URL = 'http://localhost:5000';
+        // Для публичного доступа (если задеплоите на Render/ngrok) замените на реальный URL
+        
+        // ========== ПОЛУЧЕНИЕ БАЛАНСА ==========
+        async function loadBalanceFromServer(userId) {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/get_balance/${userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    game.balance = data.balance;
+                    game.crystals = data.crystals;
+                    game.level = data.level;
+                    game.reputation = data.reputation;
+                    updateUI(); // обновляем интерфейс
+                    return true;
+                }
+            } catch (e) {
+                console.error('❌ Ошибка загрузки баланса:', e);
+            }
+            return false;
+        }
+        
+        // ========== СИНХРОНИЗАЦИЯ ДАННЫХ ИГРОКА ==========
+        async function syncToServer(userId) {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        data: {
+                            balance: game.balance,
+                            crystals: game.crystals,
+                            level: game.level,
+                            xp: game.xp,
+                            reputation: game.reputation,
+                            buildings: game.buildings,
+                            resources: game.resources,
+                            crypto: game.crypto,
+                            quests: game.quests,
+                            earned: game.earned,
+                            built_count: game.built_count
+                        }
+                    })
+                });
+                return response.ok;
+            } catch (e) {
+                console.error('❌ Ошибка синхронизации:', e);
+            }
+            return false;
+        }
+        
+        // ========== СОЗДАНИЕ ПОКУПКИ ==========
+        async function purchaseItem(userId, itemType, amount, price) {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/create_purchase`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        type: itemType,
+                        amount: amount,
+                        price: price
+                    })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    showToast(`✅ Покупка создана! ID: ${data.purchase_id}`);
+                    return true;
+                }
+            } catch (e) {
+                console.error('❌ Ошибка покупки:', e);
+            }
+            return false;
+        }
+        
+        // ========== ПРИМЕР ИСПОЛЬЗОВАНИЯ В КНОПКАХ МАГАЗИНА ==========
+        // Замените старые функции purchaseCoins и purchaseCrystals:
+        function purchaseCoins(amount, price) {
+            const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('❌ Игрок не авторизован в Telegram');
+                return;
+            }
+            purchaseItem(userId, 'coins', amount, price);
+        }
+        
+        function purchaseCrystals(amount, price) {
+            const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+            if (!userId) {
+                showToast('❌ Игрок не авторизован в Telegram');
+                return;
+            }
+            purchaseItem(userId, 'crystals', amount, price);
+        }
     </script>
 </body>
 </html>
