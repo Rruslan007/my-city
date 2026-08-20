@@ -2176,7 +2176,7 @@
         }
         // Сайт и API отдаются одним и тем же Flask-сервером, поэтому используем относительные пути —
         // это работает автоматически на любом домене Render без правки кода.
-        const API_BASE_URL = '';
+        const API_BASE_URL = 'https://novara-city-server-py.onrender.com';
         const PAYMENT_SERVER_URL = API_BASE_URL + '/create_invoice';
 
         // ============================================================
