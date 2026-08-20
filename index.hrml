@@ -1823,8 +1823,8 @@
                 </div>
                 <div class="body">
                     <div style="font-weight:600;font-size:14px;text-align:center;margin-bottom:6px;" id="bankStatsTitle">Доходы и расходы</div>
-                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span id="bankIncomeLabel">📈 Доходы:</span><span class="text-green" style="display:flex;align-items:center;gap:4px;"><span id="bankIncome">0</span><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:16px;height:16px;"></span></div>
-                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span id="bankExpenseLabel">📉 Расходы:</span><span class="text-red" style="display:flex;align-items:center;gap:4px;"><span id="bankExpense">0</span><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:16px;height:16px;"></span></div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span id="bankIncomeLabel">📈 Доходы:</span><span class="text-green" style="display:flex;align-items:center;gap:4px;"><span id="bankIncome">0</span><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:16px;height:16px;"><span id="bankIncomeSuffix">/мин</span></span></div>
+                    <div class="bank-row" style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:14px;"><span id="bankExpenseLabel">📉 Расходы:</span><span class="text-red" style="display:flex;align-items:center;gap:4px;"><span id="bankExpense">0</span><img src="https://rruslan007.github.io/novara-city-images/effects/moneta.PNG" style="width:16px;height:16px;"><span id="bankExpenseSuffix">/мин</span></span></div>
                 </div>
             </div>
         </div>
@@ -1862,6 +1862,10 @@
         <div class="page-title" id="profileTitle">Профиль</div>
         <div class="profile-shift-down">
         <div class="profile-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--glass-bg);border:2px solid var(--gold);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:40px;">👤</div>
+        <div style="text-align:center;margin-bottom:8px;">
+            <div id="profileTgUsername" style="font-size:16px;font-weight:700;color:#fff;">@username</div>
+            <div id="profileTgId" style="font-size:11px;color:var(--text-secondary);">ID: —</div>
+        </div>
         <div style="text-align:center;margin-bottom:12px;">
             <input type="text" id="playerName" placeholder="Ваше имя" style="background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;padding:8px 14px;color:#fff;width:100%;max-width:250px;font-size:16px;text-align:center;">
         </div>
@@ -2159,7 +2163,129 @@
     <!-- ===== TOAST ===== -->
     <div id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:10px 20px;border-radius:12px;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--glass-border);color:#fff;white-space:nowrap;"></div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        // ============================================================
+        // TELEGRAM WEBAPP
+        // ============================================================
+        let tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+        if (tg) {
+            tg.ready();
+            // При необходимости расширить окно на весь экран
+            tg.expand();
+        }
+        // Сайт и API отдаются одним и тем же Flask-сервером, поэтому используем относительные пути —
+        // это работает автоматически на любом домене Render без правки кода.
+        const API_BASE_URL = '';
+        const PAYMENT_SERVER_URL = API_BASE_URL + '/create_invoice';
+
+        // ============================================================
+        // TELEGRAM ПОЛЬЗОВАТЕЛЬ И СИНХРОНИЗАЦИЯ С СЕРВЕРОМ
+        // ============================================================
+        const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+        const TELEGRAM_USER_ID = tgUser ? tgUser.id : null;
+        const TELEGRAM_USERNAME = tgUser ? (tgUser.username || tgUser.first_name || String(tgUser.id)) : null;
+
+        function updateProfileTelegramUI() {
+            const idEl = document.getElementById('profileTgId');
+            const nameEl = document.getElementById('profileTgUsername');
+            if (idEl) idEl.textContent = 'ID: ' + (TELEGRAM_USER_ID || '—');
+            if (nameEl) nameEl.textContent = TELEGRAM_USERNAME ? '@' + TELEGRAM_USERNAME.replace(/^@/, '') : (lang === 'ru' ? 'Гость (не через Telegram)' : 'Guest (not via Telegram)');
+        }
+
+        // Подтягиваем сохранённый на сервере прогресс при первом запуске (например, на новом устройстве)
+        function fetchProfileFromServer() {
+            if (!TELEGRAM_USER_ID) return;
+            fetch(`${API_BASE_URL}/api/profile/${TELEGRAM_USER_ID}`)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (data && data.user) {
+                        // Локальное сохранение в браузере остаётся источником истины для уже открытой сессии,
+                        // серверные данные используются только если локального сохранения ещё нет.
+                        if (!localStorage.getItem('novaraCitySave')) {
+                            Object.assign(game, {
+                                balance: data.user.balance, crystals: data.user.crystals,
+                                level: data.user.level, xp: data.user.xp, reputation: data.user.reputation,
+                                credit: data.user.credit, crypto: data.user.crypto || game.crypto
+                            });
+                            saveGame();
+                            updateUI();
+                        }
+                    }
+                })
+                .catch(err => console.error('Profile fetch error:', err));
+        }
+
+        // Отправляем текущее состояние профиля на сервер (Supabase). Вызывается из saveGame().
+        let syncTimeout;
+        function syncProfileToServer() {
+            if (!TELEGRAM_USER_ID) return;
+            clearTimeout(syncTimeout);
+            // Небольшая задержка, чтобы не слать запрос на каждое мелкое изменение
+            syncTimeout = setTimeout(() => {
+                fetch(`${API_BASE_URL}/api/profile/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: TELEGRAM_USER_ID,
+                        username: TELEGRAM_USERNAME,
+                        level: game.level,
+                        xp: game.xp,
+                        reputation: game.reputation,
+                        balance: Math.round(game.balance),
+                        crystals: Math.round(game.crystals),
+                        buildings_count: game.buildings ? game.buildings.filter(b => b.status === 'built').length : 0,
+                        credit: game.credit || null,
+                        crypto: game.crypto || {},
+                        income_per_min: typeof getTotalIncome === 'function' ? getTotalIncome() : 0,
+                        expenses_per_min: typeof getTotalExpensePerMin === 'function' ? getTotalExpensePerMin() : 0
+                    })
+                }).catch(err => console.error('Profile sync error:', err));
+            }, 800);
+        }
+
+        function initiatePurchase(itemType, amount, price) {
+            // Получаем user_id из данных Telegram WebApp
+            const userId = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
+            if (!userId) {
+                showToast(lang === 'ru' ? '❌ Не удалось определить пользователя. Запустите приложение через Telegram.' : '❌ Could not identify user. Please open this app via Telegram.');
+                return;
+            }
+            showToast(lang === 'ru' ? '⏳ Создаём счёт...' : '⏳ Creating invoice...');
+            // Отправляем запрос на наш сервер
+            fetch(PAYMENT_SERVER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    item_type: itemType,
+                    amount: amount,
+                    price: price
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.invoice_link) {
+                    // Открываем ссылку на оплату через Telegram WebApp
+                    tg.openInvoice(data.invoice_link, function(status) {
+                        if (status === 'paid') {
+                            showToast(lang === 'ru' ? '✅ Оплата прошла успешно!' : '✅ Payment successful!');
+                        } else if (status === 'cancelled') {
+                            showToast(lang === 'ru' ? 'Оплата отменена' : 'Payment cancelled');
+                        } else if (status === 'failed') {
+                            showToast(lang === 'ru' ? '❌ Оплата не прошла' : '❌ Payment failed');
+                        }
+                    });
+                } else {
+                    showToast((lang === 'ru' ? '❌ Ошибка создания счёта: ' : '❌ Invoice error: ') + (data.error || ''));
+                }
+            })
+            .catch(err => {
+                showToast(lang === 'ru' ? '❌ Ошибка соединения с сервером.' : '❌ Server connection error.');
+                console.error(err);
+            });
+        }
+
         // ============================================================
         // ЛОКАЛИЗАЦИЯ (упрощенная)
         // ============================================================
@@ -2225,6 +2351,8 @@
             document.getElementById('bankStatsTitle').textContent = t('stats');
             document.getElementById('bankIncomeLabel').textContent = '📈 ' + t('income') + ':';
             document.getElementById('bankExpenseLabel').textContent = '📉 ' + t('expense') + ':';
+            document.getElementById('bankIncomeSuffix').textContent = lang === 'ru' ? '/мин' : '/min';
+            document.getElementById('bankExpenseSuffix').textContent = lang === 'ru' ? '/мин' : '/min';
             document.getElementById('bankTitle').textContent = t('bank');
             document.getElementById('resourcesTitle').textContent = t('resources');
             document.getElementById('questsTitle').textContent = t('quests');
@@ -2460,6 +2588,15 @@
             }
             return income;
         }
+        function getTotalExpensePerMin() {
+            // Расходы в минуту: обслуживание построенных зданий (потребление энергии)
+            let expense = 0;
+            for (let b of game.buildings) {
+                const data = BUILDINGS.find(d => d.id === b.id);
+                if (data && b.status === 'built') expense += (data.energyUse || 0) * 0.5 * b.level;
+            }
+            return expense;
+        }
 
         // ============================================================
         // ГОРОД - СЕТКА 12 РАЙОНОВ
@@ -2468,6 +2605,7 @@
             const grid = document.getElementById('cityGrid');
             grid.innerHTML = '';
             for (let i = 0; i < 12; i++) {
+              try {
                 const item = game.cityItems[i] || { districtId: null, unlocked: false, selected: false };
                 const div = document.createElement('div');
                 div.className = 'city-item';
@@ -2481,13 +2619,21 @@
                 } else if (item.unlocked && item.selected && item.districtId) {
                     // Выбранный район
                     const dist = DISTRICT_SELECT.find(d => d.id === item.districtId);
-                    const dName = t(dist.key);
-                    div.classList.add('unlocked');
-                    div.innerHTML = `
-                        <img src="${dist.icon}" class="district-icon" alt="${dName}">
-                        <div class="district-name">${dName}</div>
-                    `;
-                    div.onclick = () => openMapFromCity(item.districtId, dName);
+                    if (!dist) {
+                        // Район из старого сохранения (например, удалённый "Парк") больше не существует - позволяем выбрать новый
+                        div.classList.add('unlocked');
+                        div.innerHTML = `
+                            <button class="open-btn" onclick="event.stopPropagation(); openDistrictSelect(${i})">${t('openDistrictBtn')}</button>
+                        `;
+                    } else {
+                        const dName = t(dist.key);
+                        div.classList.add('unlocked');
+                        div.innerHTML = `
+                            <img src="${dist.icon}" class="district-icon" alt="${dName}">
+                            <div class="district-name">${dName}</div>
+                        `;
+                        div.onclick = () => openMapFromCity(item.districtId, dName);
+                    }
                 } else if (item.unlocked) {
                     // Открыт, но не выбран
                     div.classList.add('unlocked');
@@ -2504,6 +2650,7 @@
                     `;
                 }
                 grid.appendChild(div);
+              } catch (e) { console.error('renderCityGrid item error', i, e); }
             }
         }
 
@@ -3135,8 +3282,7 @@
                 creditBtnWrapper.style.display = 'block';
             }
             document.getElementById('bankIncome').textContent = getTotalIncome().toFixed(0);
-            document.getElementById('bankExpense').textContent = '0';
-            // крипто портфель
+            document.getElementById('bankExpense').textContent = getTotalExpensePerMin().toFixed(0);
             const cryptoDiv = document.getElementById('cryptoPortfolio');
             let hasCrypto = false;
             let html = '';
@@ -3314,13 +3460,11 @@
         }
 
         function buyCoinPack(amount, price) {
-            // Имитация покупки за звезды - отправка в бота
-            showToast(`⭐ Покупка ${amount} монет за ${price} звёзд. Проверьте Telegram!`);
-            // Здесь будет интеграция с ботом
+            initiatePurchase('coin', amount, price);
         }
 
         function buyDiamondPack(amount, price) {
-            showToast(`⭐ Покупка ${amount} кристаллов за ${price} звёзд. Проверьте Telegram!`);
+            initiatePurchase('diamond', amount, price);
         }
 
         // ============================================================
@@ -3629,6 +3773,7 @@
             document.getElementById('profileCryptoVal').textContent = Math.round(totalCryptoVal);
             document.getElementById('profileTime').textContent = `В игре: ${Math.floor((Date.now() - game.lastOnline) / 60000)} мин`;
             document.getElementById('playerName').value = localStorage.getItem('playerName') || '';
+            updateProfileTelegramUI();
         }
 
         // ============================================================
@@ -3707,6 +3852,7 @@
                 market: game.market,
                 usedPromoCodes: usedPromoCodes
             }));
+            syncProfileToServer();
         }
         function loadGame() {
             const raw = localStorage.getItem('novaraCitySave');
@@ -3724,6 +3870,17 @@
                     }
                     game.cityItems[0].unlocked = true;
                 }
+                // Миграция старых сохранений: убираем ссылки на удалённые районы (например "Парк"),
+                // чтобы страница города больше не падала с ошибкой у игроков со старым сохранением
+                const validDistrictIds = DISTRICT_SELECT.map(d => d.id);
+                Object.keys(game.cityItems).forEach(key => {
+                    const it = game.cityItems[key];
+                    if (it && it.districtId && !validDistrictIds.includes(it.districtId)) {
+                        it.selected = false;
+                        it.districtId = null;
+                    }
+                });
+                game.unlockedDistricts = game.unlockedDistricts.filter(id => validDistrictIds.includes(id));
                 if (data.usedPromoCodes) usedPromoCodes = data.usedPromoCodes;
                 return true;
             } catch (e) { return false; }
@@ -3750,6 +3907,9 @@
             if (savedLang && LANG[savedLang]) lang = savedLang;
             else { document.getElementById('langModal').classList.add('active'); return; }
             currentLang = LANG[lang];
+
+            updateProfileTelegramUI();
+            fetchProfileFromServer();
 
             if (!loadGame()) {
                 RESOURCES.forEach(r => { game.resources[r.id] = 10; });
